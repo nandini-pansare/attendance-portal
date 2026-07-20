@@ -19,3 +19,4 @@
 # OS files
 .DS_Store
 Thumbs.db
+backend/src/config/firebase-service-account.json
