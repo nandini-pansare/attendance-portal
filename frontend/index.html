@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Attendance Portal</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+
+        <br>
+
+        <h1>Attendance Portal</h1>
+        <br>
+
+        <div>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Login</button>
+        </div>
+
+        <button onclick="getTokenFromFirebase()">
+            Get FCM Token
+        </button>
+        <button onclick="registerToken()">
+            Register Device
+        </button>
+                <button onclick="testNotification()">
+            Test Notification
+        </button>
+
+
+        <script type="module" src="script.js?v=10"></script>
+    </body>
+</html>

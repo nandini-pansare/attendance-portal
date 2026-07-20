@@ -1,0 +1,11 @@
+import 'express-session';
+
+declare module 'express-session' {
+    interface SessionData {
+        userId: number;
+        username: string;
+        email: string;
+        password: string;
+        role: string;
+    }
+}
