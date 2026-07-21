@@ -1,3 +1,4 @@
+const API_BASE = "https://attendanceportal.duckdns.org";
 
 async function getFirebaseToken() {
     // Firebase is optional for login. Loading it on demand prevents an FCM
@@ -8,14 +9,13 @@ async function getFirebaseToken() {
 
 window.testNotification = async function (){
     const response = await fetch(
-        "https://wispy-expensive-penny.ngrok-free.dev/notifications/test",
+        `${API_BASE}/notifications/test`,
         {
             method: "POST",
             credentials: "include",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                "ngrok-skip-browser-warning": "1",
-
+                //"ngrok-skip-browser-warning": "1",
             }
         }
     );
@@ -50,14 +50,13 @@ window.registerToken = async function(){
         return;
     }
 
-    const response = await fetch("https://wispy-expensive-penny.ngrok-free.dev/notifications/register",
+    const response = await fetch(`${API_BASE}/notifications/register`,
         {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                "ngrok-skip-browser-warning": "1",
-
+                //"ngrok-skip-browser-warning": "1",
             },
             credentials: "include",
             body: JSON.stringify({
@@ -77,12 +76,12 @@ window.login = async function(){
 
     console.log("Username:", username);
     try {
-        const response = await fetch("https://wispy-expensive-penny.ngrok-free.dev/auth/portal-login", {
+        const response = await fetch(`${API_BASE}/auth/portal-login`, {
             method: "POST",
             credentials: "include",
             headers: { 
                 "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "1",
+                //"ngrok-skip-browser-warning": "1",
             },
             body: JSON.stringify({ username, password}),
         });

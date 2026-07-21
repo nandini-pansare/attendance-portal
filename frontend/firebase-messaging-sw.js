@@ -40,8 +40,13 @@ self.addEventListener("notificationclick", (event)=> {
   );
 
   if(existingClient){
-    await existingClient.navigate(url);
-    return existingClient.focus();
+    try {
+      await existingClient.navigate(url);
+      return existingClient.focus();
+    } catch (err) {
+      console.warn("Existing client navigation failed, opening new window:", err);
+      return clients.openWIndow(url);
+    }
   }
 
   return clients.openWindow(url);
