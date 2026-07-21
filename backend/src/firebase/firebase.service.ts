@@ -1,5 +1,4 @@
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import serviceAccount from '../config/firebase-service-account.json';
 import { getMessaging } from 'firebase-admin/messaging';
 import { DeviceTokens } from './token.model';
 import { InjectModel } from '@nestjs/sequelize';
@@ -9,7 +8,7 @@ import type {} from 'multer';
 import { S3Service } from 'src/aws/s3.service';
 import { NotificaionQueueService } from './firebase.queue';
 
-@Injectable()
+@Injectable() 
 export class FirebaseService {
   constructor(
     @InjectModel(DeviceTokens)
@@ -21,7 +20,11 @@ export class FirebaseService {
   ) {
     if(!getApps().length) {
       initializeApp({
-        credential: cert(serviceAccount as any),
+        credential: cert ({
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+          privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        })
       });
     }
   }
