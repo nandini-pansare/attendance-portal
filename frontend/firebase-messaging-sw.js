@@ -45,7 +45,7 @@ self.addEventListener("notificationclick", (event)=> {
       return existingClient.focus();
     } catch (err) {
       console.warn("Existing client navigation failed, opening new window:", err);
-      return clients.openWIndow(url);
+      return clients.openWindow(url);
     }
   }
 
