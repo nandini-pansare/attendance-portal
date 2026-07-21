@@ -1,32 +1,58 @@
+
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Attendance Portal</title>
+        <title>Emplpoyees Portal</title>
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
 
         <br>
 
-        <h1>Attendance Portal</h1>
+        <h1>Registeration</h1>
         <br>
 
-        <div>
-            <input type="text" id="username" placeholder="Username">
-            <input type="password" id="password" placeholder="Password">
+        
+        <div id="otpSection">
+            <h4>Get Otp</h4>
+            <input type="text" id="email-id" placeholder="Email ID" required autocomplete="email">
+            <br><br>
+            <button onclick="getOtp()">Get Otp </button>
+
+            <button onclick="showLogin()">Login</button>
+        </div>
+
+        <div id="registrationForm" hidden>
+            <h4>Registration</h4>
+            <input type="text" id="reg-username" placeholder="Username" required autocomplete="username">
+            <input type="password" id="reg-password" placeholder="Password" required autocomplete="new password">
+            <input type="text" id="reg-email" placeholder="Email ID" required autocomplete="email">
+            <select id="code" required>
+                <option value="9876"></option>
+                <option value="8765"></option>
+                <option value="7654"></option>
+            </select>
+            <input type="number" id="otp" placeholder="6 Digit Otp" required>
+            <button onclick="register()">Register</button>
+        </div>
+
+        <div id="loginForm" hidden>
+            <h4>Login</h4>
+            <input type="text" id="login-username" placeholder="Username" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+
             <button onclick="login()">Login</button>
         </div>
 
-        <button onclick="getTokenFromFirebase()">
-            Get FCM Token
-        </button>
-        <button onclick="registerToken()">
-            Register Device
-        </button>
-                <button onclick="testNotification()">
-            Test Notification
-        </button>
-
+        <div id="tokenSection" hidden>
+            <h4>FCM Token</h4>
+            <button onclick="getTokenFromFirebase()">Get FCM Token</button>
+            <button onclick="registerToken()">Register Device</button>
+            <br><br>
+            <input type="file" id="notificationImage" accept="image/*">
+            <br>
+            <button onclick="testNotification()">Test Notification</button>
+        </div>
 
         <script type="module" src="script.js?v=10"></script>
     </body>

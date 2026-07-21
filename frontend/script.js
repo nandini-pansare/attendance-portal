@@ -1,27 +1,139 @@
 const API_BASE = "https://attendanceportal.duckdns.org";
+let verifiedEmail = null;
+
+window.getOtp = async function(){
+    const email = document.getElementById("email-id").value;
+
+    const response = await fetch(`${API_BASE}/otp/portal-get-otp`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({email})
+    });
+
+    const data = await response.json();
+
+    if(response.ok){
+        verifiedEmail = email;
+        document.getElementById("reg-email").value = email;
+
+        alert("Otp Sent.");
+
+        document.getElementById("otpSection").hidden = true;
+        document.getElementById("registrationForm").hidden = false;
+    } else{
+        alert(data.message);
+    }
+};
+
+window.showLogin = function(){
+    document.getElementById("otpSection").hidden = true;
+    document.getElementById("registrationForm").hidden = true;
+    document.getElementById("loginForm").hidden = false;
+};
+
+window.register = async function(){
+    const username = document.getElementById("reg-username").value;
+    const password = document.getElementById("reg-password").value;
+    const email = document.getElementById("reg-email").value;
+    const code = Number(document.getElementById("code").value);
+    const otp = Number(document.getElementById("otp").value);
+
+    try{
+        const response = await fetch(`${API_BASE}/users/portal-register`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, email, password, code, otp})
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            alert(data.message || "Account created. Proceed to Log in");
+            document.getElementById("registrationForm").hidden = true;
+            document.getElementById("loginForm").hidden = false;
+        } else{
+            alert( data.message || "Registration failed!");
+        }
+    } catch(error){
+        alert("Error: " + error.message);
+        console.log(error);
+    }
+};
+
+
+window.login = async function(){
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+        const response = await fetch(`${API_BASE}/auth/portal-login`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+                //"ngrok-skip-browser-warning": "1",
+            },
+            body: JSON.stringify({ username, password}),
+        });
+
+        alert ("Login Successful " + response.status);
+
+        const data = await response.json();
+        console.log("Login response", data);
+
+        if(data.token){
+            localStorage.setItem('token', data.token);
+            console.log("Logged in, token saved");
+
+            document.getElementById("loginForm").hidden = true;
+            document.getElementById("tokenSection").hidden = false;
+        } else{
+            alert(data.message || "Login failed.");
+        }
+    } catch(error){
+        alert("ERROR: "+error.message);
+        console.log(error);
+    }
+};
 
 async function getFirebaseToken() {
-    // Firebase is optional for login. Loading it on demand prevents an FCM
-    // loading failure from stopping this entire module on a phone.
     const { getFCMToken } = await import("./firebase.js");
+    alert("Token Generated");
     return getFCMToken();
+    
 }
 
 window.testNotification = async function (){
-    const response = await fetch(
-        `${API_BASE}/notifications/test`,
-        {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                //"ngrok-skip-browser-warning": "1",
-            }
-        }
-    );
+    const file = document.getElementById("notificationImage").files[0];
+    const formData = new FormData();
 
-    const data = await response.json();
-    console.log(data);
+    if(file){
+        formData.append("image", file);
+    }
+
+    try{
+        const response = await fetch(`${API_BASE}/notifications/test`,
+            {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                    //"ngrok-skip-browser-warning": "1",
+                },
+                body: formData,
+            }
+        );
+        
+        const data = await response.json();
+        console.log(data);
+    } catch(error){
+        console.error(error);
+        alert(error.message);
+    }
 };
 
 window.getTokenFromFirebase = async function (){
@@ -66,39 +178,7 @@ window.registerToken = async function(){
     );
 
     const data = await response.json();
+    alert("Token Reistered");
     console.log("Token registered:", data);
 };
 
-window.login = async function(){
-    alert("Login Clicked");
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    console.log("Username:", username);
-    try {
-        const response = await fetch(`${API_BASE}/auth/portal-login`, {
-            method: "POST",
-            credentials: "include",
-            headers: { 
-                "Content-Type": "application/json",
-                //"ngrok-skip-browser-warning": "1",
-            },
-            body: JSON.stringify({ username, password}),
-        });
-
-        alert ("Response recieved: " + response.status);
-
-        const data = await response.json();
-        console.log("Login response", data);
-
-        if(data.token){
-            localStorage.setItem('token', data.token);
-            console.log("Logged in, token saved");
-        }
-    } catch(error){
-        alert("ERROR: "+error.message);
-        console.log(error);
-    }
-};
-
-alert("login exists: "+ typeof window.login);
