@@ -269,7 +269,7 @@ window.listToday = async function(){
         const data = await response.json();
 
         if(response.ok){
-            document.getElementById("listTodayResult").textCOntent = JSON.stringify(data, null, 2);
+            document.getElementById("listTodayResult").textContent = JSON.stringify(data, null, 2);
         } else {
             alert(data.message);
         }
