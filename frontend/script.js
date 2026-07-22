@@ -137,16 +137,16 @@ window.login = async function(){
 window.showAttendance = async function(){
     document.getElementById("afterLogin").hidden = true;
     document.getElementById("attendanceSection").hidden = false;
-}
+};
 window.showLeave = async function(){
     document.getElementById("afterLogin").hidden = true;
     document.getElementById("leaveSection").hidden = false;
-}
+};
 
 window.showTokenSection = function(){
     document.getElementById("afterLogin").hidden = true;
     document.getElementById("tokenSection").hidden = false;
-}
+};
 
 //attendance
 window.userViewToday = async function(){
@@ -176,19 +176,49 @@ window.userViewToday = async function(){
     }
 };
 
-window.checkIn(){}
-window.checkOut(){}
-window.getAttendanceRange(){}
-window.listToday(){}
-window.getList(){}
-window.userAttendance(){}
+window.checkIn = async function(){
+    try {
+        const response = await fetch(`${API_BASE}/attendance/check-in`,{
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
 
-//leave
-window.postLeave(){}
-window.leaveHistory(){}
-window.pendingLeaves(){}
-window.approveLeave(){}
-window.rejectLeave(){}
+        const data = await response.json();
+        
+        alert(data.message);   
+
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.checkOut = async function(){
+    try{
+        const response = await fetch(`${API_BASE}/attendance/check-out`,{
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            let display = data.message;
+            display += `\nHours worked: ${data.hours}`;
+            alert(display);
+        }
+        else{
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
 
 window.getTokenFromFirebase = async function (){
     try {

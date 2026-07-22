@@ -5,6 +5,7 @@ import session = require('express-session');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
 
   app.enableCors({
     origin: [
@@ -28,6 +29,8 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 15 * 60 * 1000, // 15 minutes
+        secure: true,      // cookie only sent over HTTPS (you have this via nginx+certbot)
+        sameSite: 'none'
       },
     }),
   );

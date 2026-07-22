@@ -62,6 +62,7 @@
 
             <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
             <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
+            <pre id="tpdayResult"></pre>
             <br><br>
             
             <h4 data-permission="CHECK_IN">Check In</h4>
@@ -104,6 +105,15 @@
             
             <h4 data-permission="LEAVE">Leave Request</h4>
             <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
+            <input type="date" id="end-leave" placeholder="End Date" data-permission="LEAVE">
+            <select id="leave-type" data-permission="LEAVE">
+                <option value="" selected disabled>Select Leave Type</option>
+                <option value="SICK">Sick</option>
+                <option value="CASUAL">Casual</option>
+                <option value="EARNED">Earned</option>
+                <option value="MANDATORY">Mandatory</option>
+            </select>
+            <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
             <button data-permission="LEAVE" onclick="postLeave()">Submit</button>
             <br><br>
             
