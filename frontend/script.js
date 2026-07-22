@@ -243,7 +243,7 @@ window.getAttendanceRange = async function(){
         if(response.ok){
             let display = data.message;
             if(data.data !== undefined){
-                display += `\nRecords: \n${data.records}`;
+                display += `\nRecords: \n${data.data, null, 2}`;
             }
             document.getElementById("attendanceRangeResult").textContent = display;
         }
