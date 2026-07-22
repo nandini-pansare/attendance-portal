@@ -255,6 +255,30 @@ window.getAttendanceRange = async function(){
     }
 };
 
+window.listToday = async function(){
+    try{
+        const response = await fetch(`${API_BASE}/attendance/list-today`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            document.getElementById("listTodayResult").textCOntent = JSON.stringify(data, null, 2);
+        } else {
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+
 window.getTokenFromFirebase = async function (){
     try {
         deviceToken = await getFCMToken();
