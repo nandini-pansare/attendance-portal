@@ -1,9 +1,33 @@
 import {getFCMToken} from "./firebase.js";
 
 const API_BASE = "https://attendanceportal.duckdns.org";
+const Permissions = {
+    HR: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_ID', 'GET_LIST', 'LIST_PENDING_REQ', 'LIST_LEAVES', 'LEAVE_STATUS'],
+    MANAGER: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_LIST', 'LEAVE_STATUS'],
+    EMPLOYEE: ['VIEW_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'USER_GET', 'LEAVE']
+};
 
 let verifiedEmail = null;
 let deviceToken = null;
+
+function decodeRole(token){
+    try{
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.role?.toUpperCase();
+    } catch{
+        return null;
+    }
+}
+
+function applyPermissions(){
+    const token = localStorage.getItem('token');
+    const role = decodeRole(token);
+    const allowed =Permissions[role] || [];
+
+    document.querySelectorAll('[data-permission]').forEach((el) => {
+        el.hidden = !allowed.includes(el.dataset.permission);
+    });
+}
 
 window.getOtp = async function(){
     const email = document.getElementById("email-id").value;
@@ -92,14 +116,15 @@ window.login = async function(){
 
         const data = await response.json();
         console.log("Login response", data);
-        alert("Login Successful.");
 
-        if(data.token){
+        if(response.ok && data.token){
             localStorage.setItem('token', data.token);
             console.log("Logged in, token saved");
+            alert("Login Successful.");
 
             document.getElementById("loginForm").hidden = true;
-            document.getElementById("tokenSection").hidden = false;
+            document.getElementById("afterLogin").hidden = false;
+            applyPermissions();
         } else{
             alert(data.message || "Login failed.");
         }
@@ -108,6 +133,62 @@ window.login = async function(){
         console.log(error);
     }
 };
+
+window.showAttendance = async function(){
+    document.getElementById("afterLogin").hidden = true;
+    document.getElementById("attendanceSection").hidden = false;
+}
+window.showLeave = async function(){
+    document.getElementById("afterLogin").hidden = true;
+    document.getElementById("leaveSection").hidden = false;
+}
+
+window.showTokenSection = function(){
+    document.getElementById("afterLogin").hidden = true;
+    document.getElementById("tokenSection").hidden = false;
+}
+
+//attendance
+window.userViewToday = async function(){
+    try {
+        const response = await fetch(`${API_BASE}/attendance/user-view-today`,{
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            let display = data.message;
+            if(data.hours !== undefined){
+                display += `\nHours worked: ${data.hours}`;
+            }
+            document.getElementById("todayResult").textContent = display;
+        } else{
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+        console.log(error);
+    }
+};
+
+window.checkIn(){}
+window.checkOut(){}
+window.getAttendanceRange(){}
+window.listToday(){}
+window.getList(){}
+window.userAttendance(){}
+
+//leave
+window.postLeave(){}
+window.leaveHistory(){}
+window.pendingLeaves(){}
+window.approveLeave(){}
+window.rejectLeave(){}
 
 window.getTokenFromFirebase = async function (){
     try {
@@ -174,7 +255,7 @@ window.testNotification = async function (){
         
         const data = await response.json();
         console.log(data);
-        alert(data.message || "Test notification sent.");
+        alert("Test notification sent.");
     } catch(error){
         console.error(error);
         alert("ERROR: " + error.message);

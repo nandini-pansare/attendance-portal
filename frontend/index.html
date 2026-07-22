@@ -9,7 +9,7 @@
 
         <br>
 
-        <h1>Registeration</h1>
+        <h2>Registration</h2>
         <br>
 
         
@@ -28,7 +28,7 @@
             <input type="password" id="reg-password" placeholder="Password" required autocomplete="new password">
             <input type="text" id="reg-email" placeholder="Email ID" required autocomplete="email">
             <select id="code" placeholder="Code" required>
-                <option value="" selected disabled> Select role</option>
+                <option value="" selected disabled> Select code</option>
                 <option value="9876">9876</option>
                 <option value="8765">8765</option>
                 <option value="7654">7654</option>
@@ -44,6 +44,87 @@
 
             <button onclick="login()">Login</button>
         </div>
+
+        <div id="afterLogin" hidden>
+            <h4>Attendance</h4>
+            <button onclick="showAttendance()">Attendance</button>
+            <br><br>
+            <h4>Leave</h4>
+            <button onclick="showLeave()">Leave</button>
+            <br><br>
+            <h4>Notification</h4>
+            <button onclick="showTokenSection()">Notification</button>
+        </div>
+
+
+        <div id="attendanceSection" hidden>
+            <h3>Attendance</h3>
+
+            <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
+            <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
+            <br><br>
+            
+            <h4 data-permission="CHECK_IN">Check In</h4>
+            <button data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
+            <br><br>
+
+            <h4 data-permission="CHECK_OUT">Check Out</h4>
+            <button data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
+            <br><br>
+
+            <h4 data-permission="USER_GET">Attendance in Date Range</h4>
+            <input type="date" id="from-date" data-permission="USER_GET">
+            <input type="date" id="to-date" data-permission="USER_GET">
+            <button data-permission="USER_GET" onclick="getAttendanceRange()">View From and To</button>
+            <pre id="attendanceRangeResult"></pre>
+            <br><br>
+
+            <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
+            <button data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
+            <pre id="listTodayResult"></pre>
+            <br><br>
+
+            <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
+            <input type="date" id="list-from-date" data-permission="GET_LIST">
+            <input type="date" id="list-to-date" data-permission="GET_LIST">
+            <button data-permission="GET_LIST" onclick="getList()">View From and To</button>
+            <pre id="getListResult"></pre>
+            <br>
+            <br>
+
+            <h4 data-permission="GET_ID">Attendance by ID</h4>
+            <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
+            <button data-permission="GET_ID" onclick="userAttendance()">View</button>
+            <pre id="userAttendanceResult"></pre>
+            <br>
+        </div>
+
+        <div id="leaveSection" hidden>
+            <h3>Leave</h3>
+            
+            <h4 data-permission="LEAVE">Leave Request</h4>
+            <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
+            <button data-permission="LEAVE" onclick="postLeave()">Submit</button>
+            <br><br>
+            
+            <h4 data-permission="LEAVE">Leave History</h4>
+            <buton data-permission="LEAVE" onclick="leaveHistory()">View</buton>
+
+            <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
+            <button data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
+            <pre id="pendingLeavesResult"></pre>
+
+            <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
+            <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
+            <pre id="leavesByIdResult"></pre>
+
+            <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
+            <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">
+            <button data-permission="LEAVE_STATUS" onclick="approveLeave()">Approve Leave Request</button>
+            <button data-permission="LEAVE_STATUS" onclick="rejectLeave()">Reject Leave Request</button>
+
+        </div>
+
 
         <div id="tokenSection" hidden>
             <h4>FCM Token</h4>
