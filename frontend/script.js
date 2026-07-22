@@ -229,7 +229,7 @@ window.getAttendanceRange = async function(){
     const to = document.getElementById("to-date").value;
 
     try{
-        const response = await fetch(`${API_BASE}/attendance/user-from-to? from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+        const response = await fetch(`${API_BASE}/attendance/user-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
         {
             method: "GET",
             credentials: "include",
