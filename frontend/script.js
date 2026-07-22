@@ -187,9 +187,10 @@ window.checkIn = async function(){
         });
 
         const data = await response.json();
-        
-        alert(data.message);   
-
+        if(response.ok){
+            let display = data.message;
+            document.getElementById("checkInResult").textContent = display;   
+        }
     } catch(error){
         alert("ERROR: " + error.message);
     }
@@ -209,8 +210,42 @@ window.checkOut = async function(){
 
         if(response.ok){
             let display = data.message;
-            display += `\nHours worked: ${data.hours}`;
-            alert(display);
+            if(data.hours !== undefined){
+                display += `\nHours worked: ${data.hours}`;
+            }
+            document.getElementById("checkOutResult").textContent = display;
+        }     
+        else{
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.getAttendanceRange = async function(){
+
+    const from = document.getElementById("from-date").value;
+    const to = document.getElementById("to-date").value;
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/user-from-to? from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            let display = data.message;
+            if(data.records !== undefined){
+                display += `\nRecords: \n${data.records}`;
+            }
+            document.getElementById("attendanceRangeResult").textContent = display;
         }
         else{
             alert(data.message);
