@@ -1,5 +1,9 @@
+import {getFCMToken} from "./firebase.js";
+
 const API_BASE = "https://attendanceportal.duckdns.org";
+
 let verifiedEmail = null;
+let deviceToken = null;
 
 window.getOtp = async function(){
     const email = document.getElementById("email-id").value;
@@ -40,6 +44,12 @@ window.register = async function(){
     const code = Number(document.getElementById("code").value);
     const otp = Number(document.getElementById("otp").value);
 
+
+    if(!code){
+        alert("Please select a role.");
+        return;
+    }
+    
     try{
         const response = await fetch(`${API_BASE}/users/portal-register`,{
             method: "POST",
@@ -80,10 +90,9 @@ window.login = async function(){
             body: JSON.stringify({ username, password}),
         });
 
-        alert ("Login Successful " + response.status);
-
         const data = await response.json();
         console.log("Login response", data);
+        alert("Login Successful.");
 
         if(data.token){
             localStorage.setItem('token', data.token);
@@ -100,12 +109,47 @@ window.login = async function(){
     }
 };
 
-async function getFirebaseToken() {
-    const { getFCMToken } = await import("./firebase.js");
-    alert("Token Generated");
-    return getFCMToken();
+window.getTokenFromFirebase = async function (){
+    try {
+        deviceToken = await getFCMToken();
+        console.log("FCM Token:", deviceToken);
+        if(deviceToken){
+            alert("Token generated. You can now register this device.");
+        } 
+    } catch (error){
+        console.error("Could not initialize Firebase messaging:", error);
+        alert("Notifications could not be initialized: " + error.message);
+    }
+};
+
+window.registerToken = async function(){
     
-}
+    if(!deviceToken){
+        alert("Get FCM Token first.");
+        return;
+    }
+
+    const authToken = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_BASE}/notifications/register`,{
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({token: deviceToken})
+        });
+
+        const data = await response.json();
+        console.log("Token registered: ", data);
+        alert(data.message || "Device registered.");
+    } catch (error) {
+        alert("ERROR: "+ error.message);
+        console.log(error);
+    }
+};
 
 window.testNotification = async function (){
     const file = document.getElementById("notificationImage").files[0];
@@ -130,55 +174,9 @@ window.testNotification = async function (){
         
         const data = await response.json();
         console.log(data);
+        alert(data.message || "Test notification sent.");
     } catch(error){
         console.error(error);
-        alert(error.message);
+        alert("ERROR: " + error.message);
     }
 };
-
-window.getTokenFromFirebase = async function (){
-    try {
-        const token = await getFirebaseToken();
-        console.log("FCM Token:", token);
-    } catch (error) {
-        console.error("Could not initialize Firebase messaging:", error);
-        alert("Notifications could not be initialized: " + error.message);
-    }
-};
-
-window.registerToken = async function(){
-    let token;
-
-    try {
-        token = await getFirebaseToken();
-    } catch (error) {
-        console.error("Could not initialize Firebase messaging:", error);
-        alert("Notifications could not be initialized: " + error.message);
-        return;
-    }
-
-    if(!token){
-        console.log("No token generated");
-        return;
-    }
-
-    const response = await fetch(`${API_BASE}/notifications/register`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                //"ngrok-skip-browser-warning": "1",
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                token: token
-            })
-        }
-    );
-
-    const data = await response.json();
-    alert("Token Reistered");
-    console.log("Token registered:", data);
-};
-

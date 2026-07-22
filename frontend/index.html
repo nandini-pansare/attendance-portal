@@ -27,10 +27,11 @@
             <input type="text" id="reg-username" placeholder="Username" required autocomplete="username">
             <input type="password" id="reg-password" placeholder="Password" required autocomplete="new password">
             <input type="text" id="reg-email" placeholder="Email ID" required autocomplete="email">
-            <select id="code" required>
-                <option value="9876"></option>
-                <option value="8765"></option>
-                <option value="7654"></option>
+            <select id="code" placeholder="Code" required>
+                <option value="" selected disabled> Select role</option>
+                <option value="9876">9876</option>
+                <option value="8765">8765</option>
+                <option value="7654">7654</option>
             </select>
             <input type="number" id="otp" placeholder="6 Digit Otp" required>
             <button onclick="register()">Register</button>
