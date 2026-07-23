@@ -76,16 +76,30 @@ export class AttendanceService {
         return{ message: 'Check Out Successful!', hours};
     }
 
+    private normalizeDateRangeValue(value: string | Date | undefined): string {
+        if (!value) {
+            return '';
+        }
+
+        if (value instanceof Date) {
+            return value.toISOString().split('T')[0];
+        }
+
+        return value.includes('T') ? value.split('T')[0] : value;
+    }
+
     async getAttendance(req:Request, from: string, to: string){
         const userId = req.session.userId;
+        const normalizedFrom = this.normalizeDateRangeValue(from);
+        const normalizedTo = this.normalizeDateRangeValue(to);
         const records = await this.attendanceModel.findAll({ where: {
             userId, 
             date: {
-                [Op.between]: [from, to]
+                [Op.between]: [normalizedFrom, normalizedTo]
             }},
             order: [['date', 'ASC']]
         });
-        if(!records || records.length === 0){
+        if(!Array.isArray(records) || records.length === 0){
             return {
                 message: 'Records Not Found!'
             };
@@ -103,11 +117,11 @@ export class AttendanceService {
         const mStr = month.toString().padStart(2, '0');
         const lastDay = new Date( year, month, 0).getDate().toString().padStart(2, '0');
 
-        const from = `${year}-${mStr}-01 00:00:00`;
-        const to = `${year}-${mStr}-${lastDay} 23:59:59`;
+        const from = `${year}-${mStr}-01`;
+        const to = `${year}-${mStr}-${lastDay}`;
 
         const records = await this.attendanceModel.findAll({ where: {userId, date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
-        if(!records || records.length === 0){
+        if(!Array.isArray(records) || records.length === 0){
             return {
                 message: 'Records Not Found!'
             };
@@ -129,7 +143,7 @@ export class AttendanceService {
                 attributes: ['userId', 'username', 'role'],
             }],     
         });
-        if(!records || records.length === 0){
+        if(!Array.isArray(records) || records.length === 0){
             return {
                 message: 'Records Not Found!'
             };
@@ -159,13 +173,15 @@ export class AttendanceService {
     }
 
     async getList(from: string, to: string){
+        const normalizedFrom = this.normalizeDateRangeValue(from);
+        const normalizedTo = this.normalizeDateRangeValue(to);
         const records = await this.attendanceModel.findAll({ where: {
             date: {
-                [Op.between]: [from, to]
+                [Op.between]: [normalizedFrom, normalizedTo]
             }},
             order: [['date', 'ASC']]
         });
-        if(!records || records.length === 0){
+        if(!Array.isArray(records) || records.length === 0){
             return {
                 message: 'Records Not Found!'
             };
@@ -183,7 +199,7 @@ export class AttendanceService {
         const to = `${year}-${month.toString().padStart(2, '0')}-${lastDay.toString().padStart( 2, '0')}`;
 
         const records = await this.attendanceModel.findAll({ where: {date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
-        if(!records || records.length === 0){
+        if(!Array.isArray(records) || records.length === 0){
             return {
                 message: 'Records Not Found!'
             };

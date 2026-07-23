@@ -1,8 +1,16 @@
 import * as Joi from 'joi';
 
+const isoDateString = Joi.string().isoDate().required().custom((value: string) => {
+    if (!value) {
+        return value;
+    }
+
+    return value.includes('T') ? value.split('T')[0] : value;
+});
+
 export const dateRangeQuerySchema = Joi.object({
-    from: Joi.date().iso().required(),
-    to: Joi.date().iso().required(),
+    from: isoDateString,
+    to: isoDateString,
 });
 
 export const monthQuerySchema = Joi.object({
@@ -11,6 +19,6 @@ export const monthQuerySchema = Joi.object({
 });
 
 export const getListSchema = Joi.object({
-    from: Joi.date().iso().required(),
-    to: Joi.date().iso().required(),
-})
+    from: isoDateString,
+    to: isoDateString,
+});
