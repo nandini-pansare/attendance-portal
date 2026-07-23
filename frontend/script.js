@@ -264,7 +264,7 @@ window.attendanceByMonth = async function(){
         alert("Please enter a month between 1 and 12.");
         return;
     }
-    if(year < 1000 || month > 9999){
+    if(year < 1000 || year > 9999){
         alert("Please enter a valid year.");
         return;
     }
@@ -405,6 +405,8 @@ window.getUserAttendance = async function(){
         alert("ERROR: " + error.message);
     }
 };
+
+
 
 window.getTokenFromFirebase = async function (){
     try {
