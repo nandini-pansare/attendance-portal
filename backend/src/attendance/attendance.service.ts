@@ -85,10 +85,10 @@ export class AttendanceService {
             }},
             order: [['date', 'ASC']]
         });
-        if(records.length === 0){
+        if(!records || records.length === 0){
             return {
-                message: 'No Records Found!'
-            }; 
+                message: 'Records Not Found!'
+            };
         }
 
         return {
@@ -106,7 +106,11 @@ export class AttendanceService {
         const to = `${year}-${month.toString().padStart(2, '0')}-${lastDay.toString().padStart( 2, '0')}`;
 
         const records = await this.attendanceModel.findAll({ where: {userId, date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
-
+        if(!records || records.length === 0){
+            return {
+                message: 'Records Not Found!'
+            };
+        }
         return {
             month, year, records
         };
@@ -116,18 +120,23 @@ export class AttendanceService {
         const reqRole = req.session.role;
         const today = new Date().toISOString().split("T")[0];
         const clause = reqRole === UserRole.HR?{}:{role: { [Op.in]: [UserRole.MANAGER, UserRole.EMPLOYEE]}};
-        return this.attendanceModel.findAll({ 
-            where: { 
-                date: today
-            }, 
-            include: [
-                {
-                    model: User,
-                    where: clause,
-                    attributes: ['userId', 'username', 'role'],
-                },
-            ],     
+        const records = await this.attendanceModel.findAll({ 
+            where: { date: today }, 
+            include: [{
+                model: User,
+                where: clause,
+                attributes: ['userId', 'username', 'role'],
+            }],     
         });
+        if(!records || records.length === 0){
+            return {
+                message: 'Records Not Found!'
+            };
+        }
+        return {
+            message: 'Records Fetched Successfully.',
+            records
+        };
     }
 
     async userAttendance(req: Express.Request, id: number){
@@ -142,7 +151,7 @@ export class AttendanceService {
         const records = await this.attendanceModel.findOne({ where: {userId: id, date: today}});
         if(!records){
             return {
-                message: "No records found!" 
+                message: 'Records Not Found!'
             };
         }
         return records;   
@@ -155,12 +164,11 @@ export class AttendanceService {
             }},
             order: [['date', 'ASC']]
         });
-        if(records.length === 0){
+        if(!records || records.length === 0){
             return {
-                message: 'No Records Found!'
-            }; 
+                message: 'Records Not Found!'
+            };
         }
-
         return {
             message: 'Attendance Fetched Successfully!',
             data: records,
@@ -174,7 +182,11 @@ export class AttendanceService {
         const to = `${year}-${month.toString().padStart(2, '0')}-${lastDay.toString().padStart( 2, '0')}`;
 
         const records = await this.attendanceModel.findAll({ where: {date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
-
+        if(!records || records.length === 0){
+            return {
+                message: 'Records Not Found!'
+            };
+        }
         return {
             month, year, records
         };

@@ -282,7 +282,7 @@ window.attendanceByMonth = async function(){
         const data = await response.json();
 
         if(response.ok){
-            document.getElementById("attendanceMonthResult").textContent = JSON.stringify(data.month, data.year, data.records, null, 2);
+            document.getElementById("attendanceMonthResult").textContent = JSON.stringify(data, null, 2);
         } else {
             alert(data.message);
         }
@@ -316,8 +316,8 @@ window.listToday = async function(){
 
 window.getAttendanceRange = async function(){
 
-    const from = document.getElementById("from-date").value;
-    const to = document.getElementById("to-date").value;
+    const from = document.getElementById("list-from-date").value;
+    const to = document.getElementById("list-to-date").value;
 
     try{
         const response = await fetch(`${API_BASE}/attendance/list-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
@@ -372,7 +372,7 @@ window.listByMonth = async function(){
         const data = await response.json();
 
         if(response.ok){
-            document.getElementById("getMonthListResult").textContent = JSON.stringify(data.month, data.year, data.records, null, 2);
+            document.getElementById("getMonthListResult").textContent = JSON.stringify(data, null, 2);
         } else {
             alert(data.message);
         }
@@ -385,7 +385,7 @@ window.getUserAttendance = async function(){
     const userId = document.getElementById("user-by-id").value;
 
     try{
-        const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(id)}`,
+        const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
         {
             method: "GET",
             credentials: "include",
