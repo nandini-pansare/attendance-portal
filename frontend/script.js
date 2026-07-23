@@ -421,6 +421,52 @@ window.getUserAttendance = async function(){
 
 
 
+
+
+// LEAVE
+window.postLeave = async function(){
+    const start = document.getElementById("start-leave").value;
+    const end = document.getElementById("end-leave").value;
+    const type = document.getElementById("leave-type").value;
+    const reason = document.getElementById("leave-reason").value;
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            alert(data.message);
+        }
+        else{
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.leaveHistory = async function(){};
+
+window.pendingLeaves =  async function(){};
+
+window.leavesById = async function(){};
+
+window.approveLeave = async function(){};
+
+window.rejectLeave = async function(){};
+
+
+
+
+
 window.getTokenFromFirebase = async function (){
     try {
         deviceToken = await getFCMToken();
