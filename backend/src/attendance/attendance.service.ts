@@ -168,8 +168,12 @@ export class AttendanceService {
             return {
                 message: 'Records Not Found!'
             };
+        } else{
+            return {
+                records,
+            };
         }
-        return records;   
+
     }
 
     async getList(from: string, to: string){
@@ -201,7 +205,7 @@ export class AttendanceService {
         const records = await this.attendanceModel.findAll({ where: {date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
         if(!Array.isArray(records) || records.length === 0){
             return {
-                message: 'Records Not Found!'
+                message: 'Records Not Found!',
             };
         }
         return {

@@ -51,7 +51,7 @@ export class AttendanceController {
         return this.attendanceService.month(req, monthNum, yearNum);
     }
 
-    // hr/man
+    // from here only accessible to hr/manager
     @Get('list-today')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @Permission('ALL_ATTENDANCE')

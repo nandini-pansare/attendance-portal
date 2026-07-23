@@ -282,8 +282,12 @@ window.attendanceByMonth = async function(){
         const data = await response.json();
 
         if(response.ok){
-            document.getElementById("attendanceMonthResult").textContent = JSON.stringify(data, null, 2);
-        } else {
+            if(data.month){
+                document.getElementById("attendanceMonthResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
+            } else{
+                document.getElementById("attendanceMonthResult").textContent = data.message;
+            }
+        }  else {
             alert(data.message);
         }
     } catch(error){
@@ -372,8 +376,13 @@ window.listByMonth = async function(){
         const data = await response.json();
 
         if(response.ok){
-            document.getElementById("getMonthListResult").textContent = JSON.stringify(data, null, 2);
-        } else {
+            if(data.month){
+                document.getElementById("getMonthListResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
+            } else{
+                document.getElementById("getMonthListResult").textContent = data.message;
+            }
+        } 
+        else {
             alert(data.message);
         }
     } catch(error){
@@ -395,11 +404,15 @@ window.getUserAttendance = async function(){
         });
 
         const data = await response.json();
+        const payload = data?.records ?? data?.data ?? data;
+        const display = payload !== undefined
+            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
+            : (data?.message || 'No data returned.');
 
         if(response.ok){
-            document.getElementById("userAttendanceResult").textContent = JSON.stringify(data, null, 2);
+            document.getElementById("userAttendanceResult").textContent = display;
         } else {
-            alert(data.message);
+            alert(data.message || 'Request failed.');
         }
     } catch(error){
         alert("ERROR: " + error.message);
