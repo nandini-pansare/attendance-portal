@@ -100,10 +100,11 @@ export class AttendanceService {
     async month(req: Express.Request, month: number, year: number){
         const userId = req.session.userId;
 
-        const from = `${year}-${month.toString().padStart(2, '0')}-01`;
-        const lastDay = new Date( year, month, 0).getDate();
+        const mStr = month.toString().padStart(2, '0');
+        const lastDay = new Date( year, month, 0).getDate().toString().padStart(2, '0');
 
-        const to = `${year}-${month.toString().padStart(2, '0')}-${lastDay.toString().padStart( 2, '0')}`;
+        const from = `${year}-${mStr}-01 00:00:00`;
+        const to = `${year}-${mStr}-${lastDay} 23:59:59`;
 
         const records = await this.attendanceModel.findAll({ where: {userId, date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
         if(!records || records.length === 0){

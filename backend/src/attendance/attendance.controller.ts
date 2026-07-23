@@ -46,7 +46,9 @@ export class AttendanceController {
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @Permission('USER_GET')
     async month(@Req() req: Express.Request, @Query(new JoiValidationPipe(monthQuerySchema)) query: { month: number; year: number }){
-        return this.attendanceService.month(req, query.month, query.year);
+        const monthNum = Number(query.month);
+        const yearNum = Number(query.year);
+        return this.attendanceService.month(req, monthNum, yearNum);
     }
 
     // hr/man
