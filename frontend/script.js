@@ -429,16 +429,18 @@ window.postLeave = async function(){
     const end = document.getElementById("end-leave").value;
     const type = document.getElementById("leave-type").value;
     const reason = document.getElementById("leave-reason").value;
+    const normalizedType = type ? type.toLowerCase() : '';
 
     try{
         const response = await fetch(`${API_BASE}/leave`,
         {
-            method: "GET",
+            method: "POST",
             credentials: "include",
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
-            body: JSON.stringify({start, end, type, reason})
+            body: JSON.stringify({start, end, leaveType: normalizedType, reason})
         });
 
         const data = await response.json();

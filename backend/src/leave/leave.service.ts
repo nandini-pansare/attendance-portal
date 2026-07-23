@@ -19,15 +19,42 @@ export class LeaveService {
         const email = req.session.email;
         const { start, end, leaveType, reason } = body;
 
-        if (new Date(start) > new Date(end)){
-            throw new Error("Start date cannot be after end date");
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const now = new Date();
+        const today = new Date(now);
+        today.setHours(0, 0, 0, 0);
+
+        if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+            throw new BadRequestException('Please provide valid start and end dates.');
         }
+
+        if (startDate > endDate) {
+            throw new BadRequestException('Start date cannot be after end date.');
+        }
+
+        const isSameDayAsToday = startDate.getFullYear() === today.getFullYear()
+            && startDate.getMonth() === today.getMonth()
+            && startDate.getDate() === today.getDate();
+
+        if (startDate < today) {
+            throw new BadRequestException('Leave cannot be requested for a date that has already passed.');
+        }
+
+        if (isSameDayAsToday && now.getHours() >= 12) {
+            throw new BadRequestException('Leave cannot be requested for today after 12 PM.');
+        }
+
         const existing = await this.leaveModel.findOne({ where: {userId, start, end, status: {[Op.ne] : LeaveStatus.REJECTED}}});
         if(existing){
             throw new BadRequestException('Leave Request Already Registered for Dates.');
         }
         const leave = await this.leaveModel.create({userId, email, start, end, leaveType, reason });
-        await this.emailService.postLeave({leaveId: leave.leaveId, userId, start, end, leaveType, reason});
+        try {
+            await this.emailService.postLeave({leaveId: leave.leaveId, userId, start, end, leaveType, reason});
+        } catch (error) {
+            console.error('Failed to queue leave email notification:', error);
+        }
         return {
             message: 'Leave Request Posted.'
         }
