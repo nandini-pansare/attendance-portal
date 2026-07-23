@@ -431,13 +431,14 @@ window.postLeave = async function(){
     const reason = document.getElementById("leave-reason").value;
 
     try{
-        const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
+        const response = await fetch(`${API_BASE}/leave`,
         {
             method: "GET",
             credentials: "include",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
-            }
+            },
+            body: JSON.stringify({start, end, type, reason})
         });
 
         const data = await response.json();
