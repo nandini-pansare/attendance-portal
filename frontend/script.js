@@ -148,7 +148,8 @@ window.showTokenSection = function(){
     document.getElementById("tokenSection").hidden = false;
 };
 
-//attendance
+//ATTENDANCE
+
 window.userViewToday = async function(){
     try {
         const response = await fetch(`${API_BASE}/attendance/user-view-today`,{
@@ -223,7 +224,7 @@ window.checkOut = async function(){
     }
 };
 
-window.getAttendanceRange = async function(){
+window.getUserAttendanceRange = async function(){
 
     const from = document.getElementById("from-date").value;
     const to = document.getElementById("to-date").value;
@@ -255,6 +256,41 @@ window.getAttendanceRange = async function(){
     }
 };
 
+window.attendanceByMonth = async function(){
+    const month = document.getElementById("get-month").value;
+    const year = document.getElementById("get-year").value;
+
+    if (month < 1 || month > 12) {
+        alert("Please enter a month between 1 and 12.");
+        return;
+    }
+    if(year < 1000 || month > 9999){
+        alert("Please enter a valid year.");
+        return;
+    }
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/user-month?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            document.getElementById("attendanceMonthResult").textContent = JSON.stringify(data.month, data.year, data.records, null, 2);
+        } else {
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+}
+
 window.listToday = async function(){
     try{
         const response = await fetch(`${API_BASE}/attendance/list-today`,
@@ -278,6 +314,97 @@ window.listToday = async function(){
     }
 };
 
+window.getAttendanceRange = async function(){
+
+    const from = document.getElementById("from-date").value;
+    const to = document.getElementById("to-date").value;
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/list-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            let display = data.message;
+            if(data.data !== undefined){
+                display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
+            }
+            document.getElementById("getListResult").textContent = display;
+        }
+        else{
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.listByMonth = async function(){
+    const month = document.getElementById("list-month").value;
+    const year = document.getElementById("list-year").value;
+
+    if (month < 1 || month > 12) {
+        alert("Please enter a month between 1 and 12.");
+        return;
+    }
+    if(year < 1000 || month > 9999){
+        alert("Please enter a valid year.");
+        return;
+    }
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/list-month?month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            document.getElementById("getMonthListResult").textContent = JSON.stringify(data.month, data.year, data.records, null, 2);
+        } else {
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.getUserAttendance = async function(){
+    const userId = document.getElementById("user-by-id").value;
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(id)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            document.getElementById("userAttendanceResult").textContent = JSON.stringify(data, null, 2);
+        } else {
+            alert(data.message);
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
 
 window.getTokenFromFirebase = async function (){
     try {

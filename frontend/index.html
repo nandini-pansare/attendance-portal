@@ -76,26 +76,37 @@
             <br><br>
 
             <h4 data-permission="USER_GET">Attendance in Date Range</h4>
-            <input type="date" id="from-date" data-permission="USER_GET">
-            <input type="date" id="to-date" data-permission="USER_GET">
-            <button data-permission="USER_GET" onclick="getAttendanceRange()">View From and To</button>
+            <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
+            <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
+            <button data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
             <pre id="attendanceRangeResult"></pre>
             <br><br>
 
-            //MONTH ADD
-            
+            <h4 data-permission="USER_GET">Attendance by Month</h4>
+            <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
+            <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
+            <button data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
+            <pre id="attendanceMonthResult"></pre>
+            <br><br>
+
             <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
             <button data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
             <pre id="listTodayResult"></pre>
             <br><br>
 
             <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
-            <input type="date" id="list-from-date" data-permission="GET_LIST">
-            <input type="date" id="list-to-date" data-permission="GET_LIST">
-            <button data-permission="GET_LIST" onclick="getList()">View From and To</button>
+            <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
+            <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
+            <button data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
             <pre id="getListResult"></pre>
-            <br>
-            <br>
+            <br><br>
+
+            <h4 data-permission="GET_LIST">Attendance List by Month</h4>
+            <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
+            <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
+            <button data-permission="GET_LIST" onclick="listByMonth()">View</button>
+            <pre id="getMonthListResult"></pre>
+            <br><br>
 
             <h4 data-permission="GET_ID">Attendance by ID</h4>
             <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">

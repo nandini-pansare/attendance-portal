@@ -85,12 +85,11 @@ export class AttendanceService {
             }},
             order: [['date', 'ASC']]
         });
-        if(!records){
+        if(records.length === 0){
             return {
                 message: 'No Records Found!'
             }; 
         }
-
 
         return {
             message: 'Attendance Fetched Successfully!',
@@ -140,8 +139,13 @@ export class AttendanceService {
                     message: 'Access Denied'
                 };
             }    
-        
-        return this.attendanceModel.findOne({ where: {userId: id, date: today}});   
+        const records = await this.attendanceModel.findOne({ where: {userId: id, date: today}});
+        if(!records){
+            return {
+                message: "No records found!" 
+            };
+        }
+        return records;   
     }
 
     async getList(from: string, to: string){
@@ -151,7 +155,7 @@ export class AttendanceService {
             }},
             order: [['date', 'ASC']]
         });
-        if(!records){
+        if(records.length === 0){
             return {
                 message: 'No Records Found!'
             }; 
