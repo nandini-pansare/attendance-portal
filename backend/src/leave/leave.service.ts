@@ -132,12 +132,46 @@ export class LeaveService {
         }
     }
 
-    async listPending(){
-        const today = new Date().toISOString().split("T")[0];
-        return this.leaveModel.findAll({where: {status: LeaveStatus.PENDING}});
+    async listPending(req: Express.Request){
+        const role = req.session.role;
+        if(role === UserRole.HR){
+            const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}});
+            if(!records || records.length === 0){
+                return {
+                    message: 'No Pending Requests Found!'
+                };
+            }
+            return {
+                message: 'Records Fetched.',
+                records,
+            }
+        }
+        if(role === UserRole.MANAGER){
+            const records = await this.leaveModel.findAll({where: {status: LeaveStatus.PENDING}});
+            if(!records || records.length === 0){
+                return{
+                    message: 'No Pending Requests Found!'
+                };
+            }
+            return {
+                message: 'Records Fetched.',
+                records,
+            }
+        }
+        
+        
     }
-    
+
     async getUser(id: number){
-        return this.leaveModel.findAll({where: {userId: id}});
+        const records = await this.leaveModel.findAll({where: {userId: id}});
+        if(!records || records.length === 0){
+            return{
+                message: 'No Records Found.'
+            };
+        }
+        return{
+            message: 'Records Fetched.',
+            data: records,       
+        }
     }
 }

@@ -34,8 +34,8 @@ export class LeaveController {
     @Get('list-pending')
     @UseGuards(JwtAuthGuard, PermissionGuard)
     @Permission('LIST_PENDING_REQ')
-    async listPending(){
-        return this.leaveService.listPending();
+    async listPending(@Req() req: Express.Request){
+        return this.leaveService.listPending(req);
     }
 
     @Get(':id')

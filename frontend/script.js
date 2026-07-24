@@ -463,9 +463,6 @@ window.leaveHistory = async function(){
         return;
     }
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const userId = payload.userId;
-
     try{
         const response = await fetch(`${API_BASE}/leave`,
         {
@@ -478,13 +475,13 @@ window.leaveHistory = async function(){
         });
 
         const data = await response.json();
-        
+        const payload = data?.data ?? data;
+        const display = payload !== undefined
+            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
+            : (data?.message || 'No data returned.');
+
         if(response.ok){
-            let display = data.message || '';
-            display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
-
             document.getElementById("leaveHistoryResult").textContent = display;
-
         } else{
             alert(data.message || 'Request failed.');
         }
@@ -493,9 +490,65 @@ window.leaveHistory = async function(){
     }
 };
 
-window.pendingLeaves =  async function(){};
+window.pendingLeaves =  async function(){
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const role = payload.role;
 
-window.leavesById = async function(){};
+    try{
+        const response = await fetch(`${API_BASE}/leave/list-pending`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        const data = await response.json();
+
+        if(response.ok){
+            let display = data.message;
+            display += `\nRecords: \n${JSON.stringify(data.records, null, 2)}`;
+            document.getElementById("pendingLeavesResul").textContent = display;
+        }
+        else{
+            alert(data.message || 'Request Failed.');
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
+window.leavesById = async function(){
+    const id = document.getElementById("leaves-by-id").value;
+    try{
+        const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        const data = await response.json();
+        const payload = data?.data ?? data;
+        const display = payload !== undefined
+            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
+            : (data?.message || 'No data returned.');
+
+        if(response.ok){
+            document.getElementById("leavesByIdResult").textContent = display;
+        }
+        else{
+            alert(data.message || 'Request Failed.');
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
 
 window.approveLeave = async function(){};
 
