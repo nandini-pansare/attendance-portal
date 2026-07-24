@@ -19,10 +19,11 @@ export class LeaveService {
         const email = req.session.email;
         const { start, end, leaveType, reason } = body;
 
-        const startDate = new Date(start);
-        const endDate = new Date(end);
+        const startDate = new Date(`${start}T00:00:00`);
+        const endDate = new Date(`${end}T00:00:00`);
+
         const now = new Date();
-        const today = new Date(now);
+        const today = new Date();
         today.setHours(0, 0, 0, 0);
 
         if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
@@ -33,13 +34,11 @@ export class LeaveService {
             throw new BadRequestException('Start date cannot be after end date.');
         }
 
-        const isSameDayAsToday = startDate.getFullYear() === today.getFullYear()
-            && startDate.getMonth() === today.getMonth()
-            && startDate.getDate() === today.getDate();
-
         if (startDate < today) {
             throw new BadRequestException('Leave cannot be requested for a date that has already passed.');
         }
+
+        const isSameDayAsToday = startDate.getTime() === today.getTime();
 
         if (isSameDayAsToday && now.getHours() >= 12) {
             throw new BadRequestException('Leave cannot be requested for today after 12 PM.');
@@ -49,6 +48,7 @@ export class LeaveService {
         if(existing){
             throw new BadRequestException('Leave Request Already Registered for Dates.');
         }
+
         const leave = await this.leaveModel.create({userId, email, start, end, leaveType, reason });
         try {
             await this.emailService.postLeave({leaveId: leave.leaveId, userId, start, end, leaveType, reason});
@@ -57,12 +57,17 @@ export class LeaveService {
         }
         return {
             message: 'Leave Request Posted.'
-        }
+        };
     }
     
     async listLeave(req: Express.Request){
         const userId = req.session.userId;
         const records = await this.leaveModel.findAll({ where: {userId}});
+        if(!records || records.length === 0){
+            return{
+                message: 'Records Not Found!'
+            };
+        }
         return {
             message: 'Fetched Records Successfully',
             data: records,

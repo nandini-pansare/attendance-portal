@@ -456,7 +456,42 @@ window.postLeave = async function(){
     }
 };
 
-window.leaveHistory = async function(){};
+window.leaveHistory = async function(){
+    const token = localStorage.getItem('token');
+    if(!token){
+        alert("Token Not Found!");
+        return;
+    }
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const userId = payload.userId;
+
+    try{
+        const response = await fetch(`${API_BASE}/leave`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        const data = await response.json();
+        
+        if(response.ok){
+            let display = data.message || '';
+            display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
+
+            document.getElementById("leaveHistoryResult").textContent = display;
+
+        } else{
+            alert(data.message || 'Request failed.');
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
 
 window.pendingLeaves =  async function(){};
 
