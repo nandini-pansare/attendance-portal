@@ -37,7 +37,7 @@ export class OtpService {
         }
     }
 
-    async verifyOtp( email: string, otp: number){
+    async verifyOtp( email: string, otp: number|string){
         const record = await this.otpModel.findOne({ where: { email }});
         if(!record){
             console.log('Record False');

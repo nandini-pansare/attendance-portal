@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import * as bcrypt from 'bcrypt';
-import { UniqueConstraintError } from 'sequelize';
+import { Op, UniqueConstraintError } from 'sequelize';
 import { UserRole } from 'src/common/enums/role.enum';
 import { OtpService } from 'src/otp/otp.service';
 
@@ -14,50 +14,54 @@ export class UsersService {
         private readonly otpService: OtpService,
     ){}
 
-    async register(username: string, email: string, password: string, code: number, otp: number){
-        if (!username || !email || !password || !code || !otp) {
+    async register(username: string, email: string, password: string, codeInput: number, otpInput: number){
+        console.log('USER SERVICE HIT');
+        
+        const code = Number(codeInput);
+        const otp = Number(otpInput);
+
+        if(!username || !email || !password || !codeInput || !otpInput){
             throw new BadRequestException('Missing registration fields');
         }
 
-        const existingUserByUsername = await this.userModel.findOne({ where: {username}});
-        if (existingUserByUsername){
-            throw new BadRequestException('Username already exists!');
-        }
-
-        const existingUserByEmail = await this.userModel.findOne({ where: {email}});
-        if (existingUserByEmail){
+        const existingEmail = await this.userModel.findOne({ where: {email}});
+        if(existingEmail){
             throw new BadRequestException('Email already registered!');
         }
+
+        const existingUsername = await this.userModel.findOne({ where: {username}});
+        if(existingUsername){
+            throw new BadRequestException('Username already taken!');
+        }
+
+        console.log('USER EMAIL AND USERNAME VALIDATED');
 
         const verifyOtp = await this.otpService.verifyOtp(email, otp);
         if(!verifyOtp){
             throw new BadRequestException('Invalid or expired OTP');
         }
-
+        console.log('OTP VERIFIED');
         const hashedPassword = await bcrypt.hash(password, 10);
-        try {
-            if(code === 9876){
-                await this.userModel.create({ username, email, password: hashedPassword });
-                return {
-                    message: 'Employee User Created.'
-                };
-            } else if(code===8765) {
-                await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.HR});
-                return {
-                    message: 'HR User Created!'
-                };
-            } else if(code===7654){ 
-                await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.MANAGER});
-                return {
-                    message: 'Manager User Created!'
-                };              
-            }
-        } catch (error) {
-            if (error instanceof UniqueConstraintError) {
-                throw new BadRequestException('Username or email already registered!');
-            }
-            throw error;
+        
+        let role: UserRole;
+        if(code === 9876){
+            role = UserRole.EMPLOYEE;
+        } else if(code === 8765){
+            role = UserRole.HR;
+        } else if(code === 7654){
+            role = UserRole.MANAGER;
+        } else{
+            throw new BadRequestException('Invalid Registration Code.');
         }
-        throw new BadRequestException('Invalid registration code');
+        
+        try{
+            await this.userModel.create({ username, email, password: hashedPassword, role});
+            return {
+                message: `${role} User Created.`,
+            };              
+        } catch(error: any){
+            console.error('User registration error:', error);
+            throw new BadRequestException(error.original?.detail || error.message || 'Invalid registration code'  );
+        }
     }
 }

@@ -15,7 +15,7 @@ export class EmailProcessor{
         const transporter = this.emailService.emailTransport();
 
         await transporter.sendMail({
-            from: process.env.Email_USER,
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'OTP Verification',
             text: `Your OTP is ${otp}. Please use it to register.`

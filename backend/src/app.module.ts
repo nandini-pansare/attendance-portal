@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { BullModule } from '@nestjs/bull';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -27,6 +28,13 @@ import { FirebaseModule } from './firebase/firebase.module';
       database: process.env.DB_NAME,
       autoLoadModels: true,
       synchronize: true,
+    }),
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST ?? '127.0.0.1',
+        port: Number(process.env.REDIS_PORT ?? 6379),
+        password: process.env.REDIS_PASSWORD || undefined,
+      },
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET, 
