@@ -23,10 +23,10 @@ export class UsersService {
             const emailExists = await this.userModel.findOne({ where: {email}});
             if(emailExists){
                 return{
-                    message: 'Email exists.'
+                    message: 'Email exist.'
                 };
             } 
-            
+
             const usernameExists = await this.userModel.findOne({ where: {email}});
             if(usernameExists){
                 return{
