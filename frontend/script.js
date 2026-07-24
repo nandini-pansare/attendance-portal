@@ -490,7 +490,7 @@ window.leaveHistory = async function(){
     }
 };
 
-window.pendingLeaves =  async function(){
+window.pendingLeaves = async function(){
     try{
         const response = await fetch(`${API_BASE}/leave/list-pending`,
         {
@@ -503,10 +503,12 @@ window.pendingLeaves =  async function(){
         });
 
         const data = await response.json();
+        const payload = data?.data ?? data;
+        const display = payload !== undefined
+            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
+            : (data?.message || 'No data returned.');
 
         if(response.ok){
-            let display = data.message;
-            display += `\nRecords: \n${JSON.stringify(data.records, null, 2)}`;
             document.getElementById("pendingLeavesResult").textContent = display;
         }
         else{

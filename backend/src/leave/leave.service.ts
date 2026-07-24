@@ -133,7 +133,7 @@ export class LeaveService {
     }
 
     async listPending(req: Express.Request){
-        const role = req.session.role;
+        const role = req.user?.role;
         if(role === UserRole.HR){
             const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}});
             if(!records || records.length === 0){
@@ -158,8 +158,9 @@ export class LeaveService {
                 records,
             }
         }
-        
-        
+        return {
+            message: 'Role not recognised.'
+        };
     }
 
     async getUser(id: number){
