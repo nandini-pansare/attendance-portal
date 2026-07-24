@@ -20,18 +20,18 @@ export class UsersService {
             const code = Number(codeInput);
             const otp = Number(otpInput);
 
-            if(!username || !email || !password || !codeInput || !otpInput){
-                throw new BadRequestException('Missing registration fields');
-            }
-
-            const existingEmail = await this.userModel.findOne({ where: {email}});
-            if(existingEmail){
-                throw new BadRequestException('Email already registered!');
-            }
-
-            const existingUsername = await this.userModel.findOne({ where: {username}});
-            if(existingUsername){
-                throw new BadRequestException('Username already taken!');
+            const emailExists = await this.userModel.findOne({ where: {email}});
+            if(emailExists){
+                return{
+                    message: 'Email exists.'
+                };
+            } 
+            
+            const usernameExists = await this.userModel.findOne({ where: {email}});
+            if(usernameExists){
+                return{
+                    message: 'Username taken.'
+                };
             }
 
             console.log('USER EMAIL AND USERNAME VALIDATED');
