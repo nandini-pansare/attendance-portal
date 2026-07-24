@@ -147,9 +147,9 @@
 
             <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
             <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">
-            <button data-permission="LEAVE_STATUS" onclick="approveLeave()">Approve Leave Request</button>
-            <button data-permission="LEAVE_STATUS" onclick="rejectLeave()">Reject Leave Request</button>
-
+            <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
+            <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
+            <pre id="updateLeaveStatusResult"
         </div>
 
 

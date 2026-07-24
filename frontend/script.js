@@ -469,7 +469,6 @@ window.leaveHistory = async function(){
             method: "GET",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`,
             },
         });
@@ -497,7 +496,6 @@ window.pendingLeaves = async function(){
             method: "GET",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
         });
@@ -527,7 +525,6 @@ window.leavesById = async function(){
             method: "GET",
             credentials: "include",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
         });
@@ -549,9 +546,31 @@ window.leavesById = async function(){
     }
 };
 
-window.approveLeave = async function(){};
+window.updateLeaveStatus = async function(status){
+    const id = document.getElementById("update-leave-status").value;
+    try{
+        const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
+        {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
 
-window.rejectLeave = async function(){};
+        const data = await response.json();
+        
+        if(response.ok){
+            document.getElementById("updateLeaveStatusResult").textContent = data.message;
+        }
+        else{
+            alert(data.message || 'Request Failed.');
+        }
+    } catch(error){
+        alert("ERROR: " + error.message);
+    }
+};
+
 
 
 

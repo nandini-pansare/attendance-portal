@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import * as bcrypt from 'bcrypt';
+import { UniqueConstraintError } from 'sequelize';
 import { UserRole } from 'src/common/enums/role.enum';
 import { OtpService } from 'src/otp/otp.service';
 
@@ -14,30 +15,49 @@ export class UsersService {
     ){}
 
     async register(username: string, email: string, password: string, code: number, otp: number){
-        const existingUser = await this.userModel.findOne({ where: {username}});
-        if (existingUser){
+        if (!username || !email || !password || !code || !otp) {
+            throw new BadRequestException('Missing registration fields');
+        }
+
+        const existingUserByUsername = await this.userModel.findOne({ where: {username}});
+        if (existingUserByUsername){
             throw new BadRequestException('Username already exists!');
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const existingUserByEmail = await this.userModel.findOne({ where: {email}});
+        if (existingUserByEmail){
+            throw new BadRequestException('Email already registered!');
+        }
+
         const verifyOtp = await this.otpService.verifyOtp(email, otp);
         if(!verifyOtp){
-            throw new BadRequestException('Invalid Otp');
+            throw new BadRequestException('Invalid or expired OTP');
         }
-        if(code === 9876){
-            await this.userModel.create({ username, email, password: hashedPassword });
-            return {
-                message: 'Employee User Created.'
-            };
-        } else if(code===8765) {
-            await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.HR});
-            return {
-                message: 'HR User Created!'
-            };
-        } else if(code===7654){ 
-            await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.MANAGER});
-            return {
-                message: 'Manager User Created!'
-            };              
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        try {
+            if(code === 9876){
+                await this.userModel.create({ username, email, password: hashedPassword });
+                return {
+                    message: 'Employee User Created.'
+                };
+            } else if(code===8765) {
+                await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.HR});
+                return {
+                    message: 'HR User Created!'
+                };
+            } else if(code===7654){ 
+                await this.userModel.create({ username, email, password: hashedPassword, role: UserRole.MANAGER});
+                return {
+                    message: 'Manager User Created!'
+                };              
+            }
+        } catch (error) {
+            if (error instanceof UniqueConstraintError) {
+                throw new BadRequestException('Username or email already registered!');
+            }
+            throw error;
         }
+        throw new BadRequestException('Invalid registration code');
     }
 }

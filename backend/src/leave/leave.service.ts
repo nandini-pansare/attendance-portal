@@ -79,7 +79,7 @@ export class LeaveService {
         if(!leave){
             throw new NotFoundException('Leave Request Not Found.');
         }
-        const role = req.session.role;
+        const role = req.user?.role;
         if(role === UserRole.HR && leave.status === LeaveStatus.HR_PENDING){
             leave.status = status;
             await leave.save();
