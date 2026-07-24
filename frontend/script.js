@@ -491,9 +491,6 @@ window.leaveHistory = async function(){
 };
 
 window.pendingLeaves =  async function(){
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const role = payload.role;
-
     try{
         const response = await fetch(`${API_BASE}/leave/list-pending`,
         {
@@ -510,7 +507,7 @@ window.pendingLeaves =  async function(){
         if(response.ok){
             let display = data.message;
             display += `\nRecords: \n${JSON.stringify(data.records, null, 2)}`;
-            document.getElementById("pendingLeavesResul").textContent = display;
+            document.getElementById("pendingLeavesResult").textContent = display;
         }
         else{
             alert(data.message || 'Request Failed.');
