@@ -685,7 +685,12 @@ window.logout = async function(){
         const data = await response.json();
         console.log(data);
         if(response.ok){
-            alert("data.message");
+            alert(data.message);
+            localStorage.removeItem('token');
+            document.getElementById("appLayout").hidden = true;
+            document.getElementById("loginForm").hidden = false;
+            document.getElementById("login-username").value = ""
+            document.getElementById("login-password").value = "";
         }
         else{
             alert(data.message);
@@ -694,4 +699,4 @@ window.logout = async function(){
         console.error(error);
         alert("ERROR " + error.message);
     }
-}
+};
