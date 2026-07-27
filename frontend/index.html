@@ -9,20 +9,7 @@
 
         <br>
 
-        <h2>Registration</h2>
-        <br>
-
-        
-        <div id="otpSection">
-            <h4>Get Otp</h4>
-            <input type="text" id="email-id" placeholder="Email ID" required autocomplete="email">
-            <br><br>
-            <button onclick="getOtp()">Get Otp </button>
-
-            <button onclick="showLogin()">Login</button>
-        </div>
-
-        <div id="registrationForm" hidden>
+        <div id="registrationForm" class="sign-card">
             <h4>Registration</h4>
             <input type="text" id="reg-username" placeholder="Username" required autocomplete="username">
             <input type="password" id="reg-password" placeholder="Password" required autocomplete="new password">
@@ -34,10 +21,15 @@
                 <option value="7654">7654</option>
             </select>
             <input type="number" id="otp" placeholder="6 Digit Otp" required>
+            <br>
+            <button onclick="getOtp()">Get Otp</button>
             <button onclick="register()">Register</button>
+            
+            <button onclick="showLogin()" class="switch-to-login">Login</button>
         </div>
 
-        <div id="loginForm" hidden>
+        <div id="loginForm" hidden class="sign-card">
+            <button onclick="backButton()" class="back-button">Back</button>
             <h4>Login</h4>
             <input type="text" id="login-username" placeholder="Username" required>
             <input type="password" id="login-password" placeholder="Password" required>
@@ -45,122 +37,143 @@
             <button onclick="login()">Login</button>
         </div>
 
-        <div id="afterLogin" hidden>
-            <h4>Attendance</h4>
-            <button onclick="showAttendance()">Attendance</button>
-            <br><br>
-            <h4>Leave</h4>
-            <button onclick="showLeave()">Leave</button>
-            <br><br>
-            <h4>Notification</h4>
-            <button onclick="showTokenSection()">Notification</button>
-        </div>
+        <div id="appLayout" hidden="true">
+            <nav id="sidebar">
+                <h4>Attendance</h4>
+                <button onclick="showAttendance()">Attendance</button>
+                <h4>Leave</h4>
+                <button onclick="showLeave()">Leave</button>
+                <h4>Notification</h4>
+                <button onclick="showTokenSection()">Notification</button>
+                <h4>Logout</h4>
+                <button onclick="logout()">Logout</button>
+            </nav>
 
+            <main id="contentArea">                
+                <div id="attendanceSection" hidden>
+                    <h3>Attendance</h3>
+                    
+                    <div class="field-card" data-permission="VIEW_ATTENDANCE">
+                        <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
+                        <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
+                        <pre id="todayResult"></pre>
+                    </div>
+        
+                    <div class="field-card" data-permission="CHECK_IN">
+                        <h4 data-permission="CHECK_IN">Check In</h4>
+                        <button data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
+                        <pre id="checkInResult"></pre>
+                    </div>
 
-        <div id="attendanceSection" hidden>
-            <h3>Attendance</h3>
+                    <div class="field-card" data-permission="CHECK_OUT">
+                        <h4 data-permission="CHECK_OUT">Check Out</h4>
+                        <button data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
+                        <pre id="checkOutResult"></pre>
+                    </div>
 
-            <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
-            <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
-            <pre id="todayResult"></pre>
-            <br><br>
+                    <div class="field-card" data-permission="USER_GET">
+                        <h4 data-permission="USER_GET">Attendance in Date Range</h4>
+                        <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
+                        <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
+                        <button data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
+                        <pre id="attendanceRangeResult"></pre>
+                    </div>
+
+                    <div class="field-card" data-permission="USER_GET">
+                        <h4 data-permission="USER_GET">Attendance by Month</h4>
+                        <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
+                        <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
+                        <button data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
+                        <pre id="attendanceMonthResult"></pre>
+                    </div>
+
+                    <div class="field-card" data-permission="ALL_ATTENDANCE">
+                        <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
+                        <button data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
+                        <pre id="listTodayResult"></pre>
+                    </div>
+
+                    <div class="field-card" data-permission="GET_LIST">
+                        <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
+                        <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
+                        <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
+                        <button data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
+                        <pre id="getListResult"></pre>
+                    </div>
+
+                    <div class="field-card" data-permission="GET_LIST">
+                        <h4 data-permission="GET_LIST">Attendance List by Month</h4>
+                        <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
+                        <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
+                        <button data-permission="GET_LIST" onclick="listByMonth()">View</button>
+                        <pre id="getMonthListResult"></pre>
+                    </div>
+
+                    <div class="field-card" data-permission="GET_ID">
+                        <h4 data-permission="GET_ID">Attendance by ID</h4>
+                        <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
+                        <button data-permission="GET_ID" onclick="getUserAttendance()">View</button>
+                        <pre id="userAttendanceResult"></pre>
+                    </div>
+                </div>
+
+                <div id="leaveSection" hidden>
+                    <h3>Leave</h3>
             
-            <h4 data-permission="CHECK_IN">Check In</h4>
-            <button data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
-            <pre id="checkInResult"></pre>
-            <br><br>
+                    <div class="field-card" data-permission="LEAVE">
+                        <h4 data-permission="LEAVE">Leave Request</h4>
+                        <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
+                        <input type="date" id="end-leave" placeholder="End Date" data-permission="LEAVE">
+                        <select id="leave-type" data-permission="LEAVE">
+                            <option value="" selected disabled>Select Leave Type</option>
+                            <option value="SICK">Sick</option>
+                            <option value="CASUAL">Casual</option>
+                            <option value="EARNED">Earned</option>
+                            <option value="MANDATORY">Mandatory</option>
+                        </select>
+                        <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
+                        <button data-permission="LEAVE" onclick="postLeave()">Submit</button>
+                    </div>
 
-            <h4 data-permission="CHECK_OUT">Check Out</h4>
-            <button data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
-            <pre id="checkOutResult"></pre>
-            <br><br>
+                    <div class="field-card" data-permission="LEAVE">
+                        <h4 data-permission="LEAVE">Leave History</h4>
+                        <button data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                        <pre id="leaveHistoryResult"></pre>
+                    </div>
 
-            <h4 data-permission="USER_GET">Attendance in Date Range</h4>
-            <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
-            <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
-            <button data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
-            <pre id="attendanceRangeResult"></pre>
-            <br><br>
+                    <div class="field-card" data-permission="LIST_PENDING_REQ">
+                        <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
+                        <button data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
+                        <pre id="pendingLeavesResult"></pre>
+                    </div>
 
-            <h4 data-permission="USER_GET">Attendance by Month</h4>
-            <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
-            <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
-            <button data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
-            <pre id="attendanceMonthResult"></pre>
-            <br><br>
+                    <div class="field-card" data-permission="LIST_LEAVES">                            
+                        <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
+                        <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
+                        <button data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
+                        <pre id="leavesByIdResult"></pre>
+                    </div>
 
-            <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
-            <button data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
-            <pre id="listTodayResult"></pre>
-            <br><br>
+                   <div class="field-card" data-permission="LEAVE_STATUS">
+                        <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
+                        <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">                    
+                        <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
+                        <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
+                        <pre id="updateLeaveStatusResult"></pre>
+                    </div>
+                </div>
 
-            <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
-            <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
-            <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
-            <button data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
-            <pre id="getListResult"></pre>
-            <br><br>
+                <div id="tokenSection" hidden>
+                    <div class="field-card">
+                        <h4>FCM Token</h4>
+                        <button onclick="getTokenFromFirebase()">Get FCM Token</button>
+                        <button onclick="registerToken()">Register Device</button>
+                        <input type="file" id="notificationImage" accept="image/*">
+                        <button onclick="testNotification()">Test Notification</button>
+                    </div>
+                </div>
 
-            <h4 data-permission="GET_LIST">Attendance List by Month</h4>
-            <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
-            <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
-            <button data-permission="GET_LIST" onclick="listByMonth()">View</button>
-            <pre id="getMonthListResult"></pre>
-            <br><br>
-
-            <h4 data-permission="GET_ID">Attendance by ID</h4>
-            <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
-            <button data-permission="GET_ID" onclick="getUserAttendance()">View</button>
-            <pre id="userAttendanceResult"></pre>
-            <br>
-        </div>
-
-        <div id="leaveSection" hidden>
-            <h3>Leave</h3>
-            
-            <h4 data-permission="LEAVE">Leave Request</h4>
-            <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
-            <input type="date" id="end-leave" placeholder="End Date" data-permission="LEAVE">
-            <select id="leave-type" data-permission="LEAVE">
-                <option value="" selected disabled>Select Leave Type</option>
-                <option value="SICK">Sick</option>
-                <option value="CASUAL">Casual</option>
-                <option value="EARNED">Earned</option>
-                <option value="MANDATORY">Mandatory</option>
-            </select>
-            <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
-            <button data-permission="LEAVE" onclick="postLeave()">Submit</button>
-            <br><br>
-            
-            <h4 data-permission="LEAVE">Leave History</h4>
-            <button data-permission="LEAVE" onclick="leaveHistory()">View</button>
-            <pre id="leaveHistoryResult"></pre>
-
-            <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
-            <button data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
-            <pre id="pendingLeavesResult"></pre>
-
-            <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
-            <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
-            <button data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
-            <pre id="leavesByIdResult"></pre>
-
-            <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
-            <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">
-            <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
-            <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
-            <pre id="updateLeaveStatusResult"
-        </div>
-
-
-        <div id="tokenSection" hidden>
-            <h4>FCM Token</h4>
-            <button onclick="getTokenFromFirebase()">Get FCM Token</button>
-            <button onclick="registerToken()">Register Device</button>
-            <br><br>
-            <input type="file" id="notificationImage" accept="image/*">
-            <br>
-            <button onclick="testNotification()">Test Notification</button>
+            </main>
         </div>
 
         <script type="module" src="script.js?v=10"></script>

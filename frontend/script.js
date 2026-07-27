@@ -30,7 +30,7 @@ function applyPermissions(){
 }
 
 window.getOtp = async function(){
-    const email = document.getElementById("email-id").value;
+    const email = document.getElementById("reg-email").value;
 
     const response = await fetch(`${API_BASE}/otp/portal-get-otp`, {
         method: "POST",
@@ -44,19 +44,15 @@ window.getOtp = async function(){
 
     if(response.ok){
         verifiedEmail = email;
-        document.getElementById("reg-email").value = email;
 
         alert("Otp Sent.");
 
-        document.getElementById("otpSection").hidden = true;
-        document.getElementById("registrationForm").hidden = false;
     } else{
         alert(data.message);
     }
 };
 
 window.showLogin = function(){
-    document.getElementById("otpSection").hidden = true;
     document.getElementById("registrationForm").hidden = true;
     document.getElementById("loginForm").hidden = false;
 };
@@ -72,6 +68,9 @@ window.register = async function(){
     if(!code){
         alert("Please select a role.");
         return;
+    }
+    if(!otp){
+        alert("Please enter otp");
     }
     
     try{
@@ -98,6 +97,10 @@ window.register = async function(){
     }
 };
 
+window.backButton = function(){
+    document.getElementById("loginForm").hidden = true;
+    document.getElementById("registrationForm").hidden = false;
+}
 
 window.login = async function(){
     const username = document.getElementById('login-username').value;
@@ -123,7 +126,7 @@ window.login = async function(){
             alert("Login Successful.");
 
             document.getElementById("loginForm").hidden = true;
-            document.getElementById("afterLogin").hidden = false;
+            document.getElementById("appLayout").hidden = false;
             applyPermissions();
         } else{
             alert(data.message || "Login failed.");
@@ -135,16 +138,19 @@ window.login = async function(){
 };
 
 window.showAttendance = async function(){
-    document.getElementById("afterLogin").hidden = true;
     document.getElementById("attendanceSection").hidden = false;
+    document.getElementById("leaveSection").hidden = true;
+    document.getElementById("tokenSection").hidden = true;
 };
 window.showLeave = async function(){
-    document.getElementById("afterLogin").hidden = true;
     document.getElementById("leaveSection").hidden = false;
+    document.getElementById("attendanceSection").hidden = true;
+    document.getElementById("tokenSection").hidden = true;
 };
 
 window.showTokenSection = function(){
-    document.getElementById("afterLogin").hidden = true;
+    document.getElementById("attendanceSection").hidden = true;
+    document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = false;
 };
 
@@ -658,9 +664,34 @@ window.testNotification = async function (){
         
         const data = await response.json();
         console.log(data);
-        alert("Test notification sent.");
+        if(response.ok){
+            alert("Test notification sent.");
+        }
     } catch(error){
         console.error(error);
         alert("ERROR: " + error.message);
     }
 };
+
+window.logout = async function(){
+    try{
+        const response = await fetch(`${API_BASE}/auth/portal-logout`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+        console.log(data);
+        if(response.ok){
+            alert("data.message");
+        }
+        else{
+            alert(data.message);
+        }
+    } catch(error){
+        console.error(error);
+        alert("ERROR " + error.message);
+    }
+}
