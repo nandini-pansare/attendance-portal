@@ -425,31 +425,48 @@ window.getUserAttendance = async function(){
 
 // LEAVE
 window.postLeave = async function(){
+    const token = localStorage.getItem('token');
+    if(!token){
+        alert('Login required before submitting leave.');
+        return;
+    }
+
     const start = document.getElementById("start-leave").value;
     const end = document.getElementById("end-leave").value;
     const type = document.getElementById("leave-type").value;
     const reason = document.getElementById("leave-reason").value;
     const normalizedType = type ? type.toLowerCase() : '';
+    const url = `${API_BASE}/leave`;
+    const payload = { start, end, leaveType: normalizedType, reason };
+
+    console.log('postLeave request', { url, payload, tokenPresent: !!token });
 
     try{
-        const response = await fetch(`${API_BASE}/leave`,
+        const response = await fetch(url,
         {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                "Authorization": `Bearer ${token}`,
             },
-            body: JSON.stringify({start, end, leaveType: normalizedType, reason})
+            body: JSON.stringify(payload)
         });
 
-        const data = await response.json();
+        let data;
+        try {
+            data = await response.json();
+        } catch (parseError) {
+            data = null;
+        }
+
+        console.log('postLeave response', { status: response.status, statusText: response.statusText, body: data });
 
         if(response.ok){
-            alert(data.message);
+            alert(data?.message || 'Leave request submitted.');
         }
         else{
-            alert(data.message);
+            alert(`${response.status}: ${data?.message || response.statusText}`);
         }
     } catch(error){
         alert("ERROR: " + error.message);
