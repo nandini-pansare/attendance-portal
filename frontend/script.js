@@ -679,7 +679,7 @@ window.logout = async function(){
             method: "POST",
             credentials: "include",
             headers: { 
-                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
         });
         const data = await response.json();
