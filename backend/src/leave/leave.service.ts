@@ -14,21 +14,26 @@ export class LeaveService {
         private readonly emailService: EmailService,
     ){}
 
-    async postLeave(req, body){
-        const userId = req.session.userId;
-        const email = req.session.email;
+    async postLeave(req, body) {
+        const userId = req.user?.userId;
+        const email = req.user?.email;
         const { start, end, leaveType, reason } = body;
 
-        const startDate = new Date(`${start}T00:00:00`);
-        const endDate = new Date(`${end}T00:00:00`);
+        const rawStart = typeof start === 'string' ? start.split('T')[0] : new Date(start).toISOString().split('T')[0];
+        const rawEnd = typeof end === 'string' ? end.split('T')[0] : new Date(end).toISOString().split('T')[0];
+        const [sYear, sMonth, sDay] = rawStart.split('-').map(Number);
+        const [eYear, eMonth, eDay] = rawEnd.split('-').map(Number);
 
-        const now = new Date();
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const startDate = new Date(sYear, sMonth - 1, sDay);
+        const endDate = new Date(eYear, eMonth - 1, eDay);
 
         if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
             throw new BadRequestException('Please provide valid start and end dates.');
         }
+
+        const now = new Date();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
         if (startDate > endDate) {
             throw new BadRequestException('Start date cannot be after end date.');
@@ -44,20 +49,42 @@ export class LeaveService {
             throw new BadRequestException('Leave cannot be requested for today after 12 PM.');
         }
 
-        const existing = await this.leaveModel.findOne({ where: {userId, start, end, status: {[Op.ne] : LeaveStatus.REJECTED}}});
-        if(existing){
+        const existing = await this.leaveModel.findOne({ 
+            where: {
+                userId, 
+                start: rawStart, 
+                end: rawEnd, 
+                status: { [Op.ne]: LeaveStatus.REJECTED }
+            }
+        });
+
+        if (existing) {
             throw new BadRequestException('Leave Request Already Registered for Dates.');
         }
 
-        const leave = await this.leaveModel.create({userId, email, start, end, leaveType, reason });
+        const leave = await this.leaveModel.create({ 
+            userId, 
+            email, 
+            start: rawStart, 
+            end: rawEnd, 
+            leaveType, 
+            reason 
+        });
+
         try {
-            await this.emailService.postLeave({leaveId: leave.leaveId, userId, start, end, leaveType, reason});
-        } catch (error) {
-            console.error('Failed to queue leave email notification:', error);
+            await this.emailService.postLeave({
+                leaveId: leave.leaveId, 
+                userId, 
+                start: rawStart, 
+                end: rawEnd, 
+                leaveType, 
+                reason
+            });
+        } catch (error) {            
+            console.error('Failed to queue leave email notification:', error);    
         }
-        return {
-            message: 'Leave Request Posted.'
-        };
+
+        return { message: 'Leave Request Posted.' };
     }
     
     async listLeave(req: Express.Request){
