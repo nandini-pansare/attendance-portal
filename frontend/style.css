@@ -165,3 +165,29 @@ pre{
         transform: translate(0);
     }
 }
+
+#banner{
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translate(-50%);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    z-index: 100;
+    color: #ffffff;
+    min-width: 320px;
+    text-align: center;
+}
+
+#banner[hidden]{
+    display: none;
+}
+
+#banner.success{
+    background-color: #3d6b4f;
+}
+
+#banner.error{
+    background-color: #a3382f;
+}

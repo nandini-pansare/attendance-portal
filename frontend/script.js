@@ -9,6 +9,7 @@ const Permissions = {
 
 let verifiedEmail = null;
 let deviceToken = null;
+let bannerTimeout;
 
 function decodeRole(token){
     try{
@@ -29,6 +30,18 @@ function applyPermissions(){
     });
 }
 
+function showBanner(message, type){
+    const banner = document.getElementById("banner");
+    banner.textContent = message;
+    banner.className = type;
+    banner.hidden = false;
+
+    clearTimeout(bannerTimeout);
+    bannerTimeout = setTimeout(()=>{
+        banner.hidden = true;
+    }, 3000);
+}
+
 window.getOtp = async function(){
     const email = document.getElementById("reg-email").value;
 
@@ -45,10 +58,10 @@ window.getOtp = async function(){
     if(response.ok){
         verifiedEmail = email;
 
-        alert("Otp Sent.");
+        showBanner("Otp Sent.", "success");
 
     } else{
-        alert(data.message);
+        showBanner(data.message, "error");
     }
 };
 
@@ -66,11 +79,11 @@ window.register = async function(){
 
 
     if(!code){
-        alert("Please select a role.");
+        showBanner("Please select a role.", "error");
         return;
     }
     if(!otp){
-        alert("Please enter otp");
+        showBanner("Please enter otp", "error");
     }
     
     try{
@@ -85,14 +98,14 @@ window.register = async function(){
         const data = await response.json();
 
         if(response.ok){
-            alert(data.message || "Account created. Proceed to Log in");
+            showBanner(data.message, "success");
             document.getElementById("registrationForm").hidden = true;
             document.getElementById("loginForm").hidden = false;
         } else{
-            alert( data.message || "Registration failed!");
+            showBanner( data.message, "error");
         }
     } catch(error){
-        alert("Error: " + error.message);
+        showBanner("Error: " + error.message, "error");
         console.log(error);
     }
 };
@@ -123,17 +136,17 @@ window.login = async function(){
         if(response.ok && data.token){
             localStorage.setItem('token', data.token);
             console.log("Logged in, token saved");
-            alert("Login Successful.");
+            showBanner("Login Successful.", "success");
 
             document.getElementById("loginForm").hidden = true;
             document.getElementById("appLayout").hidden = false;
             applyPermissions();
             showAttendance();
         } else{
-            alert(data.message || "Login failed.");
+            showBanner(data.message || "Login failed.", "error");
         }
     } catch(error){
-        alert("ERROR: "+error.message);
+        showBanner("ERROR: "+error.message, "error");
         console.log(error);
     }
 };
@@ -189,10 +202,10 @@ window.userViewToday = async function(){
             }
             document.getElementById("todayResult").textContent = display;
         } else{
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
         console.log(error);
     }
 };
@@ -213,7 +226,7 @@ window.checkIn = async function(){
             document.getElementById("checkInResult").textContent = display;   
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -237,10 +250,10 @@ window.checkOut = async function(){
             document.getElementById("checkOutResult").textContent = display;
         }     
         else{
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -269,10 +282,10 @@ window.getUserAttendanceRange = async function(){
             document.getElementById("attendanceRangeResult").textContent = display;
         }
         else{
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -281,11 +294,11 @@ window.attendanceByMonth = async function(){
     const year = document.getElementById("get-year").value;
 
     if (month < 1 || month > 12) {
-        alert("Please enter a month between 1 and 12.");
+        showBanner("Please enter a month between 1 and 12.", "error");
         return;
     }
     if(year < 1000 || year > 9999){
-        alert("Please enter a valid year.");
+        showBanner("Please enter a valid year.", "error");
         return;
     }
 
@@ -308,10 +321,10 @@ window.attendanceByMonth = async function(){
                 document.getElementById("attendanceMonthResult").textContent = data.message;
             }
         }  else {
-            alert(data.message);
+            showBanner(data.message, "success");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 }
 
@@ -331,10 +344,10 @@ window.listToday = async function(){
         if(response.ok){
             document.getElementById("listTodayResult").textContent = JSON.stringify(data, null, 2);
         } else {
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -363,10 +376,10 @@ window.getAttendanceRange = async function(){
             document.getElementById("getListResult").textContent = display;
         }
         else{
-            alert(data.message);
+            showBanner(data.message), "error";
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -375,11 +388,11 @@ window.listByMonth = async function(){
     const year = document.getElementById("list-year").value;
 
     if (month < 1 || month > 12) {
-        alert("Please enter a month between 1 and 12.");
+        showBanner("Please enter a month between 1 and 12.", "error");
         return;
     }
     if(year < 1000 || month > 9999){
-        alert("Please enter a valid year.");
+        showBanner("Please enter a valid year.", "error");
         return;
     }
 
@@ -403,10 +416,10 @@ window.listByMonth = async function(){
             }
         } 
         else {
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -432,10 +445,10 @@ window.getUserAttendance = async function(){
         if(response.ok){
             document.getElementById("userAttendanceResult").textContent = display;
         } else {
-            alert(data.message || 'Request failed.');
+            showBanner(data.message || 'Request failed.', "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -447,7 +460,7 @@ window.getUserAttendance = async function(){
 window.postLeave = async function(){
     const token = localStorage.getItem('token');
     if(!token){
-        alert('Login required before submitting leave.');
+        showBanner('Login required before submitting leave.', "error");
         return;
     }
 
@@ -483,20 +496,20 @@ window.postLeave = async function(){
         console.log('postLeave response', { status: response.status, statusText: response.statusText, body: data });
 
         if(response.ok){
-            alert(data?.message || 'Leave request submitted.');
+            showBanner(data?.message || 'Leave request submitted.', "success");
         }
         else{
-            alert(`${response.status}: ${data?.message || response.statusText}`);
+            showBanner(`${response.status}: ${data?.message || response.statusText}`, "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
 window.leaveHistory = async function(){
     const token = localStorage.getItem('token');
     if(!token){
-        alert("Token Not Found!");
+        showBanner("Token Not Found!", "error");
         return;
     }
 
@@ -519,10 +532,10 @@ window.leaveHistory = async function(){
         if(response.ok){
             document.getElementById("leaveHistoryResult").textContent = display;
         } else{
-            alert(data.message || 'Request failed.');
+            showBanner(data.message || 'Request failed.', "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -547,10 +560,10 @@ window.pendingLeaves = async function(){
             document.getElementById("pendingLeavesResult").textContent = display;
         }
         else{
-            alert(data.message || 'Request Failed.');
+            showBanner(data.message || 'Request Failed.', "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -576,10 +589,10 @@ window.leavesById = async function(){
             document.getElementById("leavesByIdResult").textContent = display;
         }
         else{
-            alert(data.message || 'Request Failed.');
+            showBanner(data.message || 'Request Failed.', "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -601,10 +614,10 @@ window.updateLeaveStatus = async function(status){
             document.getElementById("updateLeaveStatusResult").textContent = data.message;
         }
         else{
-            alert(data.message || 'Request Failed.');
+            showBanner(data.message || 'Request Failed.', "error");
         }
     } catch(error){
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -618,18 +631,18 @@ window.getTokenFromFirebase = async function (){
         deviceToken = await getFCMToken();
         console.log("FCM Token:", deviceToken);
         if(deviceToken){
-            alert("Token generated. You can now register this device.");
+            showBanner("Token generated. You can now register this device.", "error");
         } 
     } catch (error){
         console.error("Could not initialize Firebase messaging:", error);
-        alert("Notifications could not be initialized: " + error.message);
+        showBanner("Notifications could not be initialized: " + error.message, "error");
     }
 };
 
 window.registerToken = async function(){
     
     if(!deviceToken){
-        alert("Get FCM Token first.");
+        showBanner("Get FCM Token first.", "error");
         return;
     }
 
@@ -648,9 +661,9 @@ window.registerToken = async function(){
 
         const data = await response.json();
         console.log("Token registered: ", data);
-        alert(data.message || "Device registered.");
+        showBanner(data.message || "Device registered.", "error");
     } catch (error) {
-        alert("ERROR: "+ error.message);
+        showBanner("ERROR: "+ error.message, "error");
         console.log(error);
     }
 };
@@ -679,11 +692,11 @@ window.testNotification = async function (){
         const data = await response.json();
         console.log(data);
         if(response.ok){
-            alert("Test notification sent.");
+            showBanner("Test notification sent.", "error");
         }
     } catch(error){
         console.error(error);
-        alert("ERROR: " + error.message);
+        showBanner("ERROR: " + error.message, "error");
     }
 };
 
@@ -699,18 +712,24 @@ window.logout = async function(){
         const data = await response.json();
         console.log(data);
         if(response.ok){
-            alert(data.message);
+            showBanner(data.message, "error");
             localStorage.removeItem('token');
             document.getElementById("appLayout").hidden = true;
             document.getElementById("loginForm").hidden = false;
             document.getElementById("login-username").value = ""
             document.getElementById("login-password").value = "";
+            document.querySelectorAll('pre').forEach((el)=> {
+                el.textContent = '';
+            });
+            document.querySelectorAll('#appLayout inpur').forEach((el)=>{
+                el.value = '';
+            });
         }
         else{
-            alert(data.message);
+            showBanner(data.message, "error");
         }
     } catch(error){
         console.error(error);
-        alert("ERROR " + error.message);
+        showBanner("ERROR " + error.message, "error");
     }
 };
