@@ -137,21 +137,34 @@ window.login = async function(){
     }
 };
 
+window.toggleSidebar = function(){
+    document.getElementById("sidebar").classList.toggle("open");
+}
+
 window.showAttendance = async function(){
     document.getElementById("attendanceSection").hidden = false;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
+    document.getElementById("navAttendance").classList.add("active");
+    document.getElementById("navLeave").classList.remove("active");
+    document.getElementById("navTokenSection").classList.remove("active");
 };
 window.showLeave = async function(){
     document.getElementById("leaveSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
+    document.getElementById("navAttendance").classList.remove("active");
+    document.getElementById("navLeave").classList.add("active");
+    document.getElementById("navTokenSection").classList.remove("active");
 };
 
 window.showTokenSection = function(){
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = false;
+    document.getElementById("navAttendance").classList.remove("active");
+    document.getElementById("navLeave").classList.remove("active");
+    document.getElementById("navTokenSection").classList.add("active");
 };
 
 //ATTENDANCE

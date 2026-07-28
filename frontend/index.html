@@ -37,14 +37,15 @@
             <button onclick="login()">Login</button>
         </div>
 
-        <div id="appLayout" hidden="true">
+        <div id="appLayout" hidden>
+            <button id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
             <nav id="sidebar">
                 <h4>Attendance</h4>
-                <button onclick="showAttendance()">Attendance</button>
+                <button id="navAttendance" onclick="showAttendance()">Attendance</button>
                 <h4>Leave</h4>
-                <button onclick="showLeave()">Leave</button>
+                <button id="navLeave" onclick="showLeave()">Leave</button>
                 <h4>Notification</h4>
-                <button onclick="showTokenSection()">Notification</button>
+                <button id="navTokenSection" onclick="showTokenSection()">Notification</button>
                 <h4>Logout</h4>
                 <button onclick="logout()">Logout</button>
             </nav>
