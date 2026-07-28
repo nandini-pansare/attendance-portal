@@ -128,6 +128,7 @@ window.login = async function(){
             document.getElementById("loginForm").hidden = true;
             document.getElementById("appLayout").hidden = false;
             applyPermissions();
+            showAttendance();
         } else{
             alert(data.message || "Login failed.");
         }
