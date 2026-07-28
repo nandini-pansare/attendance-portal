@@ -22,16 +22,12 @@ export class UsersService {
 
             const emailExists = await this.userModel.findOne({ where: {email}});
             if(emailExists){
-                return{
-                    message: 'Email exist.'
-                };
+                throw new BadRequestException('Email Already Registered');
             } 
 
             const usernameExists = await this.userModel.findOne({ where: {email}});
             if(usernameExists){
-                return{
-                    message: 'Username taken.'
-                };
+                throw new BadRequestException('Username Already Registered!');
             }
 
             console.log('USER EMAIL AND USERNAME VALIDATED');

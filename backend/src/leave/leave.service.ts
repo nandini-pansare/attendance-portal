@@ -5,6 +5,7 @@ import { EmailService } from 'src/email/email.service';
 import { LeaveStatus } from 'src/common/enums/leave-status.enum';
 import { UserRole } from 'src/common/enums/role.enum';
 import { Op } from 'sequelize';
+import { NotFound } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class LeaveService {
@@ -41,12 +42,6 @@ export class LeaveService {
 
         if (startDate < today) {
             throw new BadRequestException('Leave cannot be requested for a date that has already passed.');
-        }
-
-        const isSameDayAsToday = startDate.getTime() === today.getTime();
-
-        if (isSameDayAsToday && now.getHours() >= 12) {
-            throw new BadRequestException('Leave cannot be requested for today after 12 PM.');
         }
 
         const existing = await this.leaveModel.findOne({ 
@@ -91,9 +86,7 @@ export class LeaveService {
         const userId = req.session.userId;
         const records = await this.leaveModel.findAll({ where: {userId}});
         if(!records || records.length === 0){
-            return{
-                message: 'Records Not Found!'
-            };
+           throw new NotFoundException('Records Not Found.');
         }
         return {
             message: 'Fetched Records Successfully',
@@ -164,9 +157,7 @@ export class LeaveService {
         if(role === UserRole.HR){
             const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}});
             if(!records || records.length === 0){
-                return {
-                    message: 'No Pending Requests Found!'
-                };
+                    throw new NotFoundException('No Pending Requests Found!');
             }
             return {
                 message: 'Records Fetched.',
@@ -176,9 +167,7 @@ export class LeaveService {
         if(role === UserRole.MANAGER){
             const records = await this.leaveModel.findAll({where: {status: LeaveStatus.PENDING}});
             if(!records || records.length === 0){
-                return{
-                    message: 'No Pending Requests Found!'
-                };
+                throw new NotFoundException('No Pending Requests Found!')
             }
             return {
                 message: 'Records Fetched.',
@@ -193,9 +182,7 @@ export class LeaveService {
     async getUser(id: number){
         const records = await this.leaveModel.findAll({where: {userId: id}});
         if(!records || records.length === 0){
-            return{
-                message: 'No Records Found.'
-            };
+            throw new NotFoundException('No Records Found.')
         }
         return{
             message: 'Records Fetched.',

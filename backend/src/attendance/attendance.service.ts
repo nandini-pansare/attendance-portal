@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { AttendanceModel } from './attendance.model';
 import { Op } from 'sequelize';
@@ -100,9 +100,7 @@ export class AttendanceService {
             order: [['date', 'ASC']]
         });
         if(!Array.isArray(records) || records.length === 0){
-            return {
-                message: 'Records Not Found!'
-            };
+            throw new NotFoundException('Records Not Found!');
         }
 
         return {
@@ -122,9 +120,7 @@ export class AttendanceService {
 
         const records = await this.attendanceModel.findAll({ where: {userId, date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
         if(!Array.isArray(records) || records.length === 0){
-            return {
-                message: 'Records Not Found!'
-            };
+            throw new NotFoundException('Records Not Found!');
         }
         return {
             month, year, records
@@ -144,9 +140,7 @@ export class AttendanceService {
             }],     
         });
         if(!Array.isArray(records) || records.length === 0){
-            return {
-                message: 'Records Not Found!'
-            };
+            throw new NotFoundException('Records Not Found!');
         }
         return {
             message: 'Records Fetched Successfully.',
@@ -165,9 +159,7 @@ export class AttendanceService {
             }    
         const records = await this.attendanceModel.findOne({ where: {userId: id, date: today}});
         if(!records){
-            return {
-                message: 'Records Not Found!'
-            };
+            throw new NotFoundException('Records Not Found!');
         } else{
             return {
                 records,
@@ -186,9 +178,7 @@ export class AttendanceService {
             order: [['date', 'ASC']]
         });
         if(!Array.isArray(records) || records.length === 0){
-            return {
-                message: 'Records Not Found!'
-            };
+            throw new NotFoundException('Records Not Found!');
         }
         return {
             message: 'Attendance Fetched Successfully!',
@@ -204,9 +194,7 @@ export class AttendanceService {
 
         const records = await this.attendanceModel.findAll({ where: {date: { [Op.between]: [from, to]}}, order: [['date', 'ASC']]});
         if(!Array.isArray(records) || records.length === 0){
-            return {
-                message: 'Records Not Found!',
-            };
+            throw new NotFoundException('Records Not Found!');
         }
         return {
             month, year, records

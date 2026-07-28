@@ -42,11 +42,7 @@ export class EmailProcessor{
             Type: ${leaveType}
             Reason: ${reason}
             
-            Approve:
-            PATCH /leave/${leaveId}/approve
-
-            Reject:
-            PATCH /leave/${leaveId}/reject
+            Please visit https://employee-attendance-port-7a0a4.web.app/ to approve or reject.
             `,
         });
     }
