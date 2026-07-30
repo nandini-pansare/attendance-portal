@@ -184,6 +184,7 @@ window.showTokenSection = function(){
 //ATTENDANCE
 
 window.userViewToday = async function(){
+        document.getElementById("todayResult").textContent = "";
     try {
         const response = await fetch(`${API_BASE}/attendance/user-view-today`,{
             method: "GET",
@@ -213,7 +214,8 @@ window.userViewToday = async function(){
 window.checkIn = async function(){
     const btn = document.getElementById("checkInBtn");
     btn.disabled = true;
-    btn.textContent = "Checking in...";
+    btn.textContent = "Checking in...";        
+    document.getElementById("checkInResult").textContent = "";
 
     try {
         const response = await fetch(`${API_BASE}/attendance/check-in`,{
@@ -241,6 +243,8 @@ window.checkOut = async function(){
     const btn = document.getElementById("checkOutBtn");
     btn.disabled = true;
     btn.textContent = "Checking out...";
+    document.getElementById("checkOutResult").textContent = "";
+
 
     try{
         const response = await fetch(`${API_BASE}/attendance/check-out`,{
@@ -277,6 +281,7 @@ window.getUserAttendanceRange = async function(){
     btn.textContent = "Fetching...";
     const from = document.getElementById("from-date").value;
     const to = document.getElementById("to-date").value;
+    document.getElementById("attendanceRangeResult").textContent = "";
 
     try{
         const response = await fetch(`${API_BASE}/attendance/user-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
@@ -314,6 +319,7 @@ window.attendanceByMonth = async function(){
     btn.textContent = "Fetching...";
     const month = document.getElementById("get-month").value;
     const year = document.getElementById("get-year").value;
+    document.getElementById("attendanceMonthResult").textContent = "";
 
     if (month < 1 || month > 12) {
         showBanner("Please enter a month between 1 and 12.", "error");
@@ -357,6 +363,7 @@ window.listToday = async function(){
     const btn = document.getElementById("listTodayBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("listTodayResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/attendance/list-today`,
         {
@@ -388,6 +395,7 @@ window.getAttendanceRange = async function(){
     btn.textContent = "Fetching...";
     const from = document.getElementById("list-from-date").value;
     const to = document.getElementById("list-to-date").value;
+    document.getElementById("getResultResult").textContent = "";
 
     try{
         const response = await fetch(`${API_BASE}/attendance/list-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
@@ -425,6 +433,7 @@ window.listByMonth = async function(){
     btn.textContent = "Fetching...";
     const month = document.getElementById("list-month").value;
     const year = document.getElementById("list-year").value;
+    document.getElementById("getMonthListResult").textContent = "";
 
     if (month < 1 || month > 12) {
         showBanner("Please enter a month between 1 and 12.", "error");
@@ -470,6 +479,7 @@ window.getUserAttendance = async function(){
     btn.disabled = true;
     btn.textContent = "Fetching...";
     const userId = document.getElementById("user-by-id").value;
+    document.getElementById("userATtendanceResult").textContent = "";
 
     try{
         const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
@@ -569,7 +579,7 @@ window.leaveHistory = async function(){
         showBanner("Token Not Found!", "error");
         return;
     }
-
+    document.getElementById("leaveHistoryResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/leave`,
         {
@@ -603,6 +613,7 @@ window.pendingLeaves = async function(){
     const btn = document.getElementById("pendingLeavesBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("pendingLeavesResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/leave/list-pending`,
         {
@@ -638,6 +649,7 @@ window.leavesById = async function(){
     btn.disabled = true;
     btn.textContent = "Fetching...";
     const id = document.getElementById("leaves-by-id").value;
+    document.getElementById("leavesByIdResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}`,
         {
@@ -675,6 +687,7 @@ window.updateLeaveStatus = async function(status){
     rejectBtn.disabled = true;
 
     const id = document.getElementById("update-leave-status").value;
+    document.getElementById("updateLeaveStatusResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
         {
