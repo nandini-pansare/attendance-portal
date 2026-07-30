@@ -42,26 +42,46 @@ function showBanner(message, type){
     }, 3000);
 }
 
+async function safeJson(response){
+    try{
+        return await response.json();
+    } catch(parseError){
+        return null;
+    }
+}
+
 window.getOtp = async function(){
+    const btn = document.querySelector('#registrataionForm button[onclick="getOtp()]');
     const email = document.getElementById("reg-email").value;
 
-    const response = await fetch(`${API_BASE}/otp/portal-get-otp`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({email})
-    });
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+    }
+    try{
+        const response = await fetch(`${API_BASE}/otp/portal-get-otp`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email})
+        });
 
-    const data = await response.json();
-
-    if(response.ok){
-        verifiedEmail = email;
-
-        showBanner("Otp Sent.", "success");
-
-    } else{
-        showBanner(data.message, "error");
+        const data = await response.json();
+        if(response.ok){
+            verifiedEmail = email;
+            showBanner("Otp Sent.", "success");
+        } else{
+            showBanner(data.message, "error");
+        }
+    } catch(error){
+        showBanner("ERROR: " + error.message, "error");
+        console.log(error);
+    } finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Get Otp";
+        }
     }
 };
 
@@ -95,14 +115,14 @@ window.register = async function(){
             body: JSON.stringify({ username, email, password, code, otp})
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
-            showBanner(data.message, "success");
+            showBanner(data.message || "Registered successfully", "success");
             document.getElementById("registrationForm").hidden = true;
             document.getElementById("loginForm").hidden = false;
         } else{
-            showBanner( data.message, "error");
+            showBanner( data?.message || "Registration Failed.", "error");
         }
     } catch(error){
         showBanner("Error: " + error.message, "error");
@@ -125,15 +145,14 @@ window.login = async function(){
             credentials: "include",
             headers: { 
                 "Content-Type": "application/json",
-                //"ngrok-skip-browser-warning": "1",
             },
             body: JSON.stringify({ username, password}),
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         console.log("Login response", data);
 
-        if(response.ok && data.token){
+        if(response.ok && data?.token){
             localStorage.setItem('token', data.token);
             console.log("Logged in, token saved");
             showBanner("Login Successful.", "success");
@@ -143,7 +162,7 @@ window.login = async function(){
             applyPermissions();
             showAttendance();
         } else{
-            showBanner(data.message || "Login failed.", "error");
+            showBanner(data?.message || "Login failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: "+error.message, "error");
@@ -194,16 +213,16 @@ window.userViewToday = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
-            let display = data.message;
-            if(data.hours !== undefined){
+            let display = data?.message || '';
+            if(data?.hours !== undefined){
                 display += `\nHours worked: ${data.hours}`;
             }
             document.getElementById("todayResult").textContent = display;
         } else{
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Request Failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -226,10 +245,11 @@ window.checkIn = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         if(response.ok){
-            let display = data.message;
-            document.getElementById("checkInResult").textContent = display;   
+            document.getElementById("checkInResult").textContent = data?.message || '';   
+        } else{
+            showBanner(data?.message || "Check-in failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -245,7 +265,6 @@ window.checkOut = async function(){
     btn.textContent = "Checking out...";
     document.getElementById("checkOutResult").textContent = "";
 
-
     try{
         const response = await fetch(`${API_BASE}/attendance/check-out`,{
             method: "POST",
@@ -255,17 +274,17 @@ window.checkOut = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
-            let display = data.message;
+            let display = data?.message || '';
             if(data.hours !== undefined){
                 display += `\nHours worked: ${data.hours}`;
             }
             document.getElementById("checkOutResult").textContent = display;
         }     
         else{
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Check-out failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -296,14 +315,14 @@ window.getUserAttendanceRange = async function(){
         const data = await response.json();
 
         if(response.ok){
-            let display = data.message;
-            if(data.data !== undefined){
+            let display = data?.message || '';
+            if(data?.data !== undefined){
                 display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
             }
             document.getElementById("attendanceRangeResult").textContent = display;
         }
         else{
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Request failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -317,16 +336,20 @@ window.attendanceByMonth = async function(){
     const btn = document.getElementById("getMonthBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("attendanceMonthResult").textContent = "";
     const month = document.getElementById("get-month").value;
     const year = document.getElementById("get-year").value;
-    document.getElementById("attendanceMonthResult").textContent = "";
 
     if (month < 1 || month > 12) {
         showBanner("Please enter a month between 1 and 12.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
         return;
     }
     if(year < 1000 || year > 9999){
         showBanner("Please enter a valid year.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
         return;
     }
 
@@ -343,13 +366,13 @@ window.attendanceByMonth = async function(){
         const data = await response.json();
 
         if(response.ok){
-            if(data.month){
+            if(data?.month){
                 document.getElementById("attendanceMonthResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
             } else{
-                document.getElementById("attendanceMonthResult").textContent = data.message;
+                document.getElementById("attendanceMonthResult").textContent = data?.message || 'No data returned.';
             }
         }  else {
-            showBanner(data.message, "success");
+            showBanner(data?.message || "Request failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -374,12 +397,12 @@ window.listToday = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
             document.getElementById("listTodayResult").textContent = JSON.stringify(data, null, 2);
         } else {
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Request failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -393,9 +416,9 @@ window.getAttendanceRange = async function(){
     const btn = document.getElementById("listRangeBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("getResultResult").textContent = "";
     const from = document.getElementById("list-from-date").value;
     const to = document.getElementById("list-to-date").value;
-    document.getElementById("getResultResult").textContent = "";
 
     try{
         const response = await fetch(`${API_BASE}/attendance/list-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
@@ -407,17 +430,17 @@ window.getAttendanceRange = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
-            let display = data.message;
-            if(data.data !== undefined){
+            let display = data?.message || '';
+            if(data?.data !== undefined){
                 display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
             }
             document.getElementById("getListResult").textContent = display;
         }
         else{
-            showBanner(data.message), "error";
+            showBanner(data?.message || "Request failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -431,16 +454,20 @@ window.listByMonth = async function(){
     const btn = document.getElementById("listMonthBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("getMonthListResult").textContent = "";
     const month = document.getElementById("list-month").value;
     const year = document.getElementById("list-year").value;
-    document.getElementById("getMonthListResult").textContent = "";
 
     if (month < 1 || month > 12) {
         showBanner("Please enter a month between 1 and 12.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
         return;
     }
-    if(year < 1000 || month > 9999){
+    if(year < 1000 || year > 9999){
         showBanner("Please enter a valid year.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
         return;
     }
 
@@ -454,17 +481,17 @@ window.listByMonth = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
-            if(data.month){
+            if(data?.month){
                 document.getElementById("getMonthListResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
             } else{
-                document.getElementById("getMonthListResult").textContent = data.message;
+                document.getElementById("getMonthListResult").textContent = data?.message || 'No data returned';
             }
         } 
         else {
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Request failed.", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -478,8 +505,8 @@ window.getUserAttendance = async function(){
     const btn = document.getElementById("userAttendanceBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    const userId = document.getElementById("user-by-id").value;
     document.getElementById("userATtendanceResult").textContent = "";
+    const userId = document.getElementById("user-by-id").value;
 
     try{
         const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
@@ -491,16 +518,16 @@ window.getUserAttendance = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         const payload = data?.records ?? data?.data ?? data;
-        const display = payload !== undefined
+        const display = payload !== undefined && payload !== null
             ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
             : (data?.message || 'No data returned.');
 
         if(response.ok){
             document.getElementById("userAttendanceResult").textContent = display;
         } else {
-            showBanner(data.message || 'Request failed.', "error");
+            showBanner(data?.message || 'Request failed.', "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -522,6 +549,8 @@ window.postLeave = async function(){
     const token = localStorage.getItem('token');
     if(!token){
         showBanner('Login required before submitting leave.', "error");
+        btn.disabled = false;
+        btn.textContent = "Submit";
         return;
     }
 
@@ -547,12 +576,7 @@ window.postLeave = async function(){
             body: JSON.stringify(payload)
         });
 
-        let data;
-        try {
-            data = await response.json();
-        } catch (parseError) {
-            data = null;
-        }
+        const data = await safeJson(response);
 
         console.log('postLeave response', { status: response.status, statusText: response.statusText, body: data });
 
@@ -574,12 +598,14 @@ window.leaveHistory = async function(){
     const btn = document.getElementById("leaveHistoryBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("leaveHistoryResult").textContent = "";
     const token = localStorage.getItem('token');
     if(!token){
         showBanner("Token Not Found!", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
         return;
     }
-    document.getElementById("leaveHistoryResult").textContent = "";
     try{
         const response = await fetch(`${API_BASE}/leave`,
         {
@@ -590,16 +616,16 @@ window.leaveHistory = async function(){
             },
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         const payload = data?.data ?? data;
-        const display = payload !== undefined
+        const display = payload !== undefined && payload !== null
             ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
             : (data?.message || 'No data returned.');
 
         if(response.ok){
             document.getElementById("leaveHistoryResult").textContent = display;
         } else{
-            showBanner(data.message || 'Request failed.', "error");
+            showBanner(data?.message || 'Request failed.', "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -624,9 +650,9 @@ window.pendingLeaves = async function(){
             },
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         const payload = data?.data ?? data;
-        const display = payload !== undefined
+        const display = payload !== undefined && payload !== null
             ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
             : (data?.message || 'No data returned.');
 
@@ -634,7 +660,7 @@ window.pendingLeaves = async function(){
             document.getElementById("pendingLeavesResult").textContent = display;
         }
         else{
-            showBanner(data.message || 'Request Failed.', "error");
+            showBanner(data?.message || 'Request Failed.', "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -648,8 +674,8 @@ window.leavesById = async function(){
     const btn = document.getElementById("leavesByIdBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    const id = document.getElementById("leaves-by-id").value;
     document.getElementById("leavesByIdResult").textContent = "";
+    const id = document.getElementById("leaves-by-id").value;
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}`,
         {
@@ -660,9 +686,9 @@ window.leavesById = async function(){
             },
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         const payload = data?.data ?? data;
-        const display = payload !== undefined
+        const display = payload !== undefined && payload !== null
             ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
             : (data?.message || 'No data returned.');
 
@@ -670,7 +696,7 @@ window.leavesById = async function(){
             document.getElementById("leavesByIdResult").textContent = display;
         }
         else{
-            showBanner(data.message || 'Request Failed.', "error");
+            showBanner(data?.message || 'Request Failed.', "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -685,9 +711,8 @@ window.updateLeaveStatus = async function(status){
     const rejectBtn = document.getElementById("rejectLeaveBtn");
     approveBtn.disabled = true;
     rejectBtn.disabled = true;
-
-    const id = document.getElementById("update-leave-status").value;
     document.getElementById("updateLeaveStatusResult").textContent = "";
+    const id = document.getElementById("update-leave-status").value;
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
         {
@@ -698,13 +723,13 @@ window.updateLeaveStatus = async function(status){
             },
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         
         if(response.ok){
-            document.getElementById("updateLeaveStatusResult").textContent = data.message;
+            document.getElementById("updateLeaveStatusResult").textContent = data?.message || 'Done';
         }
         else{
-            showBanner(data.message || 'Request Failed.', "error");
+            showBanner(data?.message || 'Request Failed.', "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -731,7 +756,7 @@ window.getTokenFromFirebase = async function (){
         deviceToken = await getFCMToken();
         console.log("FCM Token:", deviceToken);
         if(deviceToken){
-            showBanner("Token generated. You can now register this device.", "error");
+            showBanner("Token generated. You can now register this device.", "success");
         } 
     } catch (error){
         console.error("Could not initialize Firebase messaging:", error);
@@ -763,9 +788,9 @@ window.registerToken = async function(){
             body: JSON.stringify({token: deviceToken})
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         console.log("Token registered: ", data);
-        showBanner(data.message || "Device registered.", "error");
+        showBanner(data?.message || "Device registered.", "success");
     } catch (error) {
         showBanner("ERROR: "+ error.message, "error");
         console.log(error);
@@ -793,10 +818,12 @@ window.testNotification = async function (){
             }
         );
         
-        const data = await response.json();
+        const data = await safeJson(response);
         console.log(data);
         if(response.ok){
-            showBanner("Test notification sent.", "error");
+            showBanner("Test notification sent.", "success");
+        } else{
+            showBanner(data?.message || "Could not send test notifcation.", "error");
         }
     } catch(error){
         console.error(error);
@@ -816,10 +843,10 @@ window.logout = async function(){
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
         });
-        const data = await response.json();
+        const data = await safeJson(response);
         console.log(data);
         if(response.ok){
-            showBanner(data.message, "error");
+            showBanner(data.message, "success");
             localStorage.removeItem('token');
             document.getElementById("appLayout").hidden = true;
             document.getElementById("loginForm").hidden = false;
@@ -828,7 +855,7 @@ window.logout = async function(){
             document.querySelectorAll('pre').forEach((el)=> {
                 el.textContent = '';
             });
-            document.querySelectorAll('#appLayout inpur').forEach((el)=>{
+            document.querySelectorAll('#appLayout input').forEach((el)=>{
                 el.value = '';
             });
         }
