@@ -91,19 +91,22 @@ window.showLogin = function(){
 };
 
 window.register = async function(){
+    const btn = document.querySelector('#registrationForm button[onclick="register()"]');
     const username = document.getElementById("reg-username").value;
     const password = document.getElementById("reg-password").value;
     const email = document.getElementById("reg-email").value;
     const code = Number(document.getElementById("code").value);
     const otp = Number(document.getElementById("otp").value);
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
-    if(!code){
-        showBanner("Please select a role.", "error");
+    if(!username || !password || !email || !code || !otp){
+        showBanner(" Please enter all values", "error");
         return;
     }
-    if(!otp){
-        showBanner("Please enter otp", "error");
+
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Registering";
     }
     
     try{
@@ -136,8 +139,19 @@ window.backButton = function(){
 }
 
 window.login = async function(){
-    const username = document.getElementById('login-username').value;
+    const btn = document.querySelector('#loginForm button[onclick="login()"]');
+    const username = document.getElementById('login-username').value.trin();
     const password = document.getElementById('login-password').value;
+
+    if(!username || !password){
+        showBanner("Please enter both username and password.", "error");
+        return;
+    }
+
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Logging in...";
+    }
 
     try {
         const response = await fetch(`${API_BASE}/auth/portal-login`, {
@@ -167,6 +181,11 @@ window.login = async function(){
     } catch(error){
         showBanner("ERROR: "+error.message, "error");
         console.log(error);
+    } finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Login";
+        }
     }
 };
 
