@@ -211,6 +211,10 @@ window.userViewToday = async function(){
 };
 
 window.checkIn = async function(){
+    const btn = document.getElementById("checkInBtn");
+    btn.disabled = true;
+    btn.textContent = "Checking in...";
+
     try {
         const response = await fetch(`${API_BASE}/attendance/check-in`,{
             method: "POST",
@@ -227,10 +231,17 @@ window.checkIn = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Check In";
     }
 };
 
 window.checkOut = async function(){
+    const btn = document.getElementById("checkOutBtn");
+    btn.disabled = true;
+    btn.textContent = "Checking out...";
+
     try{
         const response = await fetch(`${API_BASE}/attendance/check-out`,{
             method: "POST",
@@ -254,11 +265,16 @@ window.checkOut = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Check Out";
     }
 };
 
 window.getUserAttendanceRange = async function(){
-
+    const btn = document.getElementById("getRangeBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const from = document.getElementById("from-date").value;
     const to = document.getElementById("to-date").value;
 
@@ -286,10 +302,16 @@ window.getUserAttendanceRange = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View From and To";
     }
 };
 
 window.attendanceByMonth = async function(){
+    const btn = document.getElementById("getMonthBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const month = document.getElementById("get-month").value;
     const year = document.getElementById("get-year").value;
 
@@ -325,10 +347,16 @@ window.attendanceByMonth = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 }
 
 window.listToday = async function(){
+    const btn = document.getElementById("listTodayBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     try{
         const response = await fetch(`${API_BASE}/attendance/list-today`,
         {
@@ -348,11 +376,16 @@ window.listToday = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
 window.getAttendanceRange = async function(){
-
+    const btn = document.getElementById("listRangeBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const from = document.getElementById("list-from-date").value;
     const to = document.getElementById("list-to-date").value;
 
@@ -380,10 +413,16 @@ window.getAttendanceRange = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View From and To";
     }
 };
 
 window.listByMonth = async function(){
+    const btn = document.getElementById("listMonthBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const month = document.getElementById("list-month").value;
     const year = document.getElementById("list-year").value;
 
@@ -420,10 +459,16 @@ window.listByMonth = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
 window.getUserAttendance = async function(){
+    const btn = document.getElementById("userAttendanceBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const userId = document.getElementById("user-by-id").value;
 
     try{
@@ -449,6 +494,9 @@ window.getUserAttendance = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
@@ -458,6 +506,9 @@ window.getUserAttendance = async function(){
 
 // LEAVE
 window.postLeave = async function(){
+    const btn = document.getElementById("postLeaveBtn");
+    btn.disabled = true;
+    btn.textContent = "Submitting...";
     const token = localStorage.getItem('token');
     if(!token){
         showBanner('Login required before submitting leave.', "error");
@@ -503,10 +554,16 @@ window.postLeave = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Submit";
     }
 };
 
 window.leaveHistory = async function(){
+    const btn = document.getElementById("leaveHistoryBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const token = localStorage.getItem('token');
     if(!token){
         showBanner("Token Not Found!", "error");
@@ -536,10 +593,16 @@ window.leaveHistory = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
 window.pendingLeaves = async function(){
+    const btn = document.getElementById("pendingLeavesBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     try{
         const response = await fetch(`${API_BASE}/leave/list-pending`,
         {
@@ -564,10 +627,16 @@ window.pendingLeaves = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
 window.leavesById = async function(){
+    const btn = document.getElementById("leavesByIdBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
     const id = document.getElementById("leaves-by-id").value;
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}`,
@@ -593,10 +662,18 @@ window.leavesById = async function(){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
     }
 };
 
 window.updateLeaveStatus = async function(status){
+    const approveBtn = document.getElementById("approveLeaveBtn");
+    const rejectBtn = document.getElementById("rejectLeaveBtn");
+    approveBtn.disabled = true;
+    rejectBtn.disabled = true;
+
     const id = document.getElementById("update-leave-status").value;
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
@@ -618,6 +695,9 @@ window.updateLeaveStatus = async function(status){
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
+    } finally{
+        approveBtn.disabled = false;
+        rejectBtn.disabled = false;
     }
 };
 
@@ -627,6 +707,13 @@ window.updateLeaveStatus = async function(status){
 
 
 window.getTokenFromFirebase = async function (){
+    const getTokenBtn = document.getElementById("getTokenBtn");
+    const registerTokenBtn = document.getElementById("registerTokenBtn");
+    const testNotificationBtn = document.getElementById("testNotificationBtn");
+
+    getTokenBtn.disabled = true;
+    registerTokenBtn.disabled = true;
+    testNotificationBtn.disabled = true;
     try {
         deviceToken = await getFCMToken();
         console.log("FCM Token:", deviceToken);
@@ -636,6 +723,10 @@ window.getTokenFromFirebase = async function (){
     } catch (error){
         console.error("Could not initialize Firebase messaging:", error);
         showBanner("Notifications could not be initialized: " + error.message, "error");
+    } finally{
+        getTokenBtn.disabled = false;
+        registerTokenBtn.disabled = false;
+        testNotificationBtn.disabled = false;
     }
 };
 
@@ -701,6 +792,9 @@ window.testNotification = async function (){
 };
 
 window.logout = async function(){
+    const btn = document.getElementById("logoutBtn");
+    btn.disabled = true;
+    btn.textContent = "Logging Out...";
     try{
         const response = await fetch(`${API_BASE}/auth/portal-logout`, {
             method: "POST",
@@ -731,5 +825,8 @@ window.logout = async function(){
     } catch(error){
         console.error(error);
         showBanner("ERROR " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Logout";
     }
 };

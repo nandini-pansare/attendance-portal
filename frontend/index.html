@@ -47,7 +47,7 @@
                 <h4>Notification</h4>
                 <button id="navTokenSection" onclick="showTokenSection()">Notification</button>
                 <h4>Logout</h4>
-                <button onclick="logout()">Logout</button>
+                <button id="logoutBtn" onclick="logout()">Logout</button>
             </nav>
 
             <main id="contentArea">                
@@ -62,13 +62,13 @@
         
                     <div class="field-card" data-permission="CHECK_IN">
                         <h4 data-permission="CHECK_IN">Check In</h4>
-                        <button data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
+                        <button id="checkInBtn" data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
                         <pre id="checkInResult"></pre>
                     </div>
 
                     <div class="field-card" data-permission="CHECK_OUT">
                         <h4 data-permission="CHECK_OUT">Check Out</h4>
-                        <button data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
+                        <button id="checkOutBtn" data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
                         <pre id="checkOutResult"></pre>
                     </div>
 
@@ -76,7 +76,7 @@
                         <h4 data-permission="USER_GET">Attendance in Date Range</h4>
                         <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
                         <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
-                        <button data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
+                        <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
                         <pre id="attendanceRangeResult"></pre>
                     </div>
 
@@ -84,13 +84,13 @@
                         <h4 data-permission="USER_GET">Attendance by Month</h4>
                         <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
                         <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
-                        <button data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
+                        <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
                         <pre id="attendanceMonthResult"></pre>
                     </div>
 
                     <div class="field-card" data-permission="ALL_ATTENDANCE">
                         <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
-                        <button data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
+                        <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
                         <pre id="listTodayResult"></pre>
                     </div>
 
@@ -98,7 +98,7 @@
                         <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
                         <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
                         <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
-                        <button data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
+                        <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
                         <pre id="getListResult"></pre>
                     </div>
 
@@ -106,14 +106,14 @@
                         <h4 data-permission="GET_LIST">Attendance List by Month</h4>
                         <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
                         <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
-                        <button data-permission="GET_LIST" onclick="listByMonth()">View</button>
+                        <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
                         <pre id="getMonthListResult"></pre>
                     </div>
 
                     <div class="field-card" data-permission="GET_ID">
                         <h4 data-permission="GET_ID">Attendance by ID</h4>
                         <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
-                        <button data-permission="GET_ID" onclick="getUserAttendance()">View</button>
+                        <button id="userAttendaneBtn" data-permission="GET_ID" onclick="getUserAttendance()">View</button>
                         <pre id="userAttendanceResult"></pre>
                     </div>
                 </div>
@@ -133,33 +133,33 @@
                             <option value="MANDATORY">Mandatory</option>
                         </select>
                         <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
-                        <button data-permission="LEAVE" onclick="postLeave()">Submit</button>
+                        <button id="postLeaveBtn" data-permission="LEAVE" onclick="postLeave()">Submit</button>
                     </div>
 
                     <div class="field-card" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave History</h4>
-                        <button data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                        <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
                         <pre id="leaveHistoryResult"></pre>
                     </div>
 
                     <div class="field-card" data-permission="LIST_PENDING_REQ">
                         <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
-                        <button data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
+                        <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
                         <pre id="pendingLeavesResult"></pre>
                     </div>
 
                     <div class="field-card" data-permission="LIST_LEAVES">                            
                         <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
-                        <button data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
+                        <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
                         <pre id="leavesByIdResult"></pre>
                     </div>
 
                    <div class="field-card" data-permission="LEAVE_STATUS">
                         <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
                         <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">                    
-                        <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
-                        <button data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
+                        <button id="approveLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
+                        <button id="rejectLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
                         <pre id="updateLeaveStatusResult"></pre>
                     </div>
                 </div>
@@ -167,10 +167,10 @@
                 <div id="tokenSection" hidden>
                     <div class="field-card">
                         <h4>FCM Token</h4>
-                        <button onclick="getTokenFromFirebase()">Get FCM Token</button>
-                        <button onclick="registerToken()">Register Device</button>
+                        <button id="getTokenBtn" onclick="getTokenFromFirebase()">Get FCM Token</button>
+                        <button id="registerTokenBtn" onclick="registerToken()">Register Device</button>
                         <input type="file" id="notificationImage" accept="image/*">
-                        <button onclick="testNotification()">Test Notification</button>
+                        <button id="testNotificationBtn" onclick="testNotification()">Test Notification</button>
                     </div>
                 </div>
 
