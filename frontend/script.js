@@ -140,7 +140,7 @@ window.backButton = function(){
 
 window.login = async function(){
     const btn = document.querySelector('#loginForm button[onclick="login()"]');
-    const username = document.getElementById('login-username').value.trin();
+    const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
 
     if(!username || !password){
