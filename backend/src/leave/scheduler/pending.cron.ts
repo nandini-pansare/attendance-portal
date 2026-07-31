@@ -23,6 +23,8 @@ export class PendingCron{
             return;
         }
 
+        console.log('Running Cron');
+        
         await this.emailService.pendingLeaveReminder(pending);
         
         await this.firebaseService.sendPendingLeaveReminder(pending.length);
