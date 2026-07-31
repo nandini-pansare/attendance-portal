@@ -12,6 +12,7 @@ import { OtpModule } from './otp/otp.module';
 import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config';
 import { FirebaseModule } from './firebase/firebase.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
@@ -41,7 +42,7 @@ import { FirebaseModule } from './firebase/firebase.module';
       signOptions: { expiresIn: '1h' },
     }),  
     
-    AuthModule, UsersModule, AttendanceModule, LeaveModule, OtpModule, EmailModule, FirebaseModule],
+    AuthModule, UsersModule, AttendanceModule, LeaveModule, OtpModule, EmailModule, FirebaseModule, ScheduleModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
   exports: [JwtModule],
