@@ -19,11 +19,11 @@ export class PendingCron{
     async pendingLeaveRequests(){
         const pending = await this.leaveModel.findAll({ where: {status: LeaveStatus.HR_PENDING}});
 
+        console.log('Running Cron');
+
         if (pending.length === 0){
             return;
         }
-
-        console.log('Running Cron');
         
         await this.emailService.pendingLeaveReminder(pending);
         
