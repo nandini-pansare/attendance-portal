@@ -51,7 +51,7 @@ async function safeJson(response){
 }
 
 window.getOtp = async function(){
-    const btn = document.querySelector('#registrataionForm button[onclick="getOtp()]');
+    const btn = document.querySelector('#registrationForm button[onclick="getOtp()"]');
     const email = document.getElementById("reg-email").value;
 
     if(btn){
@@ -67,12 +67,12 @@ window.getOtp = async function(){
             body: JSON.stringify({email})
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
         if(response.ok){
             verifiedEmail = email;
-            showBanner("Otp Sent.", "success");
+            showBanner(data?.message || "Otp Sent.", "success");
         } else{
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Could not send OTP", "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -99,8 +99,24 @@ window.register = async function(){
     const otp = Number(document.getElementById("otp").value);
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if(!username || !password || !email || !code || !otp){
-        showBanner(" Please enter all values", "error");
+    if(!username){
+        showBanner("Please enter a username.", "error");
+        return;
+    } 
+    if(!password){
+        showBanner("Pleaser enter a password.", "error");
+        return;
+    } 
+    if(!emailPattern.test(email)){
+        showBanner("Please enter a valid email address.", "error");
+        return;
+    } 
+    if(!code){
+        showBanner("Please select a role", "error");
+        return;
+    }  
+    if(!otp){
+        showBanner(" Please enter otp", "error");
         return;
     }
 
@@ -121,7 +137,7 @@ window.register = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            showBanner(data.message || "Registered successfully", "success");
+            showBanner(data?.message || "Registered successfully", "success");
             document.getElementById("registrationForm").hidden = true;
             document.getElementById("loginForm").hidden = false;
         } else{
@@ -130,6 +146,11 @@ window.register = async function(){
     } catch(error){
         showBanner("Error: " + error.message, "error");
         console.log(error);
+    } finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Register";
+        }
     }
 };
 
@@ -317,9 +338,23 @@ window.getUserAttendanceRange = async function(){
     const btn = document.getElementById("getRangeBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+    document.getElementById("attendanceRangeResult").textContent = "";
     const from = document.getElementById("from-date").value;
     const to = document.getElementById("to-date").value;
-    document.getElementById("attendanceRangeResult").textContent = "";
+    
+    if(!from || !to){
+        showBanner("Please select both a from and to date", "error");
+        btn.disabled = false;
+        btn.textContent = "View From and To";
+        return;
+    }
+
+    if(from>to){
+        showBanner("The from date must be before the to date.", "error");
+        btn.disabled = false;
+        btn.textContent = "View From and To";
+        return;
+    }
 
     try{
         const response = await fetch(`${API_BASE}/attendance/user-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
@@ -331,7 +366,7 @@ window.getUserAttendanceRange = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
             let display = data?.message || '';
@@ -382,7 +417,7 @@ window.attendanceByMonth = async function(){
             }
         });
 
-        const data = await response.json();
+        const data = await safeJson(response);
 
         if(response.ok){
             if(data?.month){
@@ -435,10 +470,22 @@ window.getAttendanceRange = async function(){
     const btn = document.getElementById("listRangeBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("getResultResult").textContent = "";
+    document.getElementById("getListResult").textContent = "";
     const from = document.getElementById("list-from-date").value;
     const to = document.getElementById("list-to-date").value;
 
+    if(!from || !to){
+        showBanner("Please select both a from and a to date.", "error");
+        btn.disabled = false;
+        btn.textContent = "View From and To";
+        return;
+    }
+    if(from > to){
+        showBanner("The from date must be before the to date.", "error");
+        btn.disabled = false;
+        btn.textContent = "View From and To";
+        return;
+    }
     try{
         const response = await fetch(`${API_BASE}/attendance/list-from-to?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`,
         {
@@ -524,9 +571,15 @@ window.getUserAttendance = async function(){
     const btn = document.getElementById("userAttendanceBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("userATtendanceResult").textContent = "";
+    document.getElementById("userAttendanceResult").textContent = "";
     const userId = document.getElementById("user-by-id").value;
 
+    if(!userId){
+        showBanner("Please enter a user ID.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
+        return;
+    }
     try{
         const response = await fetch(`${API_BASE}/attendance/${encodeURIComponent(userId)}`,
         {
@@ -577,11 +630,35 @@ window.postLeave = async function(){
     const end = document.getElementById("end-leave").value;
     const type = document.getElementById("leave-type").value;
     const reason = document.getElementById("leave-reason").value;
+    
+    if(!start || !end){
+        showBanner("Please select a start and end date.", "error");
+        btn.disabled = false;
+        btn.textContent = "Submit";
+        return;
+    }
+    if(start > end){
+        showBanner("The start date must be before the end date.", "error");
+        btn.disabled = false;
+        btn.textContent = "Submit";
+        return;
+    }
+    if(!type){
+        showBanner("Please select a leave type.", "error");
+        btn.disabled = false;
+        btn.textContent = "Submit";
+        return;
+    }
+    if(!reason){
+        showBanner("Please enter a reason for leave.", "error");
+        btn.disabled = false;
+        btn.textContent = "Submit";
+        return;
+    }
+
     const normalizedType = type ? type.toLowerCase() : '';
     const url = `${API_BASE}/leave`;
     const payload = { start, end, leaveType: normalizedType, reason };
-
-    console.log('postLeave request', { url, payload, tokenPresent: !!token });
 
     try{
         const response = await fetch(url,
@@ -695,6 +772,14 @@ window.leavesById = async function(){
     btn.textContent = "Fetching...";
     document.getElementById("leavesByIdResult").textContent = "";
     const id = document.getElementById("leaves-by-id").value;
+    
+    if(!id){
+        showBanner("Please enter a user ID.", "error");
+        btn.disabled = false;
+        btn.textContent = "View";
+        return;
+    }
+
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}`,
         {
@@ -726,12 +811,22 @@ window.leavesById = async function(){
 };
 
 window.updateLeaveStatus = async function(status){
+    const id = document.getElementById("update-leave-status").value;
+    if(!id){
+        showBanner("Please enter a leave ID.", "error");
+        return;
+    }
+    const confirmed = window.confirm(`Are you sure you want to ${status} leave request #${id}?`);
+    if(!confirmed){
+        return;
+    }
+
     const approveBtn = document.getElementById("approveLeaveBtn");
     const rejectBtn = document.getElementById("rejectLeaveBtn");
     approveBtn.disabled = true;
     rejectBtn.disabled = true;
     document.getElementById("updateLeaveStatusResult").textContent = "";
-    const id = document.getElementById("update-leave-status").value;
+    
     try{
         const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
         {
@@ -809,7 +904,11 @@ window.registerToken = async function(){
 
         const data = await safeJson(response);
         console.log("Token registered: ", data);
-        showBanner(data?.message || "Device registered.", "success");
+        if(response.ok){
+            showBanner(data?.message || "Device registered.", "success");
+        } else{
+            showBanner(data?.message || "Could not register device.", "error");
+        }
     } catch (error) {
         showBanner("ERROR: "+ error.message, "error");
         console.log(error);
@@ -840,7 +939,7 @@ window.testNotification = async function (){
         const data = await safeJson(response);
         console.log(data);
         if(response.ok){
-            showBanner("Test notification sent.", "success");
+            showBanner(data?.message || "Test notification sent.", "success");
         } else{
             showBanner(data?.message || "Could not send test notifcation.", "error");
         }
@@ -865,7 +964,7 @@ window.logout = async function(){
         const data = await safeJson(response);
         console.log(data);
         if(response.ok){
-            showBanner(data.message, "success");
+            showBanner(data?.message || "Logged out", "success");
             localStorage.removeItem('token');
             document.getElementById("appLayout").hidden = true;
             document.getElementById("loginForm").hidden = false;
@@ -879,7 +978,7 @@ window.logout = async function(){
             });
         }
         else{
-            showBanner(data.message, "error");
+            showBanner(data?.message || "Logout failed.", "error");
         }
     } catch(error){
         console.error(error);

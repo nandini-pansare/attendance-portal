@@ -11,15 +11,25 @@
 
         <div id="registrationForm" class="sign-card">
             <h4>Registration</h4>
+
+            <label for="reg-username" class="sr-only">Username</label>
             <input type="text" id="reg-username" placeholder="Username" required autocomplete="username">
+            
+            <label for="reg-password" class="sr-only">Password</label>
             <input type="password" id="reg-password" placeholder="Password" required autocomplete="new-password">
+            
+            <label for="reg-email" class="sr-only">Password</label>
             <input type="text" id="reg-email" placeholder="Email ID" required autocomplete="email">
+            
+            <label for="code" class="sr-only">Role Code</label>
             <select id="code" placeholder="Code" required>
                 <option value="" selected disabled> Select code</option>
                 <option value="9876">9876</option>
                 <option value="8765">8765</option>
                 <option value="7654">7654</option>
             </select>
+
+            <label for="otp" class="sr-only">6 Digit OTP</label>
             <input type="number" id="otp" placeholder="6 Digit Otp" required>
             <br>
             <button onclick="getOtp()">Get Otp</button>
@@ -31,7 +41,9 @@
         <div id="loginForm" hidden class="sign-card">
             <button onclick="backButton()" class="back-button">Back</button>
             <h4>Login</h4>
+            <label for="login-username" class="sr-only">Username</label>
             <input type="text" id="login-username" placeholder="Username" required>
+            <label for="login-password" class="sr-only">Password</label>
             <input type="password" id="login-password" placeholder="Password" required>
 
             <button onclick="login()">Login</button>
@@ -74,7 +86,9 @@
 
                     <div class="field-card" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance in Date Range</h4>
+                        <label for="from-date" class="sr-only">From Date</label>
                         <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
+                        <label for="to-date" class="sr-only">To Date</label>
                         <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
                         <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
                         <pre id="attendanceRangeResult"></pre>
@@ -82,7 +96,9 @@
 
                     <div class="field-card" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance by Month</h4>
+                        <label for="get-month" class="sr-only">Month (MM)</label>
                         <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
+                        <label for="get-year" class="sr-only">Year (YYYY)</label>
                         <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
                         <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
                         <pre id="attendanceMonthResult"></pre>
@@ -96,7 +112,9 @@
 
                     <div class="field-card" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
+                        <label for="list-from-date" class="sr-only">From Date</label>
                         <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
+                        <label for="list-to-date" class="sr-only"> To Date</label>
                         <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
                         <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
                         <pre id="getListResult"></pre>
@@ -104,7 +122,9 @@
 
                     <div class="field-card" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST">Attendance List by Month</h4>
+                        <label for="list-month" class="sr-only">Month (MM)</label>
                         <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
+                        <label for="list-year" class="sr-only">Year (YYYY)</label>
                         <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
                         <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
                         <pre id="getMonthListResult"></pre>
@@ -112,6 +132,7 @@
 
                     <div class="field-card" data-permission="GET_ID">
                         <h4 data-permission="GET_ID">Attendance by ID</h4>
+                        <label for="user-by-id" class="sr-only">User ID</label>
                         <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
                         <button id="userAttendanceBtn" data-permission="GET_ID" onclick="getUserAttendance()">View</button>
                         <pre id="userAttendanceResult"></pre>
@@ -123,8 +144,11 @@
             
                     <div class="field-card" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave Request</h4>
+                        <label for="start-leave" class="sr-only">Leave start date</label>
                         <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
+                        <label for="end-leave" class="sr-only">Leave end date</label>
                         <input type="date" id="end-leave" placeholder="End Date" data-permission="LEAVE">
+                        <label for="leave-type" class="sr-only">Leave Type</label>
                         <select id="leave-type" data-permission="LEAVE">
                             <option value="" selected disabled>Select Leave Type</option>
                             <option value="SICK">Sick</option>
@@ -132,6 +156,7 @@
                             <option value="EARNED">Earned</option>
                             <option value="MANDATORY">Mandatory</option>
                         </select>
+                        <label for="leabe-reason" class="sr-only">Reason for leave</label>
                         <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
                         <button id="postLeaveBtn" data-permission="LEAVE" onclick="postLeave()">Submit</button>
                     </div>
@@ -150,6 +175,7 @@
 
                     <div class="field-card" data-permission="LIST_LEAVES">                            
                         <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
+                        <label for="leaves-by-id" class="sr-only">User ID</label>
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
                         <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
                         <pre id="leavesByIdResult"></pre>
@@ -157,6 +183,7 @@
 
                    <div class="field-card" data-permission="LEAVE_STATUS">
                         <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
+                        <label for="update-leave-status" class="sr-only">Leave ID</label>
                         <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">                    
                         <button id="approveLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
                         <button id="rejectLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
@@ -169,6 +196,7 @@
                         <h4>FCM Token</h4>
                         <button id="getTokenBtn" onclick="getTokenFromFirebase()">Get FCM Token</button>
                         <button id="registerTokenBtn" onclick="registerToken()">Register Device</button>
+                        <label for="notificationImage" class="sr-only">Notification test image</label>
                         <input type="file" id="notificationImage" accept="image/*">
                         <button id="testNotificationBtn" onclick="testNotification()">Test Notification</button>
                     </div>
