@@ -15,7 +15,7 @@ export class PendingCron{
         private readonly firebaseService: FirebaseService,
     ){}
 
-    @Cron('* 8 * * * *')
+    @Cron('* 8 * * *')
     async pendingLeaveRequests(){
         const pending = await this.leaveModel.findAll({ where: {status: LeaveStatus.HR_PENDING}});
 
