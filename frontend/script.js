@@ -270,7 +270,7 @@ function startClock(){
     const clockE1 = document.getElementById("liveCLock");
     if(!clockE1) return;
 
-    clearIntervak(clockInterval);
+    clearInterval(clockInterval);
     const tick = () => {
          clockE1.textContent = new Date().toLocaleTimeString();
     };
