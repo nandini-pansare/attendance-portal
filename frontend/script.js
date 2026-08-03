@@ -157,7 +157,15 @@ window.register = async function(){
 window.backButton = function(){
     document.getElementById("loginForm").hidden = true;
     document.getElementById("registrationForm").hidden = false;
+
+    // Ensure the register button isn't left disabled/stuck if user navigates back
+    const regBtn = document.querySelector('#registrationForm button[onclick="register()"]');
+    if(regBtn){
+        regBtn.disabled = false;
+        regBtn.textContent = "Register";
+    }
 }
+
 
 window.login = async function(){
     const btn = document.querySelector('#loginForm button[onclick="login()"]');
@@ -195,7 +203,8 @@ window.login = async function(){
             document.getElementById("loginForm").hidden = true;
             document.getElementById("appLayout").hidden = false;
             applyPermissions();
-            showAttendance();
+            showDashboard();
+            loadDashboard();
         } else{
             showBanner(data?.message || "Login failed.", "error");
         }
@@ -214,15 +223,24 @@ window.toggleSidebar = function(){
     document.getElementById("sidebar").classList.toggle("open");
 }
 
+window.showDashboard = function(){
+    document.getElementById("dashboardSection").hidden = false;
+    document.getElementById("attendanceSection").hidden = true;
+    document.getElementById("leaveSection").hidden = true;
+    document.getElementById("tokenSection").hidden = true;
+}
+
 window.showAttendance = async function(){
     document.getElementById("attendanceSection").hidden = false;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
+    document.getElementById("dashboardSection").hidden = true;
     document.getElementById("navAttendance").classList.add("active");
     document.getElementById("navLeave").classList.remove("active");
     document.getElementById("navTokenSection").classList.remove("active");
 };
 window.showLeave = async function(){
+    document.getElementById("dashboardSection").hidden = true;
     document.getElementById("leaveSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
@@ -232,6 +250,7 @@ window.showLeave = async function(){
 };
 
 window.showTokenSection = function(){
+    document.getElementById("dashboardSection").hidden = true;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = false;
@@ -239,6 +258,8 @@ window.showTokenSection = function(){
     document.getElementById("navLeave").classList.remove("active");
     document.getElementById("navTokenSection").classList.add("active");
 };
+
+window.dashboardSection = async function(){}
 
 //ATTENDANCE
 

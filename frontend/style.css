@@ -113,6 +113,11 @@ button:hover {
   background-color: #2f2f2f;
 }
 
+button:disabled{
+    opacity: .6;
+    cursor: not-allowed;
+}
+
 .back-button{
     background-color: transparent;
     color: #4a4a4a;
