@@ -208,25 +208,40 @@ pre{
     border: 0;
 }
 
+#dashboardSection{
+    background-color: #c7b8a3;
+    border-radius: 10px;
+    padding: 24px;
+    width: 100%;
+}
+
+.dashboard-header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.dashboard-header h4{
+    margin: 0 0 6px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color : #4b3621;
+}
+
+#liveClock{
+    font-size: 32px;
+    font-weight: bold;
+    color: #2f2f2f;
+    font-variant-numeric: tabular-nums;
+}
+
 .dashboard-grid{
     display: grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     gap:20px;
     width:100%;
 }
 
-.dashboard-card{
-    background: white;
-    border-radius:10px;
-    padding:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-
-.dashboard-card h4{
-    margin:0 0 10px;
-}
-
-.dashboard-card p{
-    font-size:22px;
-    font-weight: bold;
-}

@@ -229,9 +229,11 @@ window.showDashboard = function(){
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
     loadDashboard();
+    startClock();
 }
 
 window.showAttendance = async function(){
+    stopClock();
     document.getElementById("attendanceSection").hidden = false;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
@@ -241,6 +243,7 @@ window.showAttendance = async function(){
     document.getElementById("navTokenSection").classList.remove("active");
 };
 window.showLeave = async function(){
+    stopClock();
     document.getElementById("dashboardSection").hidden = true;
     document.getElementById("leaveSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
@@ -251,6 +254,7 @@ window.showLeave = async function(){
 };
 
 window.showTokenSection = function(){
+    stopClock();
     document.getElementById("dashboardSection").hidden = true;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
@@ -259,6 +263,24 @@ window.showTokenSection = function(){
     document.getElementById("navLeave").classList.remove("active");
     document.getElementById("navTokenSection").classList.add("active");
 };
+
+let clockInterval;
+
+function startClock(){
+    const clockE1 = document.getElementById("liveCLock");
+    if(!clockE1) return;
+
+    clearIntervak(clockInterval);
+    const tick = () => {
+         clockE1.textContent = new Date().toLocaleTimeString();
+    };
+    tick();
+    clockInterval = setInterval(tick, 1000);
+}
+
+function stopClock(){
+    clearInterval(clockInterval);
+}
 
 window.loadDashboard = async function(){
     const token = localStorage.getItem('token');
