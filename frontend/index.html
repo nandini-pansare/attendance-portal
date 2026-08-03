@@ -52,6 +52,7 @@
         <div id="appLayout" hidden>
             <button id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
             <nav id="sidebar">
+                <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
                 <div class="nav-group">
                     <a href='#' class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">Attendance</a>
                     <div id="attendanceGroup" class="nav-submenu">
@@ -78,7 +79,6 @@
                     </div>
                 </div>
 
-                <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
                 <a href="#" onclick="showTokenSection(); return false;">Notifications</a>
                 <a href="#" onclick="logout(); return false;">Logout</a>
                 <div class="sidebar-spacer"></div>
