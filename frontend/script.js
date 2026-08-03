@@ -267,7 +267,7 @@ window.showTokenSection = function(){
 let clockInterval;
 
 function startClock(){
-    const clockE1 = document.getElementById("liveCLock");
+    const clockE1 = document.getElementById("liveClock");
     if(!clockE1) return;
 
     clearInterval(clockInterval);
