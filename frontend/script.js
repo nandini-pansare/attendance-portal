@@ -11,15 +11,6 @@ let verifiedEmail = null;
 let deviceToken = null;
 let bannerTimeout;
 
-function decodeRole(token){
-    try{
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.role?.toUpperCase();
-    } catch{
-        return null;
-    }
-}
-
 function applyPermissions(){
     const token = localStorage.getItem('token');
     const role = decodeRole(token);
@@ -168,6 +159,7 @@ window.backButton = function(){
 
 
 window.login = async function(){
+    console.log('login clicked');
     const btn = document.querySelector('#loginForm button[onclick="login()"]');
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
@@ -262,6 +254,21 @@ window.showTokenSection = function(){
     document.getElementById("navAttendance").classList.remove("active");
     document.getElementById("navLeave").classList.remove("active");
     document.getElementById("navTokenSection").classList.add("active");
+};
+
+window.showProfile = function(){
+    const token = localStorage.getItem('token');
+    const payload = decodeToken(token);
+
+    document.getElementById("profileUsername").textContent = payload?.username || '--';
+    document.getElementById("profileEmail").textContent = payload?.email || '--';
+    document.getElementById("profileRole").textContent = payload?.role?.toUpperCase() || '--';
+
+    document.getElementById("profileModal").hidden = false;
+};
+
+window.closeProfile = function(){
+    document.getElementById("profileModal").hidden = true;
 };
 
 let clockInterval;
@@ -1098,3 +1105,15 @@ window.logout = async function(){
         btn.textContent = "Logout";
     }
 };
+
+function decodeToken(token){
+    try{
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch{
+        return null;
+    }
+}
+
+function decodeRole(token){
+    return decodeToken(token)?.role.toUpperCase() || null;
+}

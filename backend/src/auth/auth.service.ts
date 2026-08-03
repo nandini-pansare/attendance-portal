@@ -30,6 +30,7 @@ export class AuthService {
 
         const token = this.jwtService.sign({
             userId: user.userId,
+            username: user.username,
             role: user.role,
             email: user.email,
         });
