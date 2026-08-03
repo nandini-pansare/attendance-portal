@@ -268,11 +268,24 @@ let clockInterval;
 
 function startClock(){
     const clockE1 = document.getElementById("liveClock");
+    const dateE1 = document.getElementById("liveDate");
     if(!clockE1) return;
 
     clearInterval(clockInterval);
     const tick = () => {
-         clockE1.textContent = new Date().toLocaleTimeString();
+        const now = new Date();
+
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        clockE1.textContent = `${hours}:${minutes}`;
+
+        if(dateE1){
+            dateE1.textContent = now.toLocaleDateString(undefined, {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
     };
     tick();
     clockInterval = setInterval(tick, 1000);
