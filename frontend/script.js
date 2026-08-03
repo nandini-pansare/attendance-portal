@@ -261,7 +261,7 @@ window.showTokenSection = function(){
 };
 
 window.loadDashboard = async function(){
-    const token = localStorage.getItm('token');
+    const token = localStorage.getItem('token');
     const role = decodeRole(token);
     const allowed = Permissions[role] || [];
 
@@ -272,7 +272,7 @@ window.loadDashboard = async function(){
 
     try{
         const response = await fetch(`${API_BASE}/attendance/user-view-today`, {
-            mrthod: "GET",
+            method: "GET",
             credentials: "include",
             headers: { "Authorization": `Bearer ${token}`}
         });
@@ -302,9 +302,9 @@ window.loadDashboard = async function(){
         const data = await safeJson(response);
         if(response.ok){
             const records = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
-            const pendingCount = allowed.include('LIST_PENDING_REQ')
+            const pendingCount = allowed.includes('LIST_PENDING_REQ')
                 ? records.length
-                :records.filer(r => (r?.status || '').toLowerCase() === 'pending').length;
+                : records.filter(r => (r?.status || '').toLowerCase() === 'pending').length;
             document.getElementById("dashLeaves").textContent = pendingCount;
         } else{
             document.getElementById("dashLeaves").textContent = '--';
