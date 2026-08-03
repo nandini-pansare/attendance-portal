@@ -52,19 +52,37 @@
         <div id="appLayout" hidden>
             <button id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
             <nav id="sidebar">
-                <h4>Dashboard</h4>
-                <button id="navDashboard" onclick="showDashboard()">Dashboard</button>
-                <h4>Attendance</h4>
-                <button id="navAttendance" onclick="showAttendance()">Attendance</button>
-                <h4>Leave</h4>
-                <button id="navLeave" onclick="showLeave()">Leave</button>
-                <h4>Notification</h4>
-                <button id="navTokenSection" onclick="showTokenSection()">Notification</button>
-                <h4>Logout</h4>
-                <button id="logoutBtn" onclick="logout()">Logout</button>
+                <div class="nav-group">
+                    <a href='#' class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">Attendance</a>
+                    <div id="attendanceGroup" class="nav-submenue">
+                        <a href="#" data-permission="VIEW_ATTENDANCE" onclick="showAttendanceView('view-today'); return false;">Today's Attendance</a>
+                        <a href="#" data-permission="CHECK_IN" onclick="showAttendanceView('check-in'); return false;">Check In</a>
+                        <a href="#" data-permission="CHECK_OUT" onclick="showAttendanceView('check-out'); return false;">Check Out</a>
+                        <a href="#" data-permission="USER_GET" onclick="showAttendanceView('date-range'); return false;">Date Range</a>
+                        <a href="#" data-permission="USER_GET" onclick="showAttendanceView('by-month'); return false;">By Month</a>
+                        <a href="#" data-permission="ALL_ATTENDANCE" onclick="showAttendanceView('list-today'); return false;">Today (All)</a>
+                        <a href="#" data-permission="GET_LIST" onclick="showAttendanceView('list-range'); return false;">List: Date Range</a>
+                        <a href="#" data-permission="GET_LIST" onclick="showAttendanceView('list-month'); return false;">List: By Month</a>
+                        <a href="#" data-permission="GET_ID" onclick="showAttendanceView('by-id'); return false;">By User ID</a>
+                    </div>
+                </div>
+                
+                <div class="nav-group">
+                    <a href="#" class="nav-toggle" onclick="toggleGroup('leaveGroup'); return false;">Leave</a>
+                    <div id="leaveGroup" class="nav-submenue">
+                        <a href="#" data-permission="LEAVE" onclick="showLeaveView('request'); return false;">Request Leave</a>
+                        <a href="#" data-permission="LEAVE" onclick="showLeaveView('history'); return false;">Leave History</a>
+                        <a href="#" data-permission="LIST_PENDING_REQ" onclick="showLeaveView('pending'); return false;">Pending Requests</a>
+                        <a href="#" data-permission="LIST_LEAVES" onclick="showLeaveView('by-id'); return false;">By User ID</a>
+                        <a href="#" data-permission="LEAVE_STATUS" onclick="showLeaveView('status'); return false;">Approve/Reject</a>
+                    </div>
+                </div>
 
+                <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
+                <a href="#" onclick="showTokenSection(); return false;">Notifications</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
                 <div class="sidebar-spacer"></div>
-                <button id="profileBtn" class="profile-btn" onclick="showProfile()">Profile</button>
+                <a href="#" onclick="showProfile(); return false;">👤 Profile</a>
             </nav>
 
             <main id="contentArea"> 
@@ -99,25 +117,25 @@
                 <div id="attendanceSection" hidden>
                     <h3>Attendance</h3>
                     
-                    <div class="field-card" data-permission="VIEW_ATTENDANCE">
+                    <div class="field-card" data-view="view-today" data-permission="VIEW_ATTENDANCE">
                         <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
                         <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
                         <pre id="todayResult"></pre>
                     </div>
         
-                    <div class="field-card" data-permission="CHECK_IN">
+                    <div class="field-card" data-view="check-in" data-permission="CHECK_IN">
                         <h4 data-permission="CHECK_IN">Check In</h4>
                         <button id="checkInBtn" data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
                         <pre id="checkInResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="CHECK_OUT">
+                    <div class="field-card" data-view="check-out" data-permission="CHECK_OUT">
                         <h4 data-permission="CHECK_OUT">Check Out</h4>
                         <button id="checkOutBtn" data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
                         <pre id="checkOutResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="USER_GET">
+                    <div class="field-card" data-view="date-range" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance in Date Range</h4>
                         <label for="from-date" class="sr-only">From Date</label>
                         <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
@@ -127,7 +145,7 @@
                         <pre id="attendanceRangeResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="USER_GET">
+                    <div class="field-card" data-view="by-month" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance by Month</h4>
                         <label for="get-month" class="sr-only">Month (MM)</label>
                         <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
@@ -137,13 +155,13 @@
                         <pre id="attendanceMonthResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="ALL_ATTENDANCE">
+                    <div class="field-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
                         <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
                         <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
                         <pre id="listTodayResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="GET_LIST">
+                    <div class="field-card" data-view="list-range" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
                         <label for="list-from-date" class="sr-only">From Date</label>
                         <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
@@ -153,7 +171,7 @@
                         <pre id="getListResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="GET_LIST">
+                    <div class="field-card" data-view="list-month" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST">Attendance List by Month</h4>
                         <label for="list-month" class="sr-only">Month (MM)</label>
                         <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
@@ -163,7 +181,7 @@
                         <pre id="getMonthListResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="GET_ID">
+                    <div class="field-card" data-view="by-id" data-permission="GET_ID">
                         <h4 data-permission="GET_ID">Attendance by ID</h4>
                         <label for="user-by-id" class="sr-only">User ID</label>
                         <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
@@ -175,7 +193,7 @@
                 <div id="leaveSection" hidden>
                     <h3>Leave</h3>
             
-                    <div class="field-card" data-permission="LEAVE">
+                    <div class="field-card" data-view="request" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave Request</h4>
                         <label for="start-leave" class="sr-only">Leave start date</label>
                         <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
@@ -194,19 +212,19 @@
                         <button id="postLeaveBtn" data-permission="LEAVE" onclick="postLeave()">Submit</button>
                     </div>
 
-                    <div class="field-card" data-permission="LEAVE">
+                    <div class="field-card" data-view="history" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave History</h4>
                         <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
                         <pre id="leaveHistoryResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="LIST_PENDING_REQ">
+                    <div class="field-card" data-view="pending" data-permission="LIST_PENDING_REQ">
                         <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
                         <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
                         <pre id="pendingLeavesResult"></pre>
                     </div>
 
-                    <div class="field-card" data-permission="LIST_LEAVES">                            
+                    <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                            
                         <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
                         <label for="leaves-by-id" class="sr-only">User ID</label>
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
@@ -214,7 +232,7 @@
                         <pre id="leavesByIdResult"></pre>
                     </div>
 
-                   <div class="field-card" data-permission="LEAVE_STATUS">
+                   <div class="field-card" data-view="status" data-permission="LEAVE_STATUS">
                         <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
                         <label for="update-leave-status" class="sr-only">Leave ID</label>
                         <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">                    

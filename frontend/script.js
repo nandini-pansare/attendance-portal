@@ -302,6 +302,28 @@ function stopClock(){
     clearInterval(clockInterval);
 }
 
+window.toggleGroup = function(groupId){
+    document.getElementById(groupId).classList.toggle('open');
+}
+
+window.showAttendanceView = function(view){
+    showAttendance();
+    document.querySelectorAll('#attendanceSection .field-card').forEach(card =>{
+        card.hidden = (card.dataset.view !== view);
+    });
+    document.querySelectorAll('#attendanceGroup a').forEach(link => link.classList.remove('active'));
+    event.target.classList.add('active');
+};
+
+window.showLeaveView = function(view){
+    showLeave();
+    document.querySelectorAll('#leaveSection .field-card').forEach(card => {
+        card.hidden = (card.dataset.view !== view);
+    });
+    document.querySelectorAll('#leaveGroup a').forEach(link => link.classList.remove('active'));
+    event.target.classList.add('active');
+};
+
 window.loadDashboard = async function(){
     const token = localStorage.getItem('token');
     const role = decodeRole(token);

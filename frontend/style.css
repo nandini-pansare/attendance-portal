@@ -56,6 +56,40 @@ body {
     background-color: #6f4e37;
 }
 
+#sidebar a{
+    color: #2f2f2f;
+    text-decoration: none;
+    padding: 8px 6px;
+    display: block;
+    font-size: 14px;
+}
+
+#sidebar a:hover{
+    background-color: rgba(0,0,0,0.06);
+}
+
+#sidebar a.active{
+    background-color: #6f4e37;
+    color: #ffffff;
+}
+
+.nav-toggle{
+    font-weight: bold;
+}
+
+.nav-submenu{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    padding-left: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-submenue.open{
+    max-height: 500px;
+}
+
 #contentArea {
     flex-grow: 1;
     background-color: #d8cbb8;
