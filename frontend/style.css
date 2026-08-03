@@ -64,6 +64,10 @@ body {
     font-size: 14px;
 }
 
+#sidebar a[hidden]{
+    display: none !important;
+}
+
 #sidebar a:hover{
     background-color: rgba(0,0,0,0.06);
 }
@@ -368,4 +372,17 @@ pre{
     margin: 2px 0 0;
     font-size: 16px;
     font-weight: bold;
+}
+
+.nav-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    padding-left: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-submenu.open {
+    max-height: 500px;
 }
