@@ -209,7 +209,7 @@ pre{
 }
 
 .dashboard-grid{
-    display: gird;
+    display: grid;
     grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
     gap:20px;
     width:100%;

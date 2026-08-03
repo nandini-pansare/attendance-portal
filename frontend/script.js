@@ -228,6 +228,7 @@ window.showDashboard = function(){
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
+    loadDashboard();
 }
 
 window.showAttendance = async function(){
@@ -259,7 +260,60 @@ window.showTokenSection = function(){
     document.getElementById("navTokenSection").classList.add("active");
 };
 
-window.dashboardSection = async function(){}
+window.loadDashboard = async function(){
+    const token = localStorage.getItm('token');
+    const role = decodeRole(token);
+    const allowed = Permissions[role] || [];
+
+    document.getElementById("dashRole").textContent = role || '--';
+    document.getElementById("dashStatus").textContent = "Loading...";
+    document.getElementById("dashHours").textContent = "--";
+    document.getElementById("dashLeaves").textContent = "--";
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/user-view-today`, {
+            mrthod: "GET",
+            credentials: "include",
+            headers: { "Authorization": `Bearer ${token}`}
+        });
+        const data = await safeJson(response);
+        if(response.ok){
+            document.getElementById("dashStatus").textContent = data?.message || 'Not Record Yet.';
+            document.getElementById("dashHours").textContent = data?.hours !== undefined ? data.hours: '--';
+        } else{
+            document.getElementById("dashStatus").textContent = 'Unavailable';
+        } 
+    } catch(error){
+            document.getElementById("dashStatus").textContent = 'Error';
+            console.log(error);
+    }
+
+    const pendingUrl = allowed.includes('LIST_PENDING_REQ')
+    ? `${API_BASE}/leave/list-pending`
+    : `${API_BASE}/leave`;
+
+    try{
+        const response = await fetch(pendingUrl, {
+            method: "GET",
+            credentials: "include",
+            headers: {"Authorization": `Bearer ${token}`}
+        });
+
+        const data = await safeJson(response);
+        if(response.ok){
+            const records = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+            const pendingCount = allowed.include('LIST_PENDING_REQ')
+                ? records.length
+                :records.filer(r => (r?.status || '').toLowerCase() === 'pending').length;
+            document.getElementById("dashLeaves").textContent = pendingCount;
+        } else{
+            document.getElementById("dashLeaves").textContent = '--';
+        }
+    } catch(error){
+        document.getElementById("dashLeaves").textContent = '--';
+        console.log(error);
+    }
+};
 
 //ATTENDANCE
 
