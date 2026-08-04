@@ -54,11 +54,11 @@
             <nav id="sidebar">
                 <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
                 <div class="nav-group">
-                    <a href='#' class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">Attendance</a>
+                    <a href='#' id="attendanceToggle" class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">Attendance</a>
                     <div id="attendanceGroup" class="nav-submenu">
                         <a href="#" data-permission="VIEW_ATTENDANCE" onclick="showAttendanceView('view-today'); return false;">Today's Attendance</a>
-                        <a href="#" data-permission="CHECK_IN" onclick="showAttendanceView('check-in'); return false;">Check In</a>
-                        <a href="#" data-permission="CHECK_OUT" onclick="showAttendanceView('check-out'); return false;">Check Out</a>
+                        <a href="#" data-permission="CHECK_IN" onclick="openModal('checkInModal', this); return false;">Check In</a>
+                        <a href="#" data-permission="CHECK_OUT" onclick="openModal('checkOutModal', this); return false;">Check Out</a>
                         <a href="#" data-permission="USER_GET" onclick="showAttendanceView('date-range'); return false;">Date Range</a>
                         <a href="#" data-permission="USER_GET" onclick="showAttendanceView('by-month'); return false;">By Month</a>
                         <a href="#" data-permission="ALL_ATTENDANCE" onclick="showAttendanceView('list-today'); return false;">Today (All)</a>
@@ -69,9 +69,9 @@
                 </div>
                 
                 <div class="nav-group">
-                    <a href="#" class="nav-toggle" onclick="toggleGroup('leaveGroup'); return false;">Leave</a>
+                    <a href="#" id="leaveToggle" class="nav-toggle" onclick="toggleGroup('leaveGroup'); return false;">Leave</a>
                     <div id="leaveGroup" class="nav-submenu">
-                        <a href="#" data-permission="LEAVE" onclick="showLeaveView('request'); return false;">Request Leave</a>
+                        <a href="#" data-permission="LEAVE" onclick="openModal('leaveRequestModal', this); return false;">Request Leave</a>
                         <a href="#" data-permission="LEAVE" onclick="showLeaveView('history'); return false;">Leave History</a>
                         <a href="#" data-permission="LIST_PENDING_REQ" onclick="showLeaveView('pending'); return false;">Pending Requests</a>
                         <a href="#" data-permission="LIST_LEAVES" onclick="showLeaveView('by-id'); return false;">By User ID</a>
@@ -118,21 +118,24 @@
                     <h3>Attendance</h3>
                     
                     <div class="field-card" data-view="view-today" data-permission="VIEW_ATTENDANCE">
-                        <h4 data-permission="VIEW_ATTENDANCE">View Today's Attendance</h4>
-                        <button data-permission="VIEW_ATTENDANCE" onclick="userViewToday()">Click</button>
-                        <pre id="todayResult"></pre>
-                    </div>
-        
-                    <div class="field-card" data-view="check-in" data-permission="CHECK_IN">
-                        <h4 data-permission="CHECK_IN">Check In</h4>
-                        <button id="checkInBtn" data-permission="CHECK_IN" onclick="checkIn()">Check In</button>
-                        <pre id="checkInResult"></pre>
-                    </div>
+                        <h4 data-permission="VIEW_ATTENDANCE">Today's Attendance</h4>
 
-                    <div class="field-card" data-view="check-out" data-permission="CHECK_OUT">
-                        <h4 data-permission="CHECK_OUT">Check Out</h4>
-                        <button id="checkOutBtn" data-permission="CHECK_OUT" onclick="checkOut()">Check Out</button>
-                        <pre id="checkOutResult"></pre>
+                        <div class="stat-row">
+                            <span class="stat-label">Check In</span>
+                            <span id="todayCheckIn" class="stat-value stat-checkin">--</span>
+                        </div>
+
+                        <div class="stat-row">
+                            <span class="stat-label">Check Out</span>
+                            <span id="todayCheckOut" class="stat-value stat-checkout">--</span>
+                        </div>
+
+                        <div class="stat-row">
+                            <span class="stat-label">Hours Worked</span>
+                            <span id="todayHours" class="stat-value stat-hours">--</span>
+                        </div>
+
+                        <p id="todayStatusNote"></p>
                     </div>
 
                     <div class="field-card" data-view="date-range" data-permission="USER_GET">
@@ -193,24 +196,7 @@
                 <div id="leaveSection" hidden>
                     <h3>Leave</h3>
             
-                    <div class="field-card" data-view="request" data-permission="LEAVE">
-                        <h4 data-permission="LEAVE">Leave Request</h4>
-                        <label for="start-leave" class="sr-only">Leave start date</label>
-                        <input type="date" id="start-leave" placeholder="Start Date" data-permission="LEAVE">
-                        <label for="end-leave" class="sr-only">Leave end date</label>
-                        <input type="date" id="end-leave" placeholder="End Date" data-permission="LEAVE">
-                        <label for="leave-type" class="sr-only">Leave Type</label>
-                        <select id="leave-type" data-permission="LEAVE">
-                            <option value="" selected disabled>Select Leave Type</option>
-                            <option value="SICK">Sick</option>
-                            <option value="CASUAL">Casual</option>
-                            <option value="EARNED">Earned</option>
-                            <option value="MANDATORY">Mandatory</option>
-                        </select>
-                        <label for="leabe-reason" class="sr-only">Reason for leave</label>
-                        <input type="text" id="leave-reason" placeholder="Reason for Leave" data-permission="LEAVE">
-                        <button id="postLeaveBtn" data-permission="LEAVE" onclick="postLeave()">Submit</button>
-                    </div>
+                    
 
                     <div class="field-card" data-view="history" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave History</h4>
@@ -275,6 +261,47 @@
             </div>
         </div>
 
+        <div id="checkInModal" class="modal-overlay" hidden>
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('checkInModal')">&times;</button>
+                <h4> Check In </h4>
+                <p class="modal-subtext">Mark your arrival for today.</p>
+                <button id="checkInBtn" onclick="checkIn()">Check In</button>
+                <pre id="checkInResult"></pre>
+            </div>
+        </div>
+        
+        <div id="checkOutModal" class="modal-overlay" hidden>
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('checkOutModal')">&times;</button>
+                <h4> Check Out </h4>
+                <p class="modal-subtext">Mark your departure for today</p>
+                <button id="checkOutBtn" onclick="checkOut()">Check Out</button>
+                <pre id="checkOutResult"></pre>
+            </div>
+        </div>
+
+        <div id="leaveRequestModal" class="modal-overlay" hidden>
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
+                <h4> Request Leave </h4>
+                <label for="start-leave" class="sr-only">Leave start date</label>
+                <input type="date" id="start-leave" placeholder="Start Date">
+                <label for="end-leave" class="sr-only">Leave end date</label>
+                <input type="date" id="end-leave" placeholder="End Date">
+                <label for="leave-type" class="sr-only">Leave Type</label>                        
+                <select id="leave-type">
+                    <option value="" selected disabled>Select Leave Type</option>
+                    <option value="SICK">Sick</option>
+                    <option value="CASUAL">Casual</option>
+                    <option value="EARNED">Earned</option>
+                    <option value="MANDATORY">Mandatory</option>
+                </select>                        
+                <label for="leabe-reason" class="sr-only">Reason for leave</label>
+                <input type="text" id="leave-reason" placeholder="Reason for Leave">
+                <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
+            </div>
+        </div>
         <script type="module" src="script.js?v=10"></script>
     </body>
 </html>

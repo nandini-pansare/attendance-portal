@@ -211,6 +211,21 @@ window.login = async function(){
     }
 };
 
+window.toggleGroup = function (groupId){
+    const group = document.getElementById(groupId);
+    const toggle = event.target;
+    const isOpening = !group.classList.contains('open');
+
+    document.querySelectorAll('.nav-submenu').forEach(g => {
+        if(g.id !== toggle.id) toggle.classList.remove('group-active');
+    });
+
+    group.classList.toggle('open');
+    toggle.classList.toggle('group-active', isOpening);
+
+    document.querySelectorAll('#sidebar a.active').forEach(link => link.classList.remove('active'));
+};
+
 window.toggleSidebar = function(){
     document.getElementById("sidebar").classList.toggle("open");
 }
@@ -222,6 +237,7 @@ window.showDashboard = function(){
     document.getElementById("tokenSection").hidden = true;
     loadDashboard();
     startClock();
+    setActiveLink(event?.target, null);
 }
 
 window.showAttendance = async function(){
@@ -254,6 +270,7 @@ window.showTokenSection = function(){
     document.getElementById("navAttendance").classList.remove("active");
     document.getElementById("navLeave").classList.remove("active");
     document.getElementById("navTokenSection").classList.add("active");
+    setActiveLink(event?.target, null);
 };
 
 window.showProfile = function(){
@@ -302,8 +319,16 @@ function stopClock(){
     clearInterval(clockInterval);
 }
 
-window.toggleGroup = function(groupId){
-    document.getElementById(groupId).classList.toggle('open');
+function setActiveLink(clickedLink, groupToggleId){
+    document.querySelectorAll('#sidebar a').forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.nav-toggle').forEach(toggle => toggle.classList.remove('group-active'));
+
+    if(clickedLink){
+        clickedLink.classList.add('active');
+    }
+    if(groupToggleId){
+        document.getElementById(groupToggleId)?.classList.add('group-active');
+    }
 }
 
 window.showAttendanceView = function(view){
@@ -311,8 +336,7 @@ window.showAttendanceView = function(view){
     document.querySelectorAll('#attendanceSection .field-card').forEach(card =>{
         card.hidden = (card.dataset.view !== view);
     });
-    document.querySelectorAll('#attendanceGroup a').forEach(link => link.classList.remove('active'));
-    event.target.classList.add('active');
+    setActiveLink(event.target, 'attendanceToggle');
 };
 
 window.showLeaveView = function(view){
@@ -320,8 +344,7 @@ window.showLeaveView = function(view){
     document.querySelectorAll('#leaveSection .field-card').forEach(card => {
         card.hidden = (card.dataset.view !== view);
     });
-    document.querySelectorAll('#leaveGroup a').forEach(link => link.classList.remove('active'));
-    event.target.classList.add('active');
+    setActiveLink(event.target, 'leaveToggle');
 };
 
 window.loadDashboard = async function(){
@@ -381,8 +404,20 @@ window.loadDashboard = async function(){
 
 //ATTENDANCE
 
+function formatTime(dateStr){
+    if(!dateStr) return '--';
+    return new Date(dateStr).toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
 window.userViewToday = async function(){
-        document.getElementById("todayResult").textContent = "";
+    document.getElementById("todayCheckIn").textContent = '--';
+    document.getElementById("todayCheckOut").textContent = '--';
+    document.getElementById("todayHours").textContent = '--';
+    document.getElementById("todayStatusNote").textContent = 'Loading...'
+
     try {
         const response = await fetch(`${API_BASE}/attendance/user-view-today`,{
             method: "GET",
@@ -395,15 +430,18 @@ window.userViewToday = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            let display = data?.message || '';
-            if(data?.hours !== undefined){
-                display += `\nHours worked: ${data.hours}`;
-            }
-            document.getElementById("todayResult").textContent = display;
+            document.getElementById("todayCheckIn").textContent = formatTime(data?.checkIn);
+            document.getElementById("todayCheckOut").textContent = formatTime(data?.checkOut);
+            document.getElementById("todayHours").textContent = data?.hours !== null && data?.hours !== undefined
+                ? data.hours
+                : '--';
+            document.getElementById("todayStatusNote").textContent = data?.message || '';
         } else{
+            document.getElementById("todayStatusNote").textContent = '';
             showBanner(data?.message || "Request Failed.", "error");
         }
     } catch(error){
+        document.getElementById("todayStatusNote").textContent = '';
         showBanner("ERROR: " + error.message, "error");
         console.log(error);
     }
@@ -1139,3 +1177,24 @@ function decodeToken(token){
 function decodeRole(token){
     return decodeToken(token)?.role.toUpperCase() || null;
 }
+
+window.openModal = function(modalId, linkEl){
+    document.getElementById(modalId).hidden = false;
+    if(linkEl){
+        document.querySelectorAll('#sidebar a').forEach(link => link.classList.remove('active'));
+        linkEl.classList.add('active');
+    }
+};
+
+window.closeModal = function(modalId){
+    document.getElementById(modalId).hidden = true;
+};
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+        if(e.target === overlay){
+            overlay.hidden = true;
+        }
+    });
+});
+    

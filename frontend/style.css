@@ -79,6 +79,12 @@ body {
 #sidebar a.active{
     background-color: #6f4e37;
     color: #ffffff;
+    font-weight: bold;
+}
+
+.nav-toggle.group-active {
+    background-color: #a67c52;
+    color: #ffffff;
 }
 
 .nav-toggle{
@@ -355,6 +361,12 @@ pre{
     line-height: 1;
 }
 
+.modal-subtext{
+    font-size: 13px;
+    color: #6f5c47;
+    margin: -4px 0 12px;
+}
+
 .modal-close:hover{
     background: transparent;
     color: #2f2f2f;
@@ -389,4 +401,46 @@ pre{
 
 .nav-submenu.open {
     max-height: 500px;
+}
+
+.stat-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+}
+
+.stat-label{
+    font-size: 13px;
+    color: #6f5c47;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value{
+    font-size: 16px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.stat-checkin{
+    background-color: #f0e4d4;
+    color: #8a5a2b;
+}
+
+.stat-checkout{
+    background-color: #dde6ea;
+    color: #35586b;
+}
+
+.stat-hours{
+    background-color: #e8f0e3;
+    color: #3d6b4f;
+}
+
+#todayStatusNote{
+    font-size: 13px;
+    color: #6f5c47;
+    margin: 8px 0 0;
 }

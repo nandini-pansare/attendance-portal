@@ -21,16 +21,18 @@ export class AttendanceService {
         const attendance = await this.attendanceModel.findOne({ where: {userId, date: today}});
         if(!attendance){
             return {                    
-                message: 'Not Checked In Yet.'
+                message: 'Not Checked In Yet.',
+                checkIn: null,
+                checkOut: null,
+                hours: null 
             };
         }
-        if(!attendance.checkOut){
-            return {
-                message: 'Check In Successful. Not Checked Out Yet.'
-            }
-        }
         return {                
-            message: 'Checked In and Checked Out Successfully.',
+            message: !attendance.checkOut
+                ? 'Check In Successful. Not Checked Out Yet'
+                : 'Checked In and Checked Out Successfully.',
+            checkIn: attendance.checkIn,
+            checkOut: attendance.checkOut,
             hours: attendance.hours, 
         };  
     }
