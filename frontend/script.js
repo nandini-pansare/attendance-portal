@@ -236,14 +236,20 @@ window.toggleGroup = function (groupId){
     const toggle = event.target;
     const isOpening = !group.classList.contains('open');
 
-    document.querySelectorAll('.nav-submenu').forEach(g => {
-        if(g.id !== toggle.id) toggle.classList.remove('group-active');
+    document.querySelectorAll('.nav-submenu').forEach(menu => {
+        if(menu !== group){
+            menu.classList.remove('open');
+        }
+    });
+
+    document.querySelectorAll('.nav-toggle').forEach(btn => {
+        if(btn !== toggle){
+            btn.classList.remove('group-active');
+        }
     });
 
     group.classList.toggle('open');
     toggle.classList.toggle('group-active', isOpening);
-
-    document.querySelectorAll('#sidebar a.active').forEach(link => link.classList.remove('active'));
 };
 
 window.toggleSidebar = function(){
@@ -1374,6 +1380,19 @@ window.logout = async function(){
             document.querySelectorAll('#appLayout input').forEach((el)=>{
                 el.value = '';
             });
+            document.querySelectorAll('.nav-submenu').forEach(menu => {
+                menu.classList.remove('open');
+            });
+            document.querySelectorAll('.nav-toggle').forEach(toggle => {
+                toggle.classList.remove('group-active');
+            });
+            document.querySelectorAll('#sidebar a').forEach(link =>{
+                link.classList.remove('active');
+            });
+            document.getElementById("dashboardSection").hidden = true;
+            document.getElementById("attendanceSection").hidden = true;
+            document.getElementById("leaveSection").hidden = true;
+            document.getElementById("tokenSection").hidden = true;
         }
         else{
             showBanner(data?.message || "Logout failed.", "error");
