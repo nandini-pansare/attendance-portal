@@ -35,7 +35,27 @@ function showBanner(message, type){
 
 async function safeJson(response){
     try{
-        return await response.json();
+        const parsed = await response.json();
+
+        const message = parsed?.message ? String(parsed.message).toLowerCase() : '';
+
+        if(response.status === 401 || message.includes('jwt malformed') || message.includes('jwt expired') || message.includes('invalid token')){
+            // Clear stored token and return to login view
+            try{
+                localStorage.removeItem('token');
+                showBanner(parsed?.message || 'Session expired. Redirecting to login.', 'error');
+                document.getElementById('appLayout').hidden = true;
+                document.getElementById('loginForm').hidden = false;
+                const userEl = document.getElementById('login-username');
+                const passEl = document.getElementById('login-password');
+                if(userEl) userEl.value = '';
+                if(passEl) passEl.value = '';
+            } catch (e) {
+                // ignore UI errors
+            }
+        }
+
+        return parsed;
     } catch(parseError){
         return null;
     }
