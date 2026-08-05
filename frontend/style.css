@@ -543,3 +543,9 @@ pre{
     width: auto;
     text-align: center;
 }
+
+#attendanceSection h3,
+#leaveSection h3{
+    text-align: center;
+    margin-bottom: 20px;
+}
