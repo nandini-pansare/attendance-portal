@@ -498,6 +498,27 @@ pre{
     padding-right: 24px;
 }
 
+
+.data-table th,
+.data-table td{
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+.leave-table {
+    table-layout: auto;
+}
+
+.leave-table th,
+.leave-table td {
+    width: auto;
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
 #userAttendanceTable th:nth-child(1),
 #userAttendanceTable td:nth-child(1){
     width:37%
