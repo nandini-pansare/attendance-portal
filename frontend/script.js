@@ -421,7 +421,13 @@ window.loadDashboard = async function(){
 
         const data = await safeJson(response);
         if(response.ok){
-            const records = Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : []);
+            const records = Array.isArray(data?.records)
+                ? data.records
+                : Array.isArray(data?.data)
+                    ? data.data
+                    : Array.isArray(data)
+                        ? data
+                        : [];
             const pendingCount = allowed.includes('LIST_PENDING_REQ')
                 ? records.length
                 : records.filter(r => (r?.status || '').toLowerCase() === 'pending').length;
@@ -990,14 +996,23 @@ window.postLeave = async function(){
         });
 
         const data = await safeJson(response);
+        const resultEl = document.getElementById('leaveRequestResult');
+        const message = response.ok
+            ? data?.message || 'Leave request submitted.'
+            : `${response.status}: ${data?.message || response.statusText}`;
 
         console.log('postLeave response', { status: response.status, statusText: response.statusText, body: data });
 
+        if(resultEl){
+            resultEl.textContent = message;
+            resultEl.className = response.ok ? 'modal-result success' : 'modal-result error';
+        }
+
         if(response.ok){
-            showBanner(data?.message || 'Leave request submitted.', "success");
+            showBanner(message, "success");
         }
         else{
-            showBanner(`${response.status}: ${data?.message || response.statusText}`, "error");
+            showBanner(message, "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -1124,10 +1139,50 @@ window.leaveHistory = async function(){
     }
 };
 
+function renderPendingLeaves(records){
+
+    const tbody = document.getElementById("pendingLeavesBody");
+    const table = document.getElementById("pendingLeavesTable");
+    const note = document.getElementById("pendingLeavesNote");
+
+    tbody.innerHTML = "";
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = "No pending leave requests.";
+        return;
+    }
+
+    table.hidden = false;
+    note.textContent = "";
+
+    records.forEach(record => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${record.userId}</td>
+            <td>${record.leaveId}</td>
+            <td>${record.leaveType}</td>
+            <td>${record.start}</td>
+            <td>${record.end}</td>
+            <td>${record.reason}</td>
+            <td>${record.status}</td>
+
+            <td>
+                <button onclick="updateLeaveStatus(${record.leaveId}, 'approve')">Approve</button>
+                <button onclick="updateLeaveStatus(${record.leaveId}, 'reject')">Reject</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
 window.pendingLeaves = async function(){
     const btn = document.getElementById("pendingLeavesBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
+
     document.getElementById("pendingLeavesNote").textContent = "";
     document.getElementById("pendingLeavesTable").hidden = true;
     
@@ -1145,13 +1200,7 @@ window.pendingLeaves = async function(){
         
         if(response.ok){
             const records = data?.records ?? [];
-            renderLeaveTableWithUser(
-                records,
-                'pendingLeavesBody',
-                'pendingLeavesTable',
-                'pendingLeavesNote',
-                data?.message || 'No pending requests found.'
-            );
+            renderPendingLeaves(records);
         }
         else{
             showBanner(data?.message || 'Request Failed.', "error");
@@ -1212,25 +1261,14 @@ window.leavesById = async function(){
     }
 };
 
-window.updateLeaveStatus = async function(status){
-    const id = document.getElementById("update-leave-status").value;
-    if(!id){
-        showBanner("Please enter a leave ID.", "error");
-        return;
-    }
+window.updateLeaveStatus = async function(id, status){
     const confirmed = window.confirm(`Are you sure you want to ${status} leave request #${id}?`);
     if(!confirmed){
         return;
     }
 
-    const approveBtn = document.getElementById("approveLeaveBtn");
-    const rejectBtn = document.getElementById("rejectLeaveBtn");
-    approveBtn.disabled = true;
-    rejectBtn.disabled = true;
-    document.getElementById("updateLeaveStatusResult").textContent = "";
-    
     try{
-        const response = await fetch(`${API_BASE}/leave/${encodeURIComponent(id)}/${encodeURIComponent(status)}`,
+        const response = await fetch(`${API_BASE}/leave/${id}/${status}`,
         {
             method: "PATCH",
             credentials: "include",
@@ -1242,7 +1280,8 @@ window.updateLeaveStatus = async function(status){
         const data = await safeJson(response);
         
         if(response.ok){
-            document.getElementById("updateLeaveStatusResult").textContent = data?.message || 'Done';
+            showBanner(data?.message || "Leave updated.", "success");
+            pendingLeaves();
         }
         else{
             showBanner(data?.message || 'Request Failed.', "error");
@@ -1419,7 +1458,13 @@ function decodeRole(token){
 }
 
 window.openModal = function(modalId, linkEl){
-    document.getElementById(modalId).hidden = false;
+    const modal = document.getElementById(modalId);
+    if(!modal){
+        console.error(`Modal not found: ${modalId}`);
+        return;
+    }
+
+    modal.hidden = false;
     if(linkEl){
         document.querySelectorAll('#sidebar a').forEach(link => link.classList.remove('active'));
         linkEl.classList.add('active');
@@ -1427,7 +1472,13 @@ window.openModal = function(modalId, linkEl){
 };
 
 window.closeModal = function(modalId){
-    document.getElementById(modalId).hidden = true;
+    const modal = document.getElementById(modalId);
+    if(!modal){
+        console.error(`Modal not found: ${modalId}`);
+        return;
+    }
+
+    modal.hidden = true;
 };
 
 document.querySelectorAll('.modal-overlay').forEach(overlay => {

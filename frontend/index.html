@@ -75,7 +75,6 @@
                         <a href="#" data-permission="LEAVE" onclick="showLeaveView('history'); return false;">Leave History</a>
                         <a href="#" data-permission="LIST_PENDING_REQ" onclick="showLeaveView('pending'); return false;">Pending Requests</a>
                         <a href="#" data-permission="LIST_LEAVES" onclick="showLeaveView('by-id'); return false;">By User ID</a>
-                        <a href="#" data-permission="LEAVE_STATUS" onclick="showLeaveView('status'); return false;">Approve/Reject</a>
                     </div>
                 </div>
 
@@ -184,10 +183,9 @@
                         <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
                         <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
                         <p id="listTodayNote"></p>
-                        <table class="data-id-table" id="listTodayTable" hidden>
+                        <table class="data-table" id="listTodayTable" hidden>
                             <thead>
                                 <tr>
-                                    <th>User ID</th>
                                     <th>Date</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
@@ -206,7 +204,7 @@
                         <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
                         <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
                         <p id="getListNote"></p>
-                        <table class="data-id-table" id="getListTable" hidden>
+                        <table class="data-table" id="getListTable" hidden>
                             <thead>
                                 <tr>
                                     <th>User ID</th>
@@ -228,10 +226,9 @@
                         <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
                         <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
                         <p id="getMonthListNote"></p>
-                        <table class="data-id-table" id="getMonthListTable" hidden>
+                        <table class="data-table" id="getMonthListTable" hidden>
                             <thead>
                                 <tr>
-                                    <th>User ID</th>
                                     <th>Date</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
@@ -262,10 +259,11 @@
                     </div>
                 </div>
 
+
+
+
                 <div id="leaveSection" hidden>
                     <h3>Leave</h3>
-            
-                    
 
                     <div class="field-card" data-view="history" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave History</h4>
@@ -289,7 +287,7 @@
                         <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
                         <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
                         <p id="pendingLeavesNote"></p>
-                        <table class="leave-table" id="pendingLeavesTable" hidden>
+                        <table id="pendingLeavesTable" class="data-table" hidden>
                             <thead>
                                 <tr>
                                     <th>User ID</th>
@@ -299,6 +297,7 @@
                                     <th>Leave Type</th>
                                     <th>Reason</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="pendingLeavesBody"></tbody>
@@ -311,7 +310,7 @@
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
                         <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
                         <p id="leaveHistoryByIdNote"></p>
-                        <table class="leave-table" id="leaveHistoryByIdTable" hidden>
+                        <table class="data-table" id="leaveHistoryByIdTable" hidden>
                             <thead>
                                 <tr>
                                     <th>User ID</th>
@@ -325,15 +324,6 @@
                             </thead>
                             <tbody id="leaveHistoryByIdBody"></tbody>
                         </table>
-                    </div>
-
-                   <div class="field-card" data-view="status" data-permission="LEAVE_STATUS">
-                        <h4 data-permission="LEAVE_STATUS">Leave Status Update</h4>
-                        <label for="update-leave-status" class="sr-only">Leave ID</label>
-                        <input type="number" id="update-leave-status" placeholder="Leave ID" data-permission="LEAVE_STATUS">                    
-                        <button id="approveLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('approve')">Approve Leave Request</button>
-                        <button id="rejectLeaveBtn" data-permission="LEAVE_STATUS" onclick="updateLeaveStatus('reject')">Reject Leave Request</button>
-                        <pre id="updateLeaveStatusResult"></pre>
                     </div>
                 </div>
 
