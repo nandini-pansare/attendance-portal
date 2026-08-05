@@ -17,7 +17,8 @@ export const Permissions = {
         'CHECK_IN',
         'CHECK_OUT',
         'GET_LIST',
-        'LEAVE_STATUS'
+        'LEAVE_STATUS',
+        'LIST_PENDING_REQ'
     ],
 
     EMPLOYEE: [

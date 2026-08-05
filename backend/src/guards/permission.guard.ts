@@ -15,15 +15,21 @@ export class PermissionGuard implements CanActivate {
         }
 
         const req = context.switchToHttp().getRequest();
-        const role: UserRole = req.user?.role;
+        // Support role coming from either req.user (JWT) or req.session (session-based)
+        const role = req.user?.role ?? req.session?.role;
 
         if (!role) {
             throw new ForbiddenException('No role found on request');
         }
 
-        const allowedPermissions = Permissions[role.toUpperCase()] || [];
+        const roleKey = String(role).toUpperCase().trim();
 
-        const hasPermission = requiredPermissions.some((perm) =>
+        const allowedPermissionsRaw = Permissions[roleKey] || [];
+        const allowedPermissions = allowedPermissionsRaw.map(p => String(p).toUpperCase().trim());
+
+        const requiredNormalized = requiredPermissions.map(p => String(p).toUpperCase().trim());
+
+        const hasPermission = requiredNormalized.some((perm) =>
             allowedPermissions.includes(perm),
         );
 

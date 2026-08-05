@@ -3,7 +3,7 @@ import {getFCMToken} from "./firebase.js";
 const API_BASE = "https://attendanceportal.duckdns.org";
 const Permissions = {
     HR: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_ID', 'GET_LIST', 'LIST_PENDING_REQ', 'LIST_LEAVES', 'LEAVE_STATUS'],
-    MANAGER: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_LIST', 'LEAVE_STATUS'],
+    MANAGER: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_LIST', 'LEAVE_STATUS', 'LIST_PENDING_REQ'],
     EMPLOYEE: ['VIEW_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'USER_GET', 'LEAVE']
 };
 
@@ -1039,6 +1039,7 @@ function renderLeaveTableWithUser(records, tbodyId, tableId, noteId, emptyMessag
         const row = document.createElement('tr');
         row.innerHTML = `
         <td>${record.userId || '--'}</td>
+        <td>${record.leaveId || '--'}</td>
         <td>${record.start || '--'}</td>
         <td>${record.end || '--'}</td>
         <td>${record.leaveType || '--'}</td>
