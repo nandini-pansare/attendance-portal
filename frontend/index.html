@@ -145,7 +145,18 @@
                         <label for="to-date" class="sr-only">To Date</label>
                         <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
                         <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
-                        <pre id="attendanceRangeResult"></pre>
+                        <p id="attendanceRangeNote"></p>
+                        <table class="data-table" id="attendanceRangeTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th> Check In </th>
+                                    <th> Check Out </th>
+                                    <th> Hours </th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceRangeBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="by-month" data-permission="USER_GET">
@@ -155,13 +166,36 @@
                         <label for="get-year" class="sr-only">Year (YYYY)</label>
                         <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
                         <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
-                        <pre id="attendanceMonthResult"></pre>
+                        <p id="attendanceMonthNote"></p>
+                        <table class="data-table" id="attendanceMonthTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceMonthBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
                         <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
                         <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
-                        <pre id="listTodayResult"></pre>
+                        <p id="listTodayNote"></p>
+                        <table class="data-id-table" id="listTodayTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody id="listTodayBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="list-range" data-permission="GET_LIST">
@@ -171,7 +205,19 @@
                         <label for="list-to-date" class="sr-only"> To Date</label>
                         <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
                         <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
-                        <pre id="getListResult"></pre>
+                        <p id="getListNote"></p>
+                        <table class="data-id-table" id="getListTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody id="getListBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="list-month" data-permission="GET_LIST">
@@ -181,7 +227,19 @@
                         <label for="list-year" class="sr-only">Year (YYYY)</label>
                         <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
                         <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
-                        <pre id="getMonthListResult"></pre>
+                        <p id="getMonthListNote"></p>
+                        <table class="data-id-table" id="getMonthListTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody id="getMonthListBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="by-id" data-permission="GET_ID">
@@ -189,7 +247,18 @@
                         <label for="user-by-id" class="sr-only">User ID</label>
                         <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
                         <button id="userAttendanceBtn" data-permission="GET_ID" onclick="getUserAttendance()">View</button>
-                        <pre id="userAttendanceResult"></pre>
+                        <p id="userAttendanceNote"></p>
+                        <table class="data-table" id="userAttendanceTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Check In</th>
+                                    <th>Check Out</th>
+                                    <th>Hours</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userAttendanceBody"></tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -201,13 +270,38 @@
                     <div class="field-card" data-view="history" data-permission="LEAVE">
                         <h4 data-permission="LEAVE">Leave History</h4>
                         <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
-                        <pre id="leaveHistoryResult"></pre>
+                        <p id="leaveHistoryNote"></p>
+                        <table class="data-table" id="leaveHistoryTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveHistoryBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="pending" data-permission="LIST_PENDING_REQ">
                         <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
                         <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
-                        <pre id="pendingLeavesResult"></pre>
+                        <p id="pendingLeavesNote"></p>
+                        <table class="leave-table" id="pendingLeavesTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingLeavesBody"></tbody>
+                        </table>
                     </div>
 
                     <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                            
@@ -215,7 +309,20 @@
                         <label for="leaves-by-id" class="sr-only">User ID</label>
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
                         <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
-                        <pre id="leavesByIdResult"></pre>
+                        <p id="leaveHistoryByIdNote"></p>
+                        <table class="leave-table" id="leaveHistoryByIdTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveHistoryByIdBody"></tbody>
+                        </table>
                     </div>
 
                    <div class="field-card" data-view="status" data-permission="LEAVE_STATUS">
@@ -246,6 +353,10 @@
             <div class="modal-card">
                 <button class="modal-close" onclick="closeProfile()">&times;</button>
                 <h4>Profile</h4>
+                <div class="profile-row">
+                    <span class="profile-label">User ID</span>
+                    <p id="profileUserId">--</p>
+                </div>
                 <div class="profile-row">
                     <span class="profile-label">Username</span>
                     <p id="profileUsername">--</p>

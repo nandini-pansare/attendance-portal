@@ -28,7 +28,7 @@ export class AttendanceService {
             };
         }
         return {                
-            message: !attendance.checkOut
+            message: !attendance.checkIn
                 ? 'Check In Successful. Not Checked Out Yet'
                 : 'Checked In and Checked Out Successfully.',
             checkIn: attendance.checkIn,

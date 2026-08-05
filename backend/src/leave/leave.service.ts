@@ -83,7 +83,10 @@ export class LeaveService {
     }
     
     async listLeave(req: Express.Request){
-        const userId = req.session.userId;
+        const userId = req.user?.userId ?? req.session?.userId;
+        if(!userId){
+            throw new BadRequestException('User ID is missing from request.');
+        }
         const records = await this.leaveModel.findAll({ where: {userId}});
         if(!records || records.length === 0){
            throw new NotFoundException('Records Not Found.');
@@ -157,21 +160,28 @@ export class LeaveService {
         if(role === UserRole.HR){
             const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}});
             if(!records || records.length === 0){
-                    throw new NotFoundException('No Pending Requests Found!');
+                return{
+                    message: 'No pending requests found.'
+                }
             }
-            return {
-                message: 'Records Fetched.',
-                records,
+            else{
+                return {
+                    message: 'Records Fetched.',
+                    records,
+                }
             }
         }
         if(role === UserRole.MANAGER){
             const records = await this.leaveModel.findAll({where: {status: LeaveStatus.PENDING}});
             if(!records || records.length === 0){
-                throw new NotFoundException('No Pending Requests Found!')
-            }
-            return {
-                message: 'Records Fetched.',
-                records,
+                return{
+                    message: 'No pending requests found.'
+                }
+            } else{
+                return {
+                    message: 'Records Fetched.',
+                    records,
+                }
             }
         }
         return {

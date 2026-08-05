@@ -246,9 +246,9 @@ window.showAttendance = async function(){
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
     document.getElementById("dashboardSection").hidden = true;
-    document.getElementById("navAttendance").classList.add("active");
-    document.getElementById("navLeave").classList.remove("active");
-    document.getElementById("navTokenSection").classList.remove("active");
+    document.getElementById("attendanceToggle")?.classList.add("group-active");
+    document.getElementById("leaveToggle")?.classList.remove("group-active");
+    document.getElementById("navTokenSection")?.classList.remove("group-active");
 };
 window.showLeave = async function(){
     stopClock();
@@ -256,9 +256,9 @@ window.showLeave = async function(){
     document.getElementById("leaveSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("tokenSection").hidden = true;
-    document.getElementById("navAttendance").classList.remove("active");
-    document.getElementById("navLeave").classList.add("active");
-    document.getElementById("navTokenSection").classList.remove("active");
+    document.getElementById("attendanceToggle")?.classList.remove("group-active");
+    document.getElementById("leaveToggle")?.classList.add("group-active");
+    document.getElementById("navTokenSection")?.classList.remove("group-active");
 };
 
 window.showTokenSection = function(){
@@ -267,9 +267,9 @@ window.showTokenSection = function(){
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
     document.getElementById("tokenSection").hidden = false;
-    document.getElementById("navAttendance").classList.remove("active");
-    document.getElementById("navLeave").classList.remove("active");
-    document.getElementById("navTokenSection").classList.add("active");
+    document.getElementById("attendanceToggle")?.classList.remove("group-active");
+    document.getElementById("leaveToggle")?.classList.remove("group-active");
+    document.getElementById("navTokenSection")?.classList.add("group-active");
     setActiveLink(event?.target, null);
 };
 
@@ -277,6 +277,7 @@ window.showProfile = function(){
     const token = localStorage.getItem('token');
     const payload = decodeToken(token);
 
+    document.getElementById("profileUserId").textContent = payload?.userId ?? payload?.id ?? '--';
     document.getElementById("profileUsername").textContent = payload?.username || '--';
     document.getElementById("profileEmail").textContent = payload?.email || '--';
     document.getElementById("profileRole").textContent = payload?.role?.toUpperCase() || '--';
@@ -337,6 +338,10 @@ window.showAttendanceView = function(view){
         card.hidden = (card.dataset.view !== view);
     });
     setActiveLink(event.target, 'attendanceToggle');
+
+    if(view === 'view-today'){
+        userViewToday();
+    }
 };
 
 window.showLeaveView = function(view){
@@ -366,7 +371,9 @@ window.loadDashboard = async function(){
         const data = await safeJson(response);
         if(response.ok){
             document.getElementById("dashStatus").textContent = data?.message || 'Not Record Yet.';
-            document.getElementById("dashHours").textContent = data?.hours !== undefined ? data.hours: '--';
+            document.getElementById("dashHours").textContent = data?.hours !== undefined && data.hours !== null
+                ? Number(data.hours).toFixed(2)
+                : '--';
         } else{
             document.getElementById("dashStatus").textContent = 'Unavailable';
         } 
@@ -394,7 +401,7 @@ window.loadDashboard = async function(){
                 : records.filter(r => (r?.status || '').toLowerCase() === 'pending').length;
             document.getElementById("dashLeaves").textContent = pendingCount;
         } else{
-            document.getElementById("dashLeaves").textContent = '--';
+            document.getElementById("dashLeaves").textContent = 'None Pending';
         }
     } catch(error){
         document.getElementById("dashLeaves").textContent = '--';
@@ -410,6 +417,76 @@ function formatTime(dateStr){
         hour: '2-digit',
         minute: '2-digit'
     });
+}
+
+function renderAttendanceTable(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Attendance table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display attendance records. Please refresh the page.', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record =>{
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${record.date || '--'}</td>
+        <td>${formatTime(record.checkIn)}</td>
+        <td>${formatTime(record.checkOut)}</td>
+        <td>${record.hours !== null && record.hours !== undefined ? Number(record.hours).toFixed(2) : '--'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    table.hidden = false;
+    note.textContent = '';
+}
+
+function renderAttendanceTableWithUser(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Attendance table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display attendance records. Please refresh the page,', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record => {
+        const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${record.userId ?? '--'}</td>
+            <td>${record.date || '--'}</td>
+            <td>${formatTime(record.checkIn)}</td>
+            <td>${formatTime(record.checkOut)}</td>
+            <td>${record.hours !== null && record.hours !== undefined ? Number(record.hours).toFixed(2) : '--'}</td>
+            `;
+            tbody.appendChild(row);
+        }
+    );
+
+    table.hidden = false;
+    note.textContent = '';
 }
 
 window.userViewToday = async function(){
@@ -433,7 +510,7 @@ window.userViewToday = async function(){
             document.getElementById("todayCheckIn").textContent = formatTime(data?.checkIn);
             document.getElementById("todayCheckOut").textContent = formatTime(data?.checkOut);
             document.getElementById("todayHours").textContent = data?.hours !== null && data?.hours !== undefined
-                ? data.hours
+                ? data.hours.toFixed(2)
                 : '--';
             document.getElementById("todayStatusNote").textContent = data?.message || '';
         } else{
@@ -464,7 +541,8 @@ window.checkIn = async function(){
 
         const data = await safeJson(response);
         if(response.ok){
-            document.getElementById("checkInResult").textContent = data?.message || '';   
+            document.getElementById("checkInResult").textContent = data?.message || '';
+            userViewToday();
         } else{
             showBanner(data?.message || "Check-in failed.", "error");
         }
@@ -499,6 +577,7 @@ window.checkOut = async function(){
                 display += `\nHours worked: ${data.hours}`;
             }
             document.getElementById("checkOutResult").textContent = display;
+            userViewToday();
         }     
         else{
             showBanner(data?.message || "Check-out failed.", "error");
@@ -515,7 +594,11 @@ window.getUserAttendanceRange = async function(){
     const btn = document.getElementById("getRangeBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("attendanceRangeResult").textContent = "";
+    document.getElementById("attendanceRangeBody").innerHTML = "";
+    document.getElementById("attendanceRangeTable").hidden = true;
+    document.getElementById("attendanceRangeNote").textContent = "";
+    
+    
     const from = document.getElementById("from-date").value;
     const to = document.getElementById("to-date").value;
     
@@ -546,11 +629,13 @@ window.getUserAttendanceRange = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            let display = data?.message || '';
-            if(data?.data !== undefined){
-                display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
-            }
-            document.getElementById("attendanceRangeResult").textContent = display;
+            renderAttendanceTable(
+                data?.data,
+                'attendanceRangeBody',
+                'attendanceRangeTable',
+                'attendanceRangeNote',
+                'No records found for this range.'
+            );
         }
         else{
             showBanner(data?.message || "Request failed.", "error");
@@ -567,7 +652,9 @@ window.attendanceByMonth = async function(){
     const btn = document.getElementById("getMonthBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("attendanceMonthResult").textContent = "";
+    document.getElementById("attendanceMonthNote").textContent = "";
+    document.getElementById("attendanceMonthTable").hidden = true;
+
     const month = document.getElementById("get-month").value;
     const year = document.getElementById("get-year").value;
 
@@ -597,11 +684,13 @@ window.attendanceByMonth = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            if(data?.month){
-                document.getElementById("attendanceMonthResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
-            } else{
-                document.getElementById("attendanceMonthResult").textContent = data?.message || 'No data returned.';
-            }
+            renderAttendanceTable(
+                data?.records,
+                'attendanceMonthBody',
+                'attendanceMonthTable',
+                'attendanceMonthNote',
+                data?.message || 'No records found for this month.'
+            );
         }  else {
             showBanner(data?.message || "Request failed.", "error");
         }
@@ -615,9 +704,13 @@ window.attendanceByMonth = async function(){
 
 window.listToday = async function(){
     const btn = document.getElementById("listTodayBtn");
-    btn.disabled = true;
-    btn.textContent = "Fetching...";
-    document.getElementById("listTodayResult").textContent = "";
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Fetching...";
+    }
+    document.getElementById("listTodayNote").textContent = "";
+    document.getElementById("listTodayTable").hidden = true;
+
     try{
         const response = await fetch(`${API_BASE}/attendance/list-today`,
         {
@@ -631,7 +724,13 @@ window.listToday = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            document.getElementById("listTodayResult").textContent = JSON.stringify(data, null, 2);
+            renderAttendanceTableWithUser(
+                data?.records,
+                'listTodayBody',
+                'listTodayTable',
+                'listTodayNote',
+                data?.message || 'No records found for today.'
+            );
         } else {
             showBanner(data?.message || "Request failed.", "error");
         }
@@ -647,7 +746,9 @@ window.getAttendanceRange = async function(){
     const btn = document.getElementById("listRangeBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("getListResult").textContent = "";
+    document.getElementById("getListNote").textContent = "";
+    document.getElementById("getListTable").hidden = true;
+    
     const from = document.getElementById("list-from-date").value;
     const to = document.getElementById("list-to-date").value;
 
@@ -676,11 +777,14 @@ window.getAttendanceRange = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            let display = data?.message || '';
-            if(data?.data !== undefined){
-                display += `\nRecords: \n${JSON.stringify(data.data, null, 2)}`;
-            }
-            document.getElementById("getListResult").textContent = display;
+            const records = data?.records ?? data?.data ?? [];
+            renderAttendanceTableWithUser(
+                records,
+                'getListBody',
+                'getListTable',
+                'getListNote',
+                data?.message || 'No records found for this range.'
+            );
         }
         else{
             showBanner(data?.message || "Request failed.", "error");
@@ -697,7 +801,9 @@ window.listByMonth = async function(){
     const btn = document.getElementById("listMonthBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("getMonthListResult").textContent = "";
+    document.getElementById("getMonthListNote").textContent = "";
+    document.getElementById("getMonthListTable").hidden = true;
+    
     const month = document.getElementById("list-month").value;
     const year = document.getElementById("list-year").value;
 
@@ -727,11 +833,14 @@ window.listByMonth = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            if(data?.month){
-                document.getElementById("getMonthListResult").textContent = `Month: ${data.month}, Year: ${data.year}\n\n${JSON.stringify(data.records, null, 2)}`;
-            } else{
-                document.getElementById("getMonthListResult").textContent = data?.message || 'No data returned';
-            }
+            const records = data?.records ?? data?.data ?? [];
+            renderAttendanceTableWithUser(
+                records,
+                'getMonthListBody',
+                'getMonthListTable',
+                'getMonthListNote',
+                data?.message || 'No records found for this month.'
+            );
         } 
         else {
             showBanner(data?.message || "Request failed.", "error");
@@ -748,7 +857,8 @@ window.getUserAttendance = async function(){
     const btn = document.getElementById("userAttendanceBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("userAttendanceResult").textContent = "";
+    document.getElementById("userAttendanceNote").textContent = "";
+    document.getElementById("userAttendanceTable").hidden = true;
     const userId = document.getElementById("user-by-id").value;
 
     if(!userId){
@@ -768,15 +878,19 @@ window.getUserAttendance = async function(){
         });
 
         const data = await safeJson(response);
-        const payload = data?.records ?? data?.data ?? data;
-        const display = payload !== undefined && payload !== null
-            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
-            : (data?.message || 'No data returned.');
+        const results = data?.records ?? data?.data;
+        const records = Array.isArray(results) ? results : (results ? [results] : []);
 
         if(response.ok){
-            document.getElementById("userAttendanceResult").textContent = display;
+            renderAttendanceTable(
+                records,
+                'userAttendanceBody',
+                'userAttendanceTable',
+                'userAttendanceNote',
+                data?.message || 'No records found for this user.'
+            );
         } else {
-            showBanner(data?.message || 'Request failed.', "error");
+            showBanner(data?.message || 'Request failed.', 'error');
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
@@ -867,11 +981,83 @@ window.postLeave = async function(){
     }
 };
 
+function renderLeaveTable(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Leave table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display leave records. Please refresh the page.', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${record.start || '--'}</td>
+        <td>${record.end || '--'}</td>
+        <td>${record.leaveType || '--'}</td>
+        <td>${record.reason || '--'}</td>
+        <td>${record.status || '--'}</td> 
+        `;
+        tbody.appendChild(row);
+    });
+
+    table.hidden = false;
+    note.textContent = '';
+}
+
+function renderLeaveTableWithUser(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Leave table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display leave records. Please refresh the page.', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${record.userId || '--'}</td>
+        <td>${record.start || '--'}</td>
+        <td>${record.end || '--'}</td>
+        <td>${record.leaveType || '--'}</td>
+        <td>${record.reason || '--'}</td>
+        <td>${record.status || '--'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    table.hidden = false;
+    note.textContent = '';
+}
+
 window.leaveHistory = async function(){
     const btn = document.getElementById("leaveHistoryBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("leaveHistoryResult").textContent = "";
+    document.getElementById("leaveHistoryNote").textContent = "";
+    document.getElementById("leaveHistoryTable").hidden = true;
     const token = localStorage.getItem('token');
     if(!token){
         showBanner("Token Not Found!", "error");
@@ -890,13 +1076,16 @@ window.leaveHistory = async function(){
         });
 
         const data = await safeJson(response);
-        const payload = data?.data ?? data;
-        const display = payload !== undefined && payload !== null
-            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
-            : (data?.message || 'No data returned.');
+        const records = data?.data ?? data?.records;
 
         if(response.ok){
-            document.getElementById("leaveHistoryResult").textContent = display;
+            renderLeaveTable(
+                Array.isArray(records) ? records : [],
+                'leaveHistoryBody',
+                'leaveHistoryTable',
+                'leaveHistoryNote',
+                data?.message || 'No records found.'
+            );
         } else{
             showBanner(data?.message || 'Request failed.', "error");
         }
@@ -912,7 +1101,9 @@ window.pendingLeaves = async function(){
     const btn = document.getElementById("pendingLeavesBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("pendingLeavesResult").textContent = "";
+    document.getElementById("pendingLeavesNote").textContent = "";
+    document.getElementById("pendingLeavesTable").hidden = true;
+    
     try{
         const response = await fetch(`${API_BASE}/leave/list-pending`,
         {
@@ -924,13 +1115,16 @@ window.pendingLeaves = async function(){
         });
 
         const data = await safeJson(response);
-        const payload = data?.data ?? data;
-        const display = payload !== undefined && payload !== null
-            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
-            : (data?.message || 'No data returned.');
-
+        
         if(response.ok){
-            document.getElementById("pendingLeavesResult").textContent = display;
+            const records = data?.records ?? [];
+            renderLeaveTableWithUser(
+                records,
+                'pendingLeavesBody',
+                'pendingLeavesTable',
+                'pendingLeavesNote',
+                data?.message || 'No pending requests found.'
+            );
         }
         else{
             showBanner(data?.message || 'Request Failed.', "error");
@@ -947,7 +1141,8 @@ window.leavesById = async function(){
     const btn = document.getElementById("leavesByIdBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
-    document.getElementById("leavesByIdResult").textContent = "";
+    document.getElementById("leaveHistoryByIdNote").textContent = "";
+    document.getElementById("leaveHistoryByIdTable").hidden = true;
     const id = document.getElementById("leaves-by-id").value;
     
     if(!id){
@@ -968,13 +1163,16 @@ window.leavesById = async function(){
         });
 
         const data = await safeJson(response);
-        const payload = data?.data ?? data;
-        const display = payload !== undefined && payload !== null
-            ? (typeof payload === 'string' ? payload : JSON.stringify(payload, null, 2))
-            : (data?.message || 'No data returned.');
+        const records = data?.records ?? data?.data ?? [];
 
         if(response.ok){
-            document.getElementById("leavesByIdResult").textContent = display;
+            renderLeaveTableWithUser(
+                Array.isArray(records) ? records : [records],
+                'leaveHistoryByIdBody',
+                'leaveHistoryByIdTable',
+                'leaveHistoryByIdNote',
+                data?.message || 'No leave records found for this user.'
+            );
         }
         else{
             showBanner(data?.message || 'Request Failed.', "error");
@@ -1128,8 +1326,10 @@ window.testNotification = async function (){
 
 window.logout = async function(){
     const btn = document.getElementById("logoutBtn");
-    btn.disabled = true;
-    btn.textContent = "Logging Out...";
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Logging Out...";
+    }
     try{
         const response = await fetch(`${API_BASE}/auth/portal-logout`, {
             method: "POST",
