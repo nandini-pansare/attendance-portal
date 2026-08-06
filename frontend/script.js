@@ -382,7 +382,7 @@ window.resetPassword = async function(){
             headers: { 
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({newPassword, resetEmail}),
+            body: JSON.stringify({password: newPassword, email: resetEmail}),
         });
 
         const data = await safeJson(response);

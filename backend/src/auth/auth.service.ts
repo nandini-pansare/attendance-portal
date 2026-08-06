@@ -79,21 +79,21 @@ export class AuthService {
         if(!user){
             throw new BadRequestException('Invalid credentials');
         }
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        if(hashedPassword === user.password){
+        const isSamePassword = await bcrypt.compare(newPassword, user.password);
+        if(isSamePassword){
             throw new BadRequestException('Password must be new.');
         }
-        else{
-            try{
-                user.password = hashedPassword;
-                await user.save();
 
-                return{
-                    message: 'Password successfully reset.'
-                };
-            } catch(error){
-                throw new BadRequestException('Reset Failed.');
-            }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        try{
+            user.password = hashedPassword;
+            await user.save();
+
+            return{
+                message: 'Password successfully reset.'
+            };
+        } catch(error){
+            throw new InternalServerErrorException('Reset Failed.');
         }
     }
 }
