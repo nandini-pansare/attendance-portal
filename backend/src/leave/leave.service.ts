@@ -164,7 +164,7 @@ export class LeaveService {
     async listPending(req: Express.Request){
         const role = req.user?.role;
         if(role === UserRole.HR){
-            const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}});
+            const records = await this.leaveModel.findAll({where: {status: LeaveStatus.HR_PENDING}, order: [['leaveId', 'ASC']]});
             if(!records || records.length === 0){
                 return{
                     message: 'No pending requests found.'
