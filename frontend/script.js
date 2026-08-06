@@ -358,12 +358,20 @@ window.resetPassword = async function(){
     const confirmPassword = document.getElementById('confirm-password').value;
 
     if(newPassword !== confirmPassword){
-        showBanner("Negetive Match! Please enter the same password again to confirm.", "error");
+        showBanner("Negative Match! Please enter the same password again to confirm.", "error");
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Reset Password";
+        }
         return;
     }
 
     const confirmed = window.confirm('Are you sure you want to change your password?');
     if(!confirmed){
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Reset Password";
+        }
         return;
     }
 
