@@ -196,7 +196,7 @@ export class LeaveService {
     }
 
     async getUser(id: number){
-        const records = await this.leaveModel.findAll({where: {userId: id}});
+        const records = await this.leaveModel.findAll({where: {userId: id}, order: [['leaveId', 'ASC']]});
         if(!records || records.length === 0){
             throw new NotFoundException('No Records Found.')
         }
