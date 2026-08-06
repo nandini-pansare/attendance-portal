@@ -104,6 +104,12 @@ export class LeaveService {
         }
         const role = req.user?.role;
         if(role === UserRole.HR && leave.status === LeaveStatus.HR_PENDING){
+            if(status === LeaveStatus.APPROVED){
+                status = LeaveStatus.HR_APPROVED;
+            }
+            if(status === LeaveStatus.REJECTED){
+                status = LeaveStatus.HR_REJECTED;
+            }
             leave.status = status;
             await leave.save();
 
