@@ -8,7 +8,8 @@ export const Permissions = {
         'GET_LIST',
         'LIST_PENDING_REQ',
         'LIST_LEAVES',
-        'LEAVE_STATUS'
+        'LEAVE_STATUS',
+        'EDIT_ATTENDANCE'
     ],
 
     MANAGER: [
@@ -18,7 +19,8 @@ export const Permissions = {
         'CHECK_OUT',
         'GET_LIST',
         'LEAVE_STATUS',
-        'LIST_PENDING_REQ'
+        'LIST_PENDING_REQ',
+        'EDIT_ATTENDANCE'
     ],
 
     EMPLOYEE: [
@@ -26,6 +28,7 @@ export const Permissions = {
         'CHECK_IN',
         'CHECK_OUT',
         'USER_GET',
-        'LEAVE'
+        'LEAVE',
+        'EDIT_ATTENDANCE'
     ],
 };

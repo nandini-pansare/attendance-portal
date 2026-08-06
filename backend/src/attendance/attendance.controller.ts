@@ -1,11 +1,12 @@
-import { Controller, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import * as Express from 'express';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
-import { dateRangeQuerySchema, getListSchema, monthQuerySchema } from '../common/validation/attendance.validation';
+import { dateRangeQuerySchema, editAttendanceSchema, getListSchema, monthQuerySchema } from '../common/validation/attendance.validation';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { Permission } from 'src/common/decorators/permissions.decorators';
 import { PermissionGuard } from 'src/guards/permission.guard';
+import { EditAttendanceDto } from './dto/edit-attendance.dto';
 
 
 @Controller('attendance')
@@ -78,5 +79,12 @@ export class AttendanceController {
     @Permission('GET_ID')
     async userAttendance(@Req() req: Express.Request, @Param('id') id: number){
         return this.attendanceService.userAttendance(req, id);
+    }
+
+    @Patch('edit-attendance')
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    @Permission('EDIT_ATTENDANCE')
+    async editToday(@Req() req: Express.Request, @Body(new JoiValidationPipe(editAttendanceSchema)) body: EditAttendanceDto){
+        return this.attendanceService.editAttendance(req, body);
     }
 }

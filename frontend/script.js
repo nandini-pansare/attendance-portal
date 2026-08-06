@@ -2,9 +2,9 @@ import {getFCMToken} from "./firebase.js";
 
 const API_BASE = "https://attendanceportal.duckdns.org";
 const Permissions = {
-    HR: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_ID', 'GET_LIST', 'LIST_PENDING_REQ', 'LIST_LEAVES', 'LEAVE_STATUS'],
-    MANAGER: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_LIST', 'LEAVE_STATUS', 'LIST_PENDING_REQ'],
-    EMPLOYEE: ['VIEW_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'USER_GET', 'LEAVE']
+    HR: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_ID', 'GET_LIST', 'LIST_PENDING_REQ', 'LIST_LEAVES', 'LEAVE_STATUS', 'EDIT_ATTENDANCE'],
+    MANAGER: ['VIEW_ATTENDANCE', 'ALL_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'GET_LIST', 'LEAVE_STATUS', 'LIST_PENDING_REQ', 'EDIT_ATTENDANCE'],
+    EMPLOYEE: ['VIEW_ATTENDANCE', 'CHECK_IN', 'CHECK_OUT', 'USER_GET', 'LEAVE', 'EDIT_ATTENDANCE']
 };
 
 let verifiedEmail = null;
@@ -770,6 +770,57 @@ window.checkOut = async function(){
     } finally{
         btn.disabled = false;
         btn.textContent = "Check Out";
+    }
+};
+
+window.editAttendance = async function(){
+    const btn = document.getElementById("editAttendanceBtn");
+    const date = document.getElementById("edit-date").value;
+    const checkIn = document.getElementById("edit-checkIn").value;
+    const checkOut = document.getElementById("edit-checkout").value;
+
+    if(!date){
+        showBanner("Please select a date.", "error");
+        return;
+    }
+    
+    if(!checkIn && !checkOut){
+        showBanner("Both check in and check out fields cannot be null.", "error");
+        return;
+    }
+
+    const payload = {date};
+    if(checkIn) payload.checkIn = checkIn;
+    if(checkOut) payload.checkOut = checkOut;
+
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+    document.getElementById("editAttendanceResult").textContent = "";
+
+    try{
+        const response = await fetch(`${API_BASE}/attenance/edit-attendance`, {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data =await safeJson(response);
+
+        if(response.ok){
+            document.getElementById("editAttendanceResult").textContent = data?.message || 'Update.';
+            userViewToday();
+        } else{
+            showBanner(data?.message || "Update failed.", "error"); 
+        }
+    } catch(error){
+        showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Save Changes";
     }
 };
 

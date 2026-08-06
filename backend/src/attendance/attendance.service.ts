@@ -5,6 +5,7 @@ import { Op } from 'sequelize';
 import { Request } from 'express';
 import { UserRole } from 'src/common/enums/role.enum';
 import { User } from 'src/users/user.model';
+import { EditAttendanceDto } from './dto/edit-attendance.dto';
 
 @Injectable()
 export class AttendanceService {
@@ -200,6 +201,52 @@ export class AttendanceService {
         }
         return {
             month, year, records
+        };
+    }
+
+    async editAttendance(req: Express.Request, body: EditAttendanceDto){
+        const userId = req.session.userId;
+        const today = new Date().toISOString().split("T")[0];
+
+        if(body.date > today){
+            throw new BadRequestException('Cannot edit attendace for a future date.');
+        }
+
+        let attendance = await this.attendanceModel.findOne({where: {userId, date: body.date}}); 
+        
+        if(!attendance){
+            throw new NotFoundException('No attendance record found. Please check in first.');
+        }
+
+        const applyTime = (timeStr: string) =>{
+            const [h, m] = timeStr.split(':').map(Number);
+            const d = new Date(`${body.date}T00:00:00`);
+            d.setHours(h, m, 0, 0);
+            return d;
+        };
+
+        if(body.checkIn){
+            attendance.checkIn = applyTime(body.checkIn);
+        }
+        if(body.checkOut){
+            attendance.checkOut = applyTime(body.checkOut);
+        }
+
+        if(attendance.checkIn && attendance.checkOut){
+            if(attendance.checkOut <= attendance.checkIn){
+                throw new BadRequestException('Check-out time must be after check-in time');
+            }
+            const diffMs = attendance.checkOut.getTime() - attendance.checkIn.getTime();
+            attendance.hours = Number((diffMs / (1000 * 60 * 60)).toFixed(2));
+        }
+
+        await attendance.save();
+
+        return{
+            message: 'Attendance updated successfuly.',
+            checkIn: attendance.checkIn,
+            checkOut: attendance.checkOut,
+            hours: attendance.hours,
         };
     }
 }

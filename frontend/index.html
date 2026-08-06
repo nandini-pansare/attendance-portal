@@ -87,6 +87,7 @@
                         <a href="#" data-permission="GET_LIST" onclick="showAttendanceView('list-range'); return false;">List: Date Range</a>
                         <a href="#" data-permission="GET_LIST" onclick="showAttendanceView('list-month'); return false;">List: By Month</a>
                         <a href="#" data-permission="GET_ID" onclick="showAttendanceView('by-id'); return false;">By User ID</a>
+                        <a href="#" data-permission="EDIT_ATTENDANCE" onclick="openModal('editAttendanceModal', this); return false;">Edit Attendance</a>
                     </div>
                 </div>
                 
@@ -434,6 +435,25 @@
                 <label for="leabe-reason" class="sr-only">Reason for leave</label>
                 <input type="text" id="leave-reason" placeholder="Reason for Leave">
                 <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
+            </div>
+        </div>
+
+        <div id="editAttendanceModal" class="modal-overlay" hidden>
+            <div class="modal-card">
+                <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
+                <h4>Edit Attendance</h4>
+                <p class="modal-subtext">Select a date</p>
+                <label for="edit-date">Date</label>
+                <input type="date" id="edit-date">
+                <br><br>
+                <label for="edit-checkIn">Check In Time</label>
+                <input type="time" id="edit-checkin" placeholder="Check In">
+                <br><br>
+                <label for="edit-checkout">Check Out Time</label>
+                <input type="time" id="edit-checkout" placeholder="Check Out">
+                <br>
+                <button id="editAttendanceBtn" onclick="ediAttendance()">Save Changes</button>
+                <pre id="editAttendanceResult"></pre>
             </div>
         </div>
         <script type="module" src="script.js?v=10"></script>
