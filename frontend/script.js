@@ -326,7 +326,7 @@ window.forgotVerify = async function(){
         return;
     }
     try{
-        const response = await fetch(`${API_BASE}/auth/verify-otp`, {
+        const response = await fetch(`${API_BASE}/otp/verify-otp`, {
             method: "POST",
             credentials: "include",
             headers: { 
