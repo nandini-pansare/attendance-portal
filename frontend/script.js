@@ -270,6 +270,7 @@ window.toggleSidebar = function(){
 let resetEmail = null;
 
 window.showForgotPassword = async function(){
+    resetAllInputs();
     document.getElementById("loginForm").hidden = true;
     document.getElementById("forgotPasswordForm").hidden = false;
 };
@@ -389,6 +390,7 @@ window.resetPassword = async function(){
 
         if(response.ok){
             showBanner(data?.message, "success");
+            resetAllInputs();
             document.getElementById("resetPassword").hidden = true;
             document.getElementById("loginForm").hidden = false;
         } else{
@@ -1601,6 +1603,18 @@ function resetAllInputs(){
     document.getElementById("reg-email").value = "";
     document.getElementById("code").value = "";
     document.getElementById("otp").value = "";
+
+    // Forgot-password flow fields (outside #appLayout, so not covered below)
+    const forgotEmailEl = document.getElementById("forgot-email");
+    const forgotOtpEl = document.getElementById("forgot-otp");
+    const newPassEl = document.getElementById("new-password");
+    const confirmPassEl = document.getElementById("confirm-password");
+    if(forgotEmailEl) forgotEmailEl.value = "";
+    if(forgotOtpEl) forgotOtpEl.value = "";
+    if(newPassEl) newPassEl.value = "";
+    if(confirmPassEl) confirmPassEl.value = "";
+
+    resetEmail = null;
 
     document.querySelectorAll('#appLayout input, #appLayout select').forEach((el) => {
         if(el.type === 'checkbox' || el.type === 'radio'){
