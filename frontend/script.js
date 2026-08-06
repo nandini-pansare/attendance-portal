@@ -162,6 +162,7 @@ window.register = async function(){
             btn.disabled = false;
             btn.textContent = "Register";
         }
+        resetAllInputs();
     }
 };
 
@@ -212,6 +213,7 @@ window.login = async function(){
             console.log("Logged in, token saved");
             showBanner("Login Successful.", "success");
 
+            resetAllInputs();
             document.getElementById("loginForm").hidden = true;
             document.getElementById("appLayout").hidden = false;
             applyPermissions();
@@ -1044,6 +1046,7 @@ function renderLeaveTable(records, tbodyId, tableId, noteId, emptyMessage){
     records.forEach(record => {
         const row = document.createElement('tr');
         row.innerHTML = `
+        <td>${record.leaveId || '--'}</td>
         <td>${record.start || '--'}</td>
         <td>${record.end || '--'}</td>
         <td>${record.leaveType || '--'}</td>
@@ -1289,8 +1292,14 @@ window.updateLeaveStatus = async function(id, status){
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
     } finally{
-        approveBtn.disabled = false;
-        rejectBtn.disabled = false;
+        const approveBtn = document.getElementById('approveLeaveBtn');
+        const rejectBtn = document.getElementById('rejectLeaveBtn');
+        if(approveBtn){
+            approveBtn.disabled = false;
+        }
+        if(rejectBtn){
+            rejectBtn.disabled = false;
+        }
     }
 };
 
@@ -1411,27 +1420,7 @@ window.logout = async function(){
             localStorage.removeItem('token');
             document.getElementById("appLayout").hidden = true;
             document.getElementById("loginForm").hidden = false;
-            document.getElementById("login-username").value = ""
-            document.getElementById("login-password").value = "";
-            document.querySelectorAll('pre').forEach((el)=> {
-                el.textContent = '';
-            });
-            document.querySelectorAll('#appLayout input').forEach((el)=>{
-                el.value = '';
-            });
-            document.querySelectorAll('.nav-submenu').forEach(menu => {
-                menu.classList.remove('open');
-            });
-            document.querySelectorAll('.nav-toggle').forEach(toggle => {
-                toggle.classList.remove('group-active');
-            });
-            document.querySelectorAll('#sidebar a').forEach(link =>{
-                link.classList.remove('active');
-            });
-            document.getElementById("dashboardSection").hidden = true;
-            document.getElementById("attendanceSection").hidden = true;
-            document.getElementById("leaveSection").hidden = true;
-            document.getElementById("tokenSection").hidden = true;
+            resetAllInputs();
         }
         else{
             showBanner(data?.message || "Logout failed.", "error");
@@ -1455,6 +1444,34 @@ function decodeToken(token){
 
 function decodeRole(token){
     return decodeToken(token)?.role.toUpperCase() || null;
+}
+
+function resetAllInputs(){
+    document.getElementById("login-username").value = "";
+    document.getElementById("login-password").value = "";
+    document.getElementById("reg-username").value = "";
+    document.getElementById("reg-password").value = "";
+    document.getElementById("reg-email").value = "";
+    document.getElementById("code").value = "";
+    document.getElementById("otp").value = "";
+
+    document.querySelectorAll('#appLayout input, #appLayout select').forEach((el) => {
+        if(el.type === 'checkbox' || el.type === 'radio'){
+            el.checked = false;
+        } else {
+            el.value = "";
+        }
+    });
+
+    document.querySelectorAll('pre').forEach((el) => {
+        el.textContent = '';
+    });
+    document.querySelectorAll('table.data-table tbody, table.data-id-table tbody, table.leave-table tbody').forEach((tbody) => {
+        tbody.innerHTML = '';
+    });
+    document.querySelectorAll('table[hidden]').forEach((table) => {
+        table.hidden = true;
+    });
 }
 
 window.openModal = function(modalId, linkEl){

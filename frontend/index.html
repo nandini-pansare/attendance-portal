@@ -139,9 +139,10 @@
 
                     <div class="field-card" data-view="date-range" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance in Date Range</h4>
-                        <label for="from-date" class="sr-only">From Date</label>
+                        <label for="from-date">From Date</label>
                         <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
-                        <label for="to-date" class="sr-only">To Date</label>
+                        <br><br>
+                        <label for="to-date">To Date</label>
                         <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
                         <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
                         <p id="attendanceRangeNote"></p>
@@ -160,9 +161,10 @@
 
                     <div class="field-card" data-view="by-month" data-permission="USER_GET">
                         <h4 data-permission="USER_GET">Attendance by Month</h4>
-                        <label for="get-month" class="sr-only">Month (MM)</label>
+                        <label for="get-month">Month (MM)</label>
                         <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
-                        <label for="get-year" class="sr-only">Year (YYYY)</label>
+                        <br><br>
+                        <label for="get-year">Year (YYYY)</label>
                         <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
                         <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
                         <p id="attendanceMonthNote"></p>
@@ -186,6 +188,7 @@
                         <table class="data-table" id="listTodayTable" hidden>
                             <thead>
                                 <tr>
+                                    <th>User ID</th>
                                     <th>Date</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
@@ -198,9 +201,10 @@
 
                     <div class="field-card" data-view="list-range" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
-                        <label for="list-from-date" class="sr-only">From Date</label>
+                        <label for="list-from-date">From Date</label>
                         <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
-                        <label for="list-to-date" class="sr-only"> To Date</label>
+                        <br><br>
+                        <label for="list-to-date"> To Date</label>
                         <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
                         <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
                         <p id="getListNote"></p>
@@ -220,15 +224,17 @@
 
                     <div class="field-card" data-view="list-month" data-permission="GET_LIST">
                         <h4 data-permission="GET_LIST">Attendance List by Month</h4>
-                        <label for="list-month" class="sr-only">Month (MM)</label>
+                        <label for="list-month">Month (MM)</label>
                         <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
-                        <label for="list-year" class="sr-only">Year (YYYY)</label>
+                        <br><br>
+                        <label for="list-year">Year (YYYY)</label>
                         <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
                         <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
                         <p id="getMonthListNote"></p>
                         <table class="data-table" id="getMonthListTable" hidden>
                             <thead>
                                 <tr>
+                                    <th>User ID</th>
                                     <th>Date</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
@@ -241,7 +247,7 @@
 
                     <div class="field-card" data-view="by-id" data-permission="GET_ID">
                         <h4 data-permission="GET_ID">Attendance by ID</h4>
-                        <label for="user-by-id" class="sr-only">User ID</label>
+                        <label for="user-by-id">User ID</label>
                         <input type="number" id="user-by-id" placeholder="User ID" data-permission="GET_ID">
                         <button id="userAttendanceBtn" data-permission="GET_ID" onclick="getUserAttendance()">View</button>
                         <p id="userAttendanceNote"></p>
@@ -272,6 +278,7 @@
                         <table class="data-table" id="leaveHistoryTable" hidden>
                             <thead>
                                 <tr>
+                                    <th>Leave ID</th>
                                     <th>Start</th>
                                     <th>End</th>
                                     <th>Leave Type</th>
@@ -388,10 +395,12 @@
             <div class="modal-card">
                 <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
                 <h4> Request Leave </h4>
-                <label for="start-leave" class="sr-only">Leave start date</label>
+                <label for="start-leave">Start date</label>
                 <input type="date" id="start-leave" placeholder="Start Date">
-                <label for="end-leave" class="sr-only">Leave end date</label>
+                <br><br>
+                <label for="end-leave">End date</label>
                 <input type="date" id="end-leave" placeholder="End Date">
+                <br><br>
                 <label for="leave-type" class="sr-only">Leave Type</label>                        
                 <select id="leave-type">
                     <option value="" selected disabled>Select Leave Type</option>
