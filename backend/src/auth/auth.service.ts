@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/user.model';
 import { SessionModel } from './session.model';
 import { promisify } from 'util';
 import { JwtService } from '@nestjs/jwt';
+import { OtpService } from 'src/otp/otp.service';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
         @InjectModel(User)
         private readonly userModel: typeof User, 
         private readonly jwtService: JwtService,
+        private readonly otpService: OtpService,
     ){}
 
     async login(username: string, password: string, req: Express.Request){
@@ -54,5 +56,21 @@ export class AuthService {
         } catch (err){
             throw new BadRequestException('Logout Failed');
         }
+    }
+
+    async forgotPassword(email: string){
+        const otp = await this.otpService.getOtp(email);
+        if(!otp.success){
+            const success = false;
+            return{
+                success            
+            };
+        } else{
+            const success = true;
+            return{
+                success
+            };
+        }
+
     }
 }

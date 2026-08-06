@@ -27,9 +27,10 @@ export class OtpService {
             }
 
             await this.emailService.sendOtp(email, otp);
-            
+            const success = true;
             return {
-                message: 'Otp Generated SucessFully. Please check your email.'
+                success,
+                //message: 'Otp Generated SucessFully. Please check your email.'
             };
 
         } catch(error){
@@ -43,7 +44,7 @@ export class OtpService {
             console.log('Record False');
             return false;
         }
-        if(record.otp !== otp){
+        if(Number(record.otp) !== Number(otp)){
             console.log('Invalid Otp');
             return false;
         }
@@ -52,6 +53,7 @@ export class OtpService {
             return false;
         }
         
+        await record.destroy();
         return true; 
     }
 }

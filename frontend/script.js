@@ -178,6 +178,15 @@ window.backButton = function(){
     }
 }
 
+window.backToLogin = function(){
+    document.getElementById("forgotPasswordForm").hidden = true;
+    document.getElementById("loginForm").hidden = false;
+    const loginBtn = document.querySelector('#loginForm button[onlick="login()"]');
+    if(loginBtn){
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Login";
+    }
+}
 
 window.login = async function(){
     console.log('login clicked');
@@ -257,6 +266,85 @@ window.toggleGroup = function (groupId){
 window.toggleSidebar = function(){
     document.getElementById("sidebar").classList.toggle("open");
 }
+
+let resetEmail = null;
+
+window.showForgotPassword = async function(){
+    document.getElementById("loginForm").hidden = true;
+    document.getElementById("forgotPasswordForm").hidden = false;
+};
+
+window.forgotPassword = async function(){
+    const email = document.getElementById('forgot-email').value;
+    if(!email){
+        showBanner("Please enter email.", "error");
+        return;
+    }
+
+    const btn = document.querySelector('#forgotBtn');
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Sending...";
+    }
+
+    try{
+        const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email}),
+        });
+
+        const data = await safeJson(response);
+
+        if(response.ok && data?.success){
+            resetEmail = email;
+            showBanner("OTP sent successfully. Please check your email.", "success");
+            document.getElementById("forgotPasswordForm").hidden = true;
+            document.getElementById("forgotOtpForm").hidden = false;
+        } else {
+            showBanner("Error in generation or sending of otp. Please try again.", "error");
+        }
+    } catch(error){
+        showBanner("ERROR: "+error.message, "error");
+        console.log(error);
+    } finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Send Otp";
+        }
+    }
+};
+
+window.forgotVerify = async function(){
+    const otp = document.getElementById("forgot-otp").value;
+    const email = resetEmail;
+    if(!email){
+        showBanner("Please try again.", "error");
+        return;
+    }
+    try{
+        const response = await fetch(`${API_BASE}/auth/verify-otp`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({email, otp}),
+        });
+
+        const data = await safeJson(response);
+        if(response.ok && data?.success){
+            showBanner("OTP Verified.", "success");
+        } else{
+            showBanner("Invalid or expired OTP.", "error");
+        }
+    } catch(error){
+        showBanner("ERROR: " + error.message, "error");
+    }
+};
 
 window.showDashboard = function(){
     document.getElementById("dashboardSection").hidden = false;

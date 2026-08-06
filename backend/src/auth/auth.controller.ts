@@ -20,6 +20,11 @@ export class AuthController {
     async logout(@Req() req: Express.Request){
         return this.authService.logout(req);
     }
+
+    @Post('forgot-password')
+    async forgotPassword(@Body('email') email: string){
+        return this.authService.forgotPassword(email);
+    }
 }
 
 

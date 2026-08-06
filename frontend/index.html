@@ -12,24 +12,24 @@
         <div id="registrationForm" class="sign-card">
             <h4>Registration</h4>
 
-            <label for="reg-username" class="sr-only">Username</label>
+            <label for="reg-username">Username</label>
             <input type="text" id="reg-username" placeholder="Username" required autocomplete="username">
-            
-            <label for="reg-password" class="sr-only">Password</label>
+            <br>
+            <label for="reg-password">Password</label>
             <input type="password" id="reg-password" placeholder="Password" required autocomplete="new-password">
-            
-            <label for="reg-email" class="sr-only">Password</label>
+            <br>
+            <label for="reg-email">Email</label>
             <input type="text" id="reg-email" placeholder="Email ID" required autocomplete="email">
-            
-            <label for="code" class="sr-only">Role Code</label>
+            <br>
+            <label for="code">Role Code</label>
             <select id="code" placeholder="Code" required>
                 <option value="" selected disabled> Select code</option>
                 <option value="9876">9876</option>
                 <option value="8765">8765</option>
                 <option value="7654">7654</option>
             </select>
-
-            <label for="otp" class="sr-only">6 Digit OTP</label>
+            <br>
+            <label for="otp">6 Digit OTP</label>
             <input type="number" id="otp" placeholder="6 Digit Otp" required>
             <br>
             <button onclick="getOtp()">Get Otp</button>
@@ -41,12 +41,26 @@
         <div id="loginForm" hidden class="sign-card">
             <button onclick="backButton()" class="back-button">Back</button>
             <h4>Login</h4>
-            <label for="login-username" class="sr-only">Username</label>
+            <label for="login-username">Username</label>
             <input type="text" id="login-username" placeholder="Username" required>
-            <label for="login-password" class="sr-only">Password</label>
+            <label for="login-password">Password</label>
             <input type="password" id="login-password" placeholder="Password" required>
-
             <button onclick="login()">Login</button>
+            <br><br>
+            <button id="forgot-password" onclick="showForgotPassword()">Forgot Password</button>
+        </div>
+
+        <div id="forgotPasswordForm" hidden class="sign-card">
+            <button onclick="backToLogin()" class="back-button">Back</button>
+            <h4>Forgot Password</h4>
+            <label for="forgot-email">Enter Registered Email ID</label>
+            <input type="text" id="forgot-email" placeholder="Registered Email ID" required>
+            <button id="forgotBtn" onclick="forgotPassword()">Send Otp</button>
+        </div>
+
+        <div id="forgotOtpForm" hidden class="sign-card">
+            <input type="number" id="forgot-otp" placeholder="OTP">
+            <button id="forgot-verify" onclick="forgotVerify()">Verify</button>
         </div>
 
         <div id="appLayout" hidden>
