@@ -73,4 +73,27 @@ export class AuthService {
         }
 
     }
+
+    async resetPassword(newPassword: string, email: string){
+        const user = await this.userModel.findOne({where: {email}});
+        if(!user){
+            throw new BadRequestException('Invalid credentials');
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        if(hashedPassword === user.password){
+            throw new BadRequestException('Password must be new.');
+        }
+        else{
+            try{
+                user.password = hashedPassword;
+                await user.save();
+
+                return{
+                    message: 'Password successfully reset.'
+                };
+            } catch(error){
+                throw new BadRequestException('Reset Failed.');
+            }
+        }
+    }
 }

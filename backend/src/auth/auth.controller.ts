@@ -3,6 +3,7 @@ import { loginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import * as Express from 'express';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { resetPasswordDto } from './dto/resetPassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,11 @@ export class AuthController {
     @Post('forgot-password')
     async forgotPassword(@Body('email') email: string){
         return this.authService.forgotPassword(email);
+    }
+
+    @Post('reset-password')
+    async resetPassword(@Body() body: resetPasswordDto){
+        return this.authService.resetPassword(body.password, body.email);
     }
 }
 

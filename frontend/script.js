@@ -346,6 +346,53 @@ window.forgotVerify = async function(){
     }
 };
 
+window.resetPassword = async function(){
+    const btn = document.querySelector('#resetPassword button[onclick="resetPassword()"]');
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Processing...";
+    }
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if(newPassword !== confirmPassword){
+        showBanner("Negetive Match! Please enter the same password again to confirm.", "error");
+        return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to change your password?');
+    if(!confirmed){
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE}/auth/reset-password`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({newPassword, resetEmail}),
+        });
+
+        const data = await safeJson(response);
+
+        if(response.ok){
+            showBanner(data?.message, "success");
+        } else{
+            showBanner(data?.message || "Reset failed.", "error");
+        }
+    } catch(error){
+        showBanner("ERROR: "+error.message, "error");
+        console.log(error);
+    } finally{
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Reset Password";
+        }
+    }
+};
+
 window.showDashboard = function(){
     document.getElementById("dashboardSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
