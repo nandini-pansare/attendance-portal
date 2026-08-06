@@ -7,9 +7,11 @@ import { User } from 'src/users/user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { OtpModule } from 'src/otp/otp.module';
 
 @Module({
   imports: [
+    OtpModule,
     SequelizeModule.forFeature([SessionModel, User]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
