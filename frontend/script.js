@@ -389,6 +389,8 @@ window.resetPassword = async function(){
 
         if(response.ok){
             showBanner(data?.message, "success");
+            document.getElementById("resetPassword").hidden = true;
+            document.getElementById("loginForm").hidden = false;
         } else{
             showBanner(data?.message || "Reset failed.", "error");
         }
