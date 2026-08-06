@@ -338,6 +338,8 @@ window.forgotVerify = async function(){
         const data = await safeJson(response);
         if(response.ok && data?.success){
             showBanner("OTP Verified.", "success");
+            document.getElementById("forgotOtpForm").hidden = true;
+            document.getElementById("resetPassword").hidden = false;
         } else{
             showBanner("Invalid or expired OTP.", "error");
         }
