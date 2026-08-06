@@ -811,7 +811,7 @@ window.editAttendance = async function(){
         const data =await safeJson(response);
 
         if(response.ok){
-            document.getElementById("editAttendanceResult").textContent = data?.message || 'Update.';
+            document.getElementById("editAttendanceResult").textContent = data?.message || 'Updated.';
             userViewToday();
         } else{
             showBanner(data?.message || "Update failed.", "error"); 
