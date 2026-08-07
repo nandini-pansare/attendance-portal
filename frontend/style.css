@@ -549,3 +549,42 @@ pre{
     text-align: center;
     margin-bottom: 20px;
 }
+
+#leaveHistoryByIdTable {
+    table-layout: fixed;
+}
+
+#leaveHistoryByIdTable th:nth-child(1),
+#leaveHistoryByIdTable td:nth-child(1) {
+    width: 8%;
+}
+
+#leaveHistoryByIdTable th:nth-child(2),
+#leaveHistoryByIdTable td:nth-child(2) {
+    width: 8%;
+}
+
+#leaveHistoryByIdTable th:nth-child(3),
+#leaveHistoryByIdTable td:nth-child(3),
+#leaveHistoryByIdTable th:nth-child(4),
+#leaveHistoryByIdTable td:nth-child(4) {
+    width: 13%;
+    white-space: nowrap;
+}
+
+#leaveHistoryByIdTable th:nth-child(5) {
+    width: 14%;
+}
+
+#leaveHistoryByIdTable th:nth-child(6) {
+    width: 20%;
+}
+
+#leaveHistoryByIdTable th:nth-child(7) {
+    width: 24%;
+}
+
+#leaveHistoryByIdTable td,
+#leaveHistoryByIdTable th{
+    text-align: center;
+}
