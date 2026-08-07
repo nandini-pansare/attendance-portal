@@ -47,7 +47,7 @@ async function safeJson(response){
                 document.getElementById('appLayout').hidden = true;
                 document.getElementById('loginForm').hidden = false;
                 const userEl = document.getElementById('login-username');
-                const passEl = document.getElementById('login-password');
+                const passEl = document.getsElementById('login-password');
                 if(userEl) userEl.value = '';
                 if(passEl) passEl.value = '';
             } catch (e) {
@@ -425,14 +425,13 @@ window.showValidatePassword = function(){
 
 window.validatePassword = async function(){
     const enteredPassword = document.getElementById('currentPassword').value;
-    closeModal('profileModal');
+
     try{
         const response = await fetch(`${API_BASE}/auth/validate-password`, {
             method: "POST",
             credentials: "include",
             headers: { 
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
-
             },
             body: JSON.stringify({password: enteredPassword}),
         });
