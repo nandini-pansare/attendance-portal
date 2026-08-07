@@ -408,6 +408,7 @@ window.resetPassword = async function(){
 };
 
 window.showDashboard = function(){
+    resetAllInputs();
     document.getElementById("dashboardSection").hidden = false;
     document.getElementById("attendanceSection").hidden = true;
     document.getElementById("leaveSection").hidden = true;
@@ -418,6 +419,7 @@ window.showDashboard = function(){
 }
 
 window.showAttendance = async function(){
+    resetAllInputs();
     stopClock();
     document.getElementById("attendanceSection").hidden = false;
     document.getElementById("leaveSection").hidden = true;
@@ -428,6 +430,7 @@ window.showAttendance = async function(){
     document.getElementById("navTokenSection")?.classList.remove("group-active");
 };
 window.showLeave = async function(){
+    resetAllInputs();
     stopClock();
     document.getElementById("dashboardSection").hidden = true;
     document.getElementById("leaveSection").hidden = false;
@@ -439,6 +442,7 @@ window.showLeave = async function(){
 };
 
 window.showTokenSection = function(){
+    resetAllInputs();
     stopClock();
     document.getElementById("dashboardSection").hidden = true;
     document.getElementById("attendanceSection").hidden = true;
@@ -451,6 +455,7 @@ window.showTokenSection = function(){
 };
 
 window.showProfile = function(){
+    resetAllInputs();
     const token = localStorage.getItem('token');
     const payload = decodeToken(token);
 
@@ -776,7 +781,7 @@ window.checkOut = async function(){
 window.editAttendance = async function(){
     const btn = document.getElementById("editAttendanceBtn");
     const date = document.getElementById("edit-date").value;
-    const checkIn = document.getElementById("edit-checkIn").value;
+    const checkIn = document.getElementById("edit-checkin").value;
     const checkOut = document.getElementById("edit-checkout").value;
 
     if(!date){
@@ -798,7 +803,7 @@ window.editAttendance = async function(){
     document.getElementById("editAttendanceResult").textContent = "";
 
     try{
-        const response = await fetch(`${API_BASE}/attenance/edit-attendance`, {
+        const response = await fetch(`${API_BASE}/attendance/edit-attendance`, {
             method: "PATCH",
             credentials: "include",
             headers: {
@@ -1681,7 +1686,7 @@ function resetAllInputs(){
     document.querySelectorAll('table.data-table tbody, table.data-id-table tbody, table.leave-table tbody').forEach((tbody) => {
         tbody.innerHTML = '';
     });
-    document.querySelectorAll('table[hidden]').forEach((table) => {
+    document.querySelectorAll('table[id]').forEach((table) => {
         table.hidden = true;
     });
 }

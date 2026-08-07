@@ -87,7 +87,7 @@ export class LeaveService {
         if(!userId){
             throw new BadRequestException('User ID is missing from request.');
         }
-        const records = await this.leaveModel.findAll({ where: {userId}});
+        const records = await this.leaveModel.findAll({ where: {userId}, order: [['leaveId', 'ASC']]});
         if(!records || records.length === 0){
            throw new NotFoundException('Records Not Found.');
         }
