@@ -368,6 +368,15 @@
                     </div>
                 </div>
 
+                <div id="validatePasswordForm" hidden>
+                    <div class="field-card">
+                        <h4>Password Validation</h4>
+                        <label for="changePasword">Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter Current Password">
+                        <button id="validatePassword" onclick="validatePassword()">Submit</button>
+                    </div>
+                </div>
+
             </main>
         </div>
 
@@ -391,6 +400,8 @@
                     <span class="profile-label">Role</span>
                     <p id="profileRole">--</p>
                 </div>
+                <br><br>
+                <button id="change password" class="back-button" onclick="showValidatePassword()">Change Password</button> 
             </div>
         </div>
 

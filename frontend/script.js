@@ -349,12 +349,12 @@ window.forgotVerify = async function(){
     }
 };
 
-window.resetPassword = async function(){
+window.resetPassword = async function(change){
     const btn = document.querySelector('#resetPassword button[onclick="resetPassword()"]');
     if(btn){
         btn.disabled = true;
         btn.textContent = "Processing...";
-    }
+    } 
     const newPassword = document.getElementById('new-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
 
@@ -406,6 +406,49 @@ window.resetPassword = async function(){
         }
     }
 };
+
+window.showValidatePassword = function(){
+    closeProfile();
+    resetAllInputs();
+    stopClock();
+
+    document.getElementById("dashboardSection").hidden = true;
+    document.getElementById("attendanceSection").hidden = true;
+    document.getElementById("leaveSection").hidden = true;
+    document.getElementById("tokenSection").hidden = true;
+    document.getElementById("validatePasswordForm").hidden = false;
+
+    document.getElementById("attendanceToggle")?.classList.remove("group-active");
+    document.getElementById("leaveToggle")?.classList.remove("group-active");
+    setActiveLink(null, null);
+};
+
+window.validatePassword = async function(){
+    const enteredPassword = document.getElementById('currentPassword').value;
+    closeModal('profileModal');
+    try{
+        const response = await fetch(`${API_BASE}/auth/validate-password`, {
+            method: "POST",
+            credentials: "include",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({password: enteredPassword}),
+        });
+
+        const data = await safeJson(response);
+
+        if(response.ok){
+            showBanner(data.message, data.success);
+            document.getElementById("resetPassword").hidden = false;
+        } else{
+            showBanner(data.message, "error");
+        }
+    }  catch(error){
+        showBanner("ERROR: "+ error.message, "error");
+        console.log(error);
+    }
+}
 
 window.showDashboard = function(){
     resetAllInputs();

@@ -31,6 +31,12 @@ export class AuthController {
     async resetPassword(@Body() body: resetPasswordDto){
         return this.authService.resetPassword(body.password, body.email);
     }
+
+    @Post('validate-password')
+    @UseGuards(JwtAuthGuard)
+    async validatePassword(@Req() req: Express.Request, @Body('password') password: string){
+        return this.authService.validatePassword(req, password);
+    }
 }
 
 

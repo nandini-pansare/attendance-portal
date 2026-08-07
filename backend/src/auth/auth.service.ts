@@ -96,4 +96,27 @@ export class AuthService {
             throw new InternalServerErrorException('Reset Failed.');
         }
     }
+
+    async validatePassword(req: Express.Request, password: string){
+        const userId = req.user?.userId;
+        const user = await this.userModel.findOne({ where: {userId}});
+        const currentPassword = user?.password;
+
+        if(!currentPassword){
+            throw new BadRequestException('Invalid credentials');
+        }
+
+        const isMatch = await bcrypt.compare(password, currentPassword);
+        if(!isMatch){
+            return{
+                message: "Invalid!",
+                success: "error"
+            };
+        } else{
+            return{
+                message: "Valid.",
+                success: "success"
+            };
+        }
+    }
 }
