@@ -100,13 +100,12 @@ export class AuthService {
     async validatePassword(req: Express.Request, password: string){
         const userId = req.user?.userId;
         const user = await this.userModel.findOne({ where: {userId}});
-        const currentPassword = user?.password;
 
-        if(!currentPassword){
-            throw new BadRequestException('Invalid credentials');
+        if(!user){
+            throw new BadRequestException('User not found');
         }
 
-        const isMatch = await bcrypt.compare(password, currentPassword);
+        const isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
             return{
                 message: "Invalid!",
