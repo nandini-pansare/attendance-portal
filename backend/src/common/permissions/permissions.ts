@@ -9,7 +9,8 @@ export const Permissions = {
         'LIST_PENDING_REQ',
         'LIST_LEAVES',
         'LEAVE_STATUS',
-        'EDIT_ATTENDANCE'
+        'EDIT_ATTENDANCE',
+        'ALL_USERS'
     ],
 
     MANAGER: [
