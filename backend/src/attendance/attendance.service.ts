@@ -216,10 +216,9 @@ export class AttendanceService {
         let attendance = await this.attendanceModel.findOne({where: {userId, date: body.date}}); 
         
         if(!attendance){
-            let showButton = true;
             return{
                 message: 'No attendance record found. Create new record?',
-                showButton
+                showButton: false,
             }
         }
 
@@ -249,6 +248,7 @@ export class AttendanceService {
 
         return{
             message: 'Attendance updated successfuly.',
+            showButton: true,
             checkIn: attendance.checkIn,
             checkOut: attendance.checkOut,
             hours: attendance.hours,
