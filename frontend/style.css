@@ -679,5 +679,5 @@ pre{
 #dashboardSection,
 #tokenSection {
     width: 100%;
-    max-width: 500px;
+    max-width: none;
 }
