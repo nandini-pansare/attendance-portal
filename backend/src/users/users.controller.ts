@@ -3,7 +3,7 @@ import { registerDto } from './dto/register.dto';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { PermissionGuard } from 'src/guards/permission.guard';
-import { Permission } from '@aws-sdk/client-s3';
+import { Permission } from 'src/common/decorators/permissions.decorators';
 
 @Controller('users')
 export class UsersController {
