@@ -286,6 +286,23 @@
                             <tbody id="userAttendanceBody"></tbody>
                         </table>
                     </div>
+
+                    <div class="fields-card" data-view="all-users-hr" data-permission="ALL_USERS">
+                        <h4 data-permission="ALL_USERS">All Users</h4>
+                        <button id="allUsersBtn" data-permission="ALL_USERS" onclick="allUsersHr()">View</button>
+                        <p id="allUsersNote"></p>
+                        <table class="data-table" id="allUsersTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Username</th>
+                                    <th>Email ID</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allUsersBody"></tbody>
+                        </table>
+                    </div>
                 </div>
 
 

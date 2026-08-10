@@ -261,56 +261,56 @@ export class AttendanceService {
 
 
     async createRecord(req: Express.Request, body){
-    const userId = req.user?.userId;
-    if(!userId){
-        throw new BadRequestException('Unable to identify user. Please login again.');
-    }
-
-    const { date, checkIn, checkOut } = body;
-    if(!date){
-        throw new BadRequestException('Date is required.');
-    }
-
-    const normalizedDate = this.normalizeDateRangeValue(date);
-    const existing = await this.attendanceModel.findOne({ where: { userId, date: normalizedDate }});
-
-    if(existing){
-        throw new BadRequestException('Attendance record already exists for this date.');
-    }
-
-    const parseTime = (time?: string) => {
-        if(!time) return null;
-        const [hours, minutes] = time.split(':').map(Number);
-        if(Number.isNaN(hours) || Number.isNaN(minutes)){
-            throw new BadRequestException('Invalid time format.');
+        const userId = req.user?.userId;
+        if(!userId){
+            throw new BadRequestException('Unable to identify user. Please login again.');
         }
-        const d = new Date(`${normalizedDate}T00:00:00`);
-        d.setHours(hours, minutes, 0, 0);
-        return d;
-    };
 
-    const checkInDate = parseTime(checkIn);
-    const checkOutDate = parseTime(checkOut);
-
-    let hours: number | null = null;
-    if(checkInDate && checkOutDate){
-        if(checkOutDate <= checkInDate){
-            throw new BadRequestException('Check-out time must be after check-in time.');
+        const { date, checkIn, checkOut } = body;
+        if(!date){
+            throw new BadRequestException('Date is required.');
         }
-        hours = Number(((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60)).toFixed(2));
+
+        const normalizedDate = this.normalizeDateRangeValue(date);
+        const existing = await this.attendanceModel.findOne({ where: { userId, date: normalizedDate }});
+
+        if(existing){
+            throw new BadRequestException('Attendance record already exists for this date.');
+        }
+
+        const parseTime = (time?: string) => {
+            if(!time) return null;
+            const [hours, minutes] = time.split(':').map(Number);
+            if(Number.isNaN(hours) || Number.isNaN(minutes)){
+                throw new BadRequestException('Invalid time format.');
+            }
+            const d = new Date(`${normalizedDate}T00:00:00`);
+            d.setHours(hours, minutes, 0, 0);
+            return d;
+        };
+
+        const checkInDate = parseTime(checkIn);
+        const checkOutDate = parseTime(checkOut);
+
+        let hours: number | null = null;
+        if(checkInDate && checkOutDate){
+            if(checkOutDate <= checkInDate){
+                throw new BadRequestException('Check-out time must be after check-in time.');
+            }
+            hours = Number(((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60)).toFixed(2));
+        }
+
+        const record = await this.attendanceModel.create({
+            userId,
+            date: normalizedDate,
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
+            hours,
+        });
+
+        return {
+            message: 'Attendance record created successfully.',
+            record,
+        };
     }
-
-    const record = await this.attendanceModel.create({
-        userId,
-        date: normalizedDate,
-        checkIn: checkInDate,
-        checkOut: checkOutDate,
-        hours,
-    });
-
-    return {
-        message: 'Attendance record created successfully.',
-        record,
-    };
-}
 }

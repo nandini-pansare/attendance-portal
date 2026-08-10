@@ -1245,6 +1245,81 @@ window.getUserAttendance = async function(){
 };
 
 
+function renderAllUsersTable(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Attendance table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display attendance records. Please refresh the page,', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record => {
+        const row = document.createElement('tr');
+            row.innerHTML = `
+            <td>${record.userId ?? '--'}</td>
+            <td>${record.username || '--'}</td>
+            <td>${record.email || '--'}</td>
+            <td>${record.role || '--'}</td>
+            `;
+            tbody.appendChild(row);
+        }
+    );
+
+    table.hidden = false;
+    note.textContent = '';
+}
+
+window.allUsersHr = async function(){
+    const btn = document.getElementBy("allUsersBtn");
+    btn.disabled = true;
+    btn.textContent = "Fetching...";
+    document.getElementById("allUsersNote").textContent = "";
+    document.getElementById("allUsersTable").hidden = true;
+
+    try{
+        const response = await fetch(`${API_BASE}/attendance/all-users-hr`,
+        {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            }
+        });
+
+        const data = await safeJson(response);
+        const results = data?.records ?? data?.data;
+        const records = Array.isArray(results) ? results : (results ? [results] : []);
+
+        if(response.ok){
+            renderAllUsersTable(
+                records,
+                'allUsersBody',
+                'allUsersTable',
+                'allUsersNote',
+                data?.message || 'No users found.'
+            );
+        } else{
+            showBanner(data?.message || 'Request failed.', 'error');
+        }
+    } catch(error){
+        showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "View";
+    }
+}
+
 
 
 

@@ -90,6 +90,7 @@ export class AttendanceController {
 
     @Post('create-record')
     @UseGuards(JwtAuthGuard, PermissionGuard)
+    @Permission('EDIT_ATTENDANCE')
     async createRecord(@Req() req: Express.Request, @Body() body){
         return this.attendanceService.createRecord(req, body);
     }

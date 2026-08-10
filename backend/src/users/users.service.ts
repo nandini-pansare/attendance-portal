@@ -59,4 +59,8 @@ export class UsersService {
             throw new BadRequestException(error.original?.detail || error.message || 'Invalid registration code'  );
         }
     }
+
+    async allUsersHr(){
+        return this.userModel.findAll();
+    }
 }
