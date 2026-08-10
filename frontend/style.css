@@ -113,7 +113,9 @@ body {
 }
 
 .field-card.field-card-wide {
-    max-width: 900px;
+    max-width: 300px;
+    align-items: ce;
+    
 }
 
 .sign-card{
@@ -606,4 +608,11 @@ pre{
 
 .modal-inline-panel[hidden] {
     display: none;
+}
+
+#attendanceSection,
+#leaveSection,
+#dashboardSection,
+#tokenSection {
+    width: 30%;
 }
