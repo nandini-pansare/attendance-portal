@@ -823,7 +823,6 @@ window.checkOut = async function(){
 };
 
 window.editAttendance = async function(){
-    resetAllInputs();
     const btn = document.getElementById("editAttendanceBtn");
     const date = document.getElementById("edit-date").value;
     const checkIn = document.getElementById("edit-checkin").value;
@@ -1797,9 +1796,19 @@ function resetAllInputs(){
     document.querySelectorAll('table[id]').forEach((table) => {
         table.hidden = true;
     });
+    const noRecordsEl = document.getElementById("noRecords");
+    const createRecordEl = document.getElementById("createRecord");
+    if(noRecordsEl) noRecordsEl.hidden = true;
+    if(createRecordEl) createRecordEl.hidden = true;
 }
 
 window.openModal = function(modalId, linkEl){
+    document.querySelectorAll('.modal-overlay').forEach(m => {
+        if(m.id !== modalId) m.hidden = true;
+    });
+
+    resetAllInputs();
+
     const modal = document.getElementById(modalId);
     if(!modal){
         console.error(`Modal not found: ${modalId}`);
