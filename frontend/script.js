@@ -1288,7 +1288,7 @@ window.allUsersHr = async function(){
     document.getElementById("allUsersTable").hidden = true;
 
     try{
-        const response = await fetch(`${API_BASE}/attendance/all-users-hr`,
+        const response = await fetch(`${API_BASE}/users/all-users-hr`,
         {
             method: "GET",
             credentials: "include",
