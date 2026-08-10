@@ -470,6 +470,15 @@
                     <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
                     <pre id="createRecordsResult"></pre>
                 </div>
+                <div id="createRecord" class="modal-inline-panel" hidden>
+                    <label for="new-checkin">Check In</label>                    
+                    <input type="time" id="new-checkin">
+                    <br><br>
+                    <label for="new-checkout">Check Out</label>
+                    <input type="time" id="new-checkout">
+                    <br><br>
+                    <button id="createRecordBtn" onclick="createRecord()">Submit</button>
+                </div>
             </div>
         </div>
         <script type="module" src="script.js?v=10"></script>
