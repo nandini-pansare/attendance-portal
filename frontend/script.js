@@ -823,6 +823,7 @@ window.checkOut = async function(){
 };
 
 window.editAttendance = async function(){
+    resetAllInputs();
     const btn = document.getElementById("editAttendanceBtn");
     const date = document.getElementById("edit-date").value;
     const checkIn = document.getElementById("edit-checkin").value;
@@ -1764,8 +1765,10 @@ function resetAllInputs(){
     document.getElementById("reg-email").value = "";
     document.getElementById("code").value = "";
     document.getElementById("otp").value = "";
+    document.getElementById("edit-date").value = "";
+    document.getElementById("edit-checkin").value = "";
+    document.getElementById("edit-checkout").value = "";
 
-    // Forgot-password flow fields (outside #appLayout, so not covered below)
     const forgotEmailEl = document.getElementById("forgot-email");
     const forgotOtpEl = document.getElementById("forgot-otp");
     const newPassEl = document.getElementById("new-password");
