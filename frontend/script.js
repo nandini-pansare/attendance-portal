@@ -1281,7 +1281,7 @@ function renderAllUsersTable(records, tbodyId, tableId, noteId, emptyMessage){
 }
 
 window.allUsersHr = async function(){
-    const btn = document.getElementBy("allUsersBtn");
+    const btn = document.getElementById("allUsersBtn");
     btn.disabled = true;
     btn.textContent = "Fetching...";
     document.getElementById("allUsersNote").textContent = "";
