@@ -61,6 +61,6 @@ export class UsersService {
     }
 
     async allUsersHr(){
-        return this.userModel.findAll();
+        return this.userModel.findAll({order: [['userId', 'ASC']]});
     }
 }
