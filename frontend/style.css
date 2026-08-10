@@ -486,14 +486,20 @@ pre{
     table-layout: fixed;
 }
 
+.data-table-with-user th{
+    white-space: nowrap;
+}
+
 .data-table-with-user th:nth-child(1),
 .data-table-with-user td:nth-child(1) {
-    width: 12%;
+    width: 14%;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .data-table-with-user th:nth-child(2),
 .data-table-with-user td:nth-child(2) {
-    width: 26%;
+    width: 24%;
     white-space: nowrap;
 }
 
@@ -552,6 +558,15 @@ pre{
 .data-table td{
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.data-table th,
+.data-id-table th,
+.leave-table th,
+#userAttendanceTable th,
+#leaveHistoryTable th,
+#leaveHistoryByIdTable th {
+    white-space: nowrap;
 }
 
 
