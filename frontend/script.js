@@ -47,7 +47,7 @@ async function safeJson(response){
                 document.getElementById('appLayout').hidden = true;
                 document.getElementById('loginForm').hidden = false;
                 const userEl = document.getElementById('login-username');
-                const passEl = document.getsElementById('login-password');
+                const passEl = document.getElementById('login-password');
                 if(userEl) userEl.value = '';
                 if(passEl) passEl.value = '';
             } catch (e) {
@@ -181,7 +181,7 @@ window.backButton = function(){
 window.backToLogin = function(){
     document.getElementById("forgotPasswordForm").hidden = true;
     document.getElementById("loginForm").hidden = false;
-    const loginBtn = document.querySelector('#loginForm button[onlick="login()"]');
+    const loginBtn = document.querySelector('#loginForm button[onclick="login()"]');
     if(loginBtn){
         loginBtn.disabled = false;
         loginBtn.textContent = "Login";
@@ -860,9 +860,14 @@ window.editAttendance = async function(){
         const data =await safeJson(response);
 
         if(response.ok){
-            document.getElementById("editAttendanceResult").textContent = data?.message || 'Updated.';
-            userViewToday();
-        } else{
+            if(data.showButton === true){
+                document.getElementById("editAttendanceResult").textContent = data?.message || 'Updated.';
+                userViewToday();
+            } else if(data.showButton === false){
+                document.getElementById("editAttendanceResult").textContent = data?.message;
+                document.getElementById("noRecords").hidden = false;
+            }
+        } else {
             showBanner(data?.message || "Update failed.", "error"); 
         }
     } catch(error){
@@ -870,6 +875,43 @@ window.editAttendance = async function(){
     } finally{
         btn.disabled = false;
         btn.textContent = "Save Changes";
+    }
+};
+
+window.showCreateRecord = function(){
+    document.getElementById("noRecords").hidden = true;
+    document.getElementById("createRecord").hidden = false;
+    creatRecord();
+};
+
+window.createRecord = async function(){
+    const btn = document.getElementById("noRecordsBtn");
+    btn.disabled = true;
+    btn.textContent = "Creating...";
+
+    const date = document.getElementById("edit-date").value;
+    const checkIn = document.getElementById("edit-checkin").value;
+    const checkOut = document.getElementById("edit-checkout").value;
+    try{
+        const response = await fetch(`${API_BASE}/attendance/create-record`,{                
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+            },
+            body:JSON.stringify({date, checkIn, checkOut}),
+        });
+
+        const data = await safeJson(response);            
+        if(response.ok){
+            document.getElementById("createRecordsResult").textContent = data?.message || 'Updated';
+        }
+    } catch(error){
+        showBanner("ERROR: " + error.message, "error");
+    } finally{
+        btn.disabled = false;
+        btn.textContent = "Create";
     }
 };
 

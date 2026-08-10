@@ -216,7 +216,11 @@ export class AttendanceService {
         let attendance = await this.attendanceModel.findOne({where: {userId, date: body.date}}); 
         
         if(!attendance){
-            throw new NotFoundException('No attendance record found. Please check in first.');
+            let showButton = true;
+            return{
+                message: 'No attendance record found. Create new record?',
+                showButton
+            }
         }
 
         const applyTime = (timeStr: string) =>{
@@ -250,4 +254,6 @@ export class AttendanceService {
             hours: attendance.hours,
         };
     }
+
+    async createRecord(req: Express.Request, body){}
 }

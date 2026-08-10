@@ -87,4 +87,10 @@ export class AttendanceController {
     async editToday(@Req() req: Express.Request, @Body(new JoiValidationPipe(editAttendanceSchema)) body: EditAttendanceDto){
         return this.attendanceService.editAttendance(req, body);
     }
+
+    @Post('create-record')
+    @UseGuards(JwtAuthGuard, PermissionGuard)
+    async createRecord(@Req() req: Express.Request, @Body() body){
+        return this.attendanceService.createRecord(req, body);
+    }
 }

@@ -588,3 +588,18 @@ pre{
 #leaveHistoryByIdTable th{
     text-align: center;
 }
+
+.modal-inline-panel {
+    display: block;
+    position: relative;   /* not fixed — stays in normal document flow inside the card */
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f9f9f9;
+}
+
+.modal-inline-panel[hidden] {
+    display: none;
+}

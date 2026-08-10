@@ -457,7 +457,7 @@
                 <label for="edit-date">Date</label>
                 <input type="date" id="edit-date">
                 <br><br>
-                <label for="edit-checkIn">Check In Time</label>
+                <label for="edit-checkin">Check In Time</label>
                 <input type="time" id="edit-checkin" placeholder="Check In">
                 <br><br>
                 <label for="edit-checkout">Check Out Time</label>
@@ -465,6 +465,14 @@
                 <br>
                 <button id="editAttendanceBtn" onclick="editAttendance()">Save Changes</button>
                 <pre id="editAttendanceResult"></pre>
+                <div id="noRecords" class="modal-inline-panel" hidden>
+                    <pre id="noRecordsResult"></pre>
+                    <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
+                    <pre id="createRecordsResult"></pre>
+                </div>
+                <div id="createRecord" class="modal-inline-panel" hidden>
+                    
+                </div>
             </div>
         </div>
         <script type="module" src="script.js?v=10"></script>
