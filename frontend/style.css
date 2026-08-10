@@ -106,6 +106,7 @@ body {
     overflow-x: auto;
     width: 100%;
     min-width: 0;
+    align-items: center;
 }
 
 .field-card[hidden]{
@@ -113,9 +114,18 @@ body {
 }
 
 .field-card.field-card-wide {
-    max-width: 300px;
-    align-items: ce;
-    
+    max-width: 900px;
+    width: auto;    
+}
+
+.field-card-wide table.data-table{
+    width: 100%;
+    table-layout: auto;
+}
+
+field-card h4 {
+    align-self: stretch;
+    text-align: center;
 }
 
 .sign-card{
@@ -614,5 +624,6 @@ pre{
 #leaveSection,
 #dashboardSection,
 #tokenSection {
-    width: 30%;
+    width: 100%;
+    max-width: 500px;
 }
