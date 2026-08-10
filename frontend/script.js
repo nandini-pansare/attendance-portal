@@ -1298,7 +1298,7 @@ window.allUsersHr = async function(){
         });
 
         const data = await safeJson(response);
-        const results = data?.records ?? data?.data;
+        const results = data?.records ?? data?.data ?? data;
         const records = Array.isArray(results) ? results : (results ? [results] : []);
 
         if(response.ok){
