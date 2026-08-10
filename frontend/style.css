@@ -112,6 +112,10 @@ body {
     display: none;
 }
 
+.field-card.field-card-wide {
+    max-width: 900px;
+}
+
 .sign-card{
     width: 300px;
     background-color: #ffffff;
