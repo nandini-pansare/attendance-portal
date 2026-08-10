@@ -881,37 +881,56 @@ window.editAttendance = async function(){
 window.showCreateRecord = function(){
     document.getElementById("noRecords").hidden = true;
     document.getElementById("createRecord").hidden = false;
-    creatRecord();
 };
 
 window.createRecord = async function(){
-    const btn = document.getElementById("noRecordsBtn");
-    btn.disabled = true;
-    btn.textContent = "Creating...";
+    const btn = document.getElementById("createRecordBtn");
+    if(btn){
+        btn.disabled = true;
+        btn.textContent = "Creating...";
+    }
 
     const date = document.getElementById("edit-date").value;
-    const checkIn = document.getElementById("edit-checkin").value;
-    const checkOut = document.getElementById("edit-checkout").value;
+    const checkIn = document.getElementById("new-checkin").value;
+    const checkOut = document.getElementById("new-checkout").value;
+
+    if(!date){
+        showBanner("Please select a date first.", "error");
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Submit";
+        }
+        return;
+    }
+
     try{
-        const response = await fetch(`${API_BASE}/attendance/create-record`,{                
+        const response = await fetch(`${API_BASE}/attendance/create-record`,{
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem('token')}`,
             },
-            body:JSON.stringify({date, checkIn, checkOut}),
+            body: JSON.stringify({date, checkIn, checkOut}),
         });
 
-        const data = await safeJson(response);            
+        const data = await safeJson(response);
+        const message = data?.message || (response.ok ? 'Attendance record created.' : 'Unable to create record.');
+
+        document.getElementById("createRecordsResult").textContent = message;
+
         if(response.ok){
-            document.getElementById("createRecordsResult").textContent = data?.message || 'Updated';
+            showBanner(message, "success");
+        } else {
+            showBanner(message, "error");
         }
     } catch(error){
         showBanner("ERROR: " + error.message, "error");
     } finally{
-        btn.disabled = false;
-        btn.textContent = "Create";
+        if(btn){
+            btn.disabled = false;
+            btn.textContent = "Submit";
+        }
     }
 };
 
