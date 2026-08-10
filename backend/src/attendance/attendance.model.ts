@@ -26,18 +26,21 @@ export class AttendanceModel extends Model{
 
     @Column({
         type: DataType.DATE,
+        allowNull: true,
     })
-    declare checkIn: Date;
+    declare checkIn: Date | null;
 
     @Column({
         type: DataType.DATE,
+        allowNull: true,
     })
-    declare checkOut: Date;
+    declare checkOut: Date | null;
 
     @Column({
         type: DataType.FLOAT,
+        allowNull: true,
     })
-    declare hours: number;
+    declare hours: number | null;
 
 
 }
