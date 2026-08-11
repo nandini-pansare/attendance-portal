@@ -566,18 +566,18 @@ pre{
 
 .data-table-with-email th:nth-child(1),
 .data-table-with-email td:nth-child(1) {
-    width: 20%;
+    width: 22%;
 }
 
 .data-table-with-email th:nth-child(2),
 .data-table-with-email td:nth-child(2) {
-    width: 25%;
+    width: 23%;
     text-align: center;
 }
 
 .data-table-with-email th:nth-child(3),
 .data-table-with-email td:nth-child(3) {
-    width: 35%;
+    width: 33%;
     text-align: center;
     padding-left: 28px;
     padding-right: 38px;
