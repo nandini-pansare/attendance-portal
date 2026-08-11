@@ -177,7 +177,7 @@
                         </div>
                     </div>
                 </div>        
-                       
+
                 <div id="attendanceSection" hidden>
                     <h3>Attendance</h3>
                     <p class="page-subtitle">View and manage employee attendance records</p>
@@ -358,7 +358,7 @@
                         <h4 data-permission="LEAVE">Leave History</h4>
                         <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
                         <p id="leaveHistoryNote"></p>
-                        <table class="data-table" id="leaveHistoryTable" hidden>
+                        <table class="leave-table" id="leaveHistoryTable" hidden>
                             <thead>
                                 <tr>
                                     <th>Leave ID</th>
@@ -377,7 +377,7 @@
                         <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
                         <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
                         <p id="pendingLeavesNote"></p>
-                        <table id="pendingLeavesTable" class="data-table" hidden>
+                        <table id="pendingLeavesTable" class="leave-table pending-leave-table" hidden>
                             <thead>
                                 <tr>
                                     <th>User ID</th>
@@ -400,7 +400,7 @@
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
                         <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
                         <p id="leaveHistoryByIdNote"></p>
-                        <table class="data-table" id="leaveHistoryByIdTable" hidden>
+                        <table class="leave-table" id="leaveHistoryByIdTable" hidden>
                             <thead>
                                 <tr>
                                     <th>User ID</th>

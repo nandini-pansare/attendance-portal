@@ -358,7 +358,7 @@ body {
 }
 
 button {
-  background-color: #331d0e;
+  background-color: #3b2211;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -835,86 +835,93 @@ pre{
 
 
 .leave-table {
-    table-layout: auto;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
 }
 
 .leave-table th,
 .leave-table td {
-    width: auto;
+    padding: 12px 10px;
     text-align: center;
-    padding-left: 20px;
-    padding-right: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
-
-#userAttendanceTable th:nth-child(1),
-#userAttendanceTable td:nth-child(1){
-    width:37%
+#leaveHistoryTable th:nth-child(1),
+#leaveHistoryTable td:nth-child(1) {
+    width: 10%;
 }
 
-#leaveHistoryTable{
-    table-layout: auto;
+#leaveHistoryTable th:nth-child(2),
+#leaveHistoryTable td:nth-child(2),
+#leaveHistoryTable th:nth-child(3),
+#leaveHistoryTable td:nth-child(3) {
+    width: 13%;
 }
 
-#leaveHistoryTable th,
-#leaveHistoryTable td{
-    width: auto;
-    text-align: center;
+#leaveHistoryTable th:nth-child(4),
+#leaveHistoryTable td:nth-child(4) {
+    width: 15%;
 }
 
-#pendingLeavesTable{
-    table-layout: auto;
+#leaveHistoryTable th:nth-child(5),
+#leaveHistoryTable td:nth-child(5) {
+    width: 34%;
 }
 
-#pendingLeavesTable th,
-#pendingLeavesTable td{
-    width: auto;
-    text-align: center;
+#leaveHistoryTable th:nth-child(6),
+#leaveHistoryTable td:nth-child(6) {
+    width: 15%;
 }
 
-#attendanceSection h3,
-#leaveSection h3{
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-#leaveHistoryByIdTable {
+.pending-leave-table {
     table-layout: fixed;
 }
 
-#leaveHistoryByIdTable th:nth-child(1),
-#leaveHistoryByIdTable td:nth-child(1) {
-    width: 8%;
-}
-
-#leaveHistoryByIdTable th:nth-child(2),
-#leaveHistoryByIdTable td:nth-child(2) {
-    width: 8%;
-}
-
-#leaveHistoryByIdTable th:nth-child(3),
-#leaveHistoryByIdTable td:nth-child(3),
-#leaveHistoryByIdTable th:nth-child(4),
-#leaveHistoryByIdTable td:nth-child(4) {
-    width: 13%;
-    white-space: nowrap;
-}
-
-#leaveHistoryByIdTable th:nth-child(5) {
-    width: 14%;
-}
-
-#leaveHistoryByIdTable th:nth-child(6) {
-    width: 20%;
-}
-
-#leaveHistoryByIdTable th:nth-child(7) {
-    width: 24%;
-}
-
-#leaveHistoryByIdTable td,
-#leaveHistoryByIdTable th{
+.pending-leave-table th,
+.pending-leave-table td {
+    padding: 10px 8px;
     text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.pending-leave-table th:nth-child(1),
+.pending-leave-table td:nth-child(1) {
+    width: 9%;
+}
+
+.pending-leave-table th:nth-child(2),
+.pending-leave-table td:nth-child(2) {
+    width: 9%;
+}
+
+.pending-leave-table th:nth-child(3),
+.pending-leave-table td:nth-child(3),
+.pending-leave-table th:nth-child(4),
+.pending-leave-table td:nth-child(4) {
+    width: 12%;
+}
+
+.pending-leave-table th:nth-child(5),
+.pending-leave-table td:nth-child(5) {
+    width: 13%;
+}
+
+.pending-leave-table th:nth-child(6),
+.pending-leave-table td:nth-child(6) {
+    width: 25%;
+}
+
+.pending-leave-table th:nth-child(7),
+.pending-leave-table td:nth-child(7) {
+    width: 10%;
+}
+
+.pending-leave-table th:nth-child(8),
+.pending-leave-table td:nth-child(8) {
+    width: 10%;
 }
 
 .modal-inline-panel {
