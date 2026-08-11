@@ -74,9 +74,28 @@
         <div id="appLayout" hidden>
             <button id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
             <nav id="sidebar">
-                <a href="#" onclick="showDashboard(); return false;">Dashboard</a>
+                <div class="sidebar-brand">
+                    <div class="brand-icon">A</div>
+                    <div>
+                        <div class="brand-title">Attendance</div>
+                        <div class="brand-subtitle">Portal</div>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">MAIN</div>
+                    <a href="#" onclick="showDashboard(); return false;">
+                        <span class="nav-icon">▣</span>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
                 <div class="nav-group">
-                    <a href='#' id="attendanceToggle" class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">Attendance</a>
+                    <a href='#' id="attendanceToggle" class="nav-toggle" onclick="toggleGroup('attendanceGroup'); return false;">
+                        <span class="nav-icon">▤</span>
+                        <span>Attendance</span>
+                        <span class="nav-arrow">⌄</span>
+                    </a>
                     <div id="attendanceGroup" class="nav-submenu">
                         <a href="#" data-permission="VIEW_ATTENDANCE" onclick="showAttendanceView('view-today'); return false;">Today's Attendance</a>
                         <a href="#" data-permission="CHECK_IN" onclick="openModal('checkInModal', this); return false;">Check In</a>
@@ -93,7 +112,11 @@
                 </div>
                 
                 <div class="nav-group">
-                    <a href="#" id="leaveToggle" class="nav-toggle" onclick="toggleGroup('leaveGroup'); return false;">Leave</a>
+                    <a href="#" id="leaveToggle" class="nav-toggle" onclick="toggleGroup('leaveGroup'); return false;">
+                        <span class="nav-icon">▣</span>
+                        <span>Leave</span>
+                        <span class="nav-arrow">⌄</span>
+                    </a>
                     <div id="leaveGroup" class="nav-submenu">
                         <a href="#" data-permission="LEAVE" onclick="openModal('leaveRequestModal', this); return false;">Request Leave</a>
                         <a href="#" data-permission="LEAVE" onclick="showLeaveView('history'); return false;">Leave History</a>
@@ -102,10 +125,27 @@
                     </div>
                 </div>
 
-                <a href="#" onclick="showTokenSection(); return false;">Notifications</a>
-                <a href="#" onclick="logout(); return false;">Logout</a>
+                <div class="nav-section">
+                    <div class="nav-section-title">SYSTEM</div>
+
+                    <a href="#" onclick="showTokenSection(); return false;">
+                        <span class="nav-icon">◉</span> 
+                        <span>Notifications</span>
+                    </a>
+                </div>
+
                 <div class="sidebar-spacer"></div>
-                <a href="#" onclick="showProfile(); return false;">👤 Profile</a>
+                <div class="sidebar-bottom">
+                    <a href="#" onclick="showProfile(); return false;">
+                        <span class="nav-icon">👤</span>
+                        <span>Profile</span>
+                    </a>
+
+                    <a href="#" class="logout-link" onclick="logout(); return false;">
+                        <span class="nav-icon">↪</span>
+                        <span>Logout</span>
+                    </a>
+                </div>
             </nav>
 
             <main id="contentArea"> 
@@ -139,6 +179,7 @@
                 </div>               
                 <div id="attendanceSection" hidden>
                     <h3>Attendance</h3>
+                    <p class="page-subtitle">View and manage employee attendance records</p>
                     
                     <div class="field-card" data-view="view-today" data-permission="VIEW_ATTENDANCE">
                         <h4 data-permission="VIEW_ATTENDANCE">Today's Attendance</h4>
