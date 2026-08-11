@@ -150,29 +150,47 @@
 
             <main id="contentArea"> 
                 <div id="dashboardSection" hidden>
-                    <div class="dashboard-header">
-                        <h4>Dashboard</h4>
+                    <div class="dashboard-top">
+                        <div>
+                            <p class="dashboard-eyebrow">EMPLOYEE PORTAL</p>
+                            <h3>Dashboard</h3>
+                            <p class="dashboard-welcome"> Overview for today</p>
+                        </div>
+                    <div class="dashboard-time">
                         <div id="liveClock">--:--:--</div>
                         <div id="liveDate">-- --- ----</div>
                     </div>
+                </div>
                     <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h4>Status</h4>
+                        <div class="dashboard-card dashboard-status-card">
+                            <div class="dashboard-card-top">
+                                <span class="dashboard-card-label">Status</span>
+                                <span class="dashboard-card-icon">●</span>
+                            </div>
                             <p id="dashStatus">Loading...</p>
                         </div>
 
                         <div class="dashboard-card">
-                            <h4>Hours Today</h4>
+                            <div class="dashboard-card-top">
+                                <span class="dashboard-card-label">Hours Today</span>
+                                <span class="dashboard-card-icon">◷</span>
+                            </div>
                             <p id="dashHours">--</p>
                         </div>
 
                         <div class="dashboard-card">
-                            <h4>Pending Leaves</h4>
+                            <div class="dashboard-card-top">
+                                <span class="dashboard-card-label">Pending Leaves</span>
+                                <span class="dashboard-card-icon">▣</span>
+                            </div>
                             <p id="dashLeaves">--</p>
                         </div>
 
                         <div class="dashboard-card">
-                            <h4>Role</h4>
+                            <div class="dashboard-card-top">
+                                <span class="dashboard-card-label">Role</span>
+                                <span class="dashboard-card-icon">◆</span>
+                            </div>
                             <p id="dashRole">--</p>
                         </div>
                     </div>
