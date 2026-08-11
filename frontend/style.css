@@ -579,6 +579,7 @@ pre{
 .data-table-with-email td:nth-child(3) {
     width: 35%;
     text-align: center;
+    padding-left: 48px;
     padding-right: 48px;
 }
 
