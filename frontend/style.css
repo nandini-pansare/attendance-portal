@@ -559,11 +559,33 @@ pre{
     padding-right: 24px;
 }
 
+.data-table-with-email {
+    table-layout: auto;
+}
+
+.data-table-with-email th:nth-child(1),
+.data-table-with-email td:nth-child(1) {
+    width: 20%;
+}
+
+.data-table-with-email th:nth-child(2),
+.data-table-with-email td:nth-child(2),
+.data-table-with-email th:nth-child(4),
+.data-table-with-email td:nth-child(4) {
+    width: 47%;
+    text-align: center;
+}
+
+.data-table-with-email th:nth-child(3),
+.data-table-with-email td:nth-child(3) {
+    width: 50%;
+    text-align: centre;
+}
 
 .data-table th,
 .data-table td{
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 .data-table th,
@@ -679,5 +701,5 @@ pre{
 #dashboardSection,
 #tokenSection {
     width: 100%;
-    max-width: none;
+    max-width: 500px;
 }
