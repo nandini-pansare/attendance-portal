@@ -66,6 +66,10 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+#sidebar a[hidden] {
+    display: none !important;
+}
+
 #sidebar a:hover{
     background-color: #f5f1ed;
     color: #6f4e37;
@@ -125,6 +129,7 @@ body {
 
 .nav-toggle {
     font-weight: 600 !important;
+    color: #4b3621 ipo !important;
 }
 
 .nav-arrow {
@@ -134,22 +139,19 @@ body {
 }
 
 .nav-submenu {
-    margin-left: 20px;
-    padding-left: 12px;
-
-    border-left: 1px solid #e5ded7;
-
+    margin: 4px 0 8px 12px;
+    padding: 6px 0 6px 12px;
+    border-left: 2px solid #d8c9b7;
     display: flex;
     flex-direction: column;
-
-    gap: 2px;
+    gap: 3px;
 }
 
-.nav-submenu a{
-    font-size:  13px !important;
-    padding: 8px 10px !important;
-
+.nav-submenu a {
+    font-size: 13px !important;
+    padding: 9px 12px !important;
     color: #6d665f !important;
+    border-radius: 7px;
 }
 
 .nav-submenu a:hover{

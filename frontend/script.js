@@ -64,7 +64,12 @@ async function safeJson(response){
 window.getOtp = async function(){
     const btn = document.querySelector('#registrationForm button[onclick="getOtp()"]');
     const email = document.getElementById("reg-email").value;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    if(!emailPattern.test(email)){
+        showBanner("Please enter a valid email address.", "error");
+        return;
+    }
     if(btn){
         btn.disabled = true;
         btn.textContent = "Sending...";
@@ -561,6 +566,8 @@ function setActiveLink(clickedLink, groupToggleId){
 window.showAttendanceView = function(view){
     showAttendance();
     document.querySelectorAll('#attendanceSection .field-card').forEach(card =>{
+        const allowed = Permissions[decodeRole(localStorage.getItem('token'))] || [];
+        const hasPerm = !card.dataset.permission || allowed.includes(card.dataset.permission);
         card.hidden = (card.dataset.view !== view);
     });
     setActiveLink(event.target, 'attendanceToggle');
