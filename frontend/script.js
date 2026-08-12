@@ -728,6 +728,40 @@ function renderAttendanceTableWithUser(records, tbodyId, tableId, noteId, emptyM
     note.textContent = '';
 }
 
+function renderAttendanceTableToday(records, tbodyId, tableId, noteId, emptyMessage){
+    const tbody = document.getElementById(tbodyId);
+    const table = document.getElementById(tableId);
+    const note = document.getElementById(noteId);
+
+    if(!tbody || !table || !note){
+        console.error('Attendance table render failed: missing elements', {tbodyId, tableId, noteId, tbody, table, note});
+        showBanner('Unable to display attendance records. Please refresh the page.', 'error');
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if(!records || records.length === 0){
+        table.hidden = true;
+        note.textContent = emptyMessage;
+        return;
+    }
+
+    records.forEach(record =>{
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${record.userId || '--'}</td>
+        <td>${formatTime(record.checkIn)}</td>
+        <td>${formatTime(record.checkOut)}</td>
+        <td>${record.hours !== null && record.hours !== undefined ? Number(record.hours).toFixed(2) : '--'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    table.hidden = false;
+    note.textContent = '';
+}
+
 window.userViewToday = async function(){
     document.getElementById("todayCheckIn").textContent = '--';
     document.getElementById("todayCheckOut").textContent = '--';
@@ -1081,7 +1115,7 @@ window.listToday = async function(){
             document.getElementById("todayCheckedIn").textContent = data.checkinCount;
             document.getElementById("todayCheckedOut").textContent = data.checkoutCount;
             document.getElementById("todayNotCheckedIn").textContent = data.notCheckedIn;
-            renderAttendanceTable(
+            renderAttendanceTableToday(
                 data?.records,
                 'listTodayBody',
                 'listTodayTable',
@@ -1884,6 +1918,11 @@ function resetAllInputs(){
     document.querySelectorAll('table[id]').forEach((table) => {
         table.hidden = true;
     });
+    const attendanceSummary = document.getElementById("attendanceSummary");
+    if(attendanceSummary){
+        attendanceSummary.hidden = true;
+        attendanceSummary.querySelectorAll('strong').forEach(el => el.textContent = '--');
+    }
     const noRecordsEl = document.getElementById("noRecords");
     const createRecordEl = document.getElementById("createRecord");
     if(noRecordsEl) noRecordsEl.hidden = true;

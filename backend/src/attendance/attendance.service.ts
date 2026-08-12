@@ -146,8 +146,6 @@ export class AttendanceService {
             }],
         });
 
-        
-
         const users = await this.userModel.findAll({
             attributes: ['userId']
         });
@@ -155,7 +153,7 @@ export class AttendanceService {
         const employeesCount = users.length;
         const checkinCount = records.filter(record => record.checkIn !== null).length;
         const checkoutCount = records.filter(record => record.checkOut !== null).length;
-        const notCheckedIn = records.filter(record => record.checkIn !== null && record.checkOut === null).length;
+        const notCheckedIn = employeesCount - checkinCount;
 
         return {
             message: 'Records Fetched Successfully.',
