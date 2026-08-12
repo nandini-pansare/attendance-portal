@@ -17,6 +17,16 @@ export class JwtAuthGuard implements CanActivate {
         try {
             const payload = this.jwtService.verify(token);
             req.user = payload;
+            if (req.session) {
+                try {
+                    req.session.userId = payload.userId;
+                    req.session.role = payload.role;
+                    req.session.email = payload.email;
+                } catch (_e) {
+                    // ignore session write errors
+                }
+            }
+
             return true;
         } catch (err: any) {
             console.log(err.message);

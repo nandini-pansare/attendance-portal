@@ -156,25 +156,26 @@
                             <h3>Dashboard</h3>
                             <p class="dashboard-welcome"> Overview for today</p>
                         </div>
-                    <div class="dashboard-time">
-                        <div id="liveClock">--:--:--</div>
-                        <div id="liveDate">-- --- ----</div>
+                        <div class="dashboard-time">
+                            <div id="liveClock">--:--:--</div>
+                            <div id="liveDate">-- --- ----</div>
+                        </div>
+
                     </div>
-                </div>
                     <div class="dashboard-grid">
                         <div class="dashboard-card dashboard-status-card">
                             <div class="dashboard-card-top">
                                 <span class="dashboard-card-label">Status</span>
                                 <span class="dashboard-card-icon">●</span>
                             </div>
-                            <p id="dashStatus">Loading...</p>
-                        </div>
+                            <p id="dashStatus">Loading...</p>                        
+                        </div> 
 
                         <div class="dashboard-card">
                             <div class="dashboard-card-top">
                                 <span class="dashboard-card-label">Hours Today</span>
                                 <span class="dashboard-card-icon">◷</span>
-                            </div>
+                            </div>                            
                             <p id="dashHours">--</p>
                         </div>
 
@@ -191,34 +192,54 @@
                                 <span class="dashboard-card-label">Role</span>
                                 <span class="dashboard-card-icon">◆</span>
                             </div>
-                            <p id="dashRole">--</p>
+                            <p id="dashRole">--</p>                        
                         </div>
-                    </div>
-                </div>        
-
+                    </div>      
+                </div>
                 <div id="attendanceSection" hidden>
                     <h3>Attendance</h3>
                     <p class="page-subtitle">View and manage employee attendance records</p>
                     
-                    <div class="field-card" data-view="view-today" data-permission="VIEW_ATTENDANCE">
-                        <h4 data-permission="VIEW_ATTENDANCE">Today's Attendance</h4>
-
-                        <div class="stat-row">
-                            <span class="stat-label">Check In</span>
-                            <span id="todayCheckIn" class="stat-value stat-checkin">--</span>
+                    <div class="field-card today-attendance-card" data-view="view-today" data-permission="VIEW_ATTENDANCE">
+                        <div class="today-attendance-header">
+                            <div>
+                                <h4 data-permission="VIEW_ATTENDANCE">Today's Attendance</h4>
+                                <p>Track your attendance for today</p>
+                            </div>
                         </div>
 
-                        <div class="stat-row">
-                            <span class="stat-label">Check Out</span>
-                            <span id="todayCheckOut" class="stat-value stat-checkout">--</span>
+                        <div class="attendance-stats">
+
+                            <div class="attendance-stat">
+                                <div class="attendance-stat-icon checkin-icon">⇥</div>
+                                <div class="attendance-stat-content">
+                                    <span class="attendance-stat-label">Check In</span>
+                                    <strong id="todayCheckIn">--</strong>
+                                </div>
+                            </div>
+
+                            <div class="attendance-stat">
+                                <div class="attendance-stat-icon checkout-icon">⇥</div>
+                            
+                                <div class="attendance-stat-content">
+                                    <span class="attendance-stat-label">Check Out</span>
+                                    <strong id="todayCheckOut">--</strong>
+                                </div>
+                            </div>
+
+                            <div class="attendance-stat">
+                                <div class="attendance-stat-icon hours-icon">◷</div>
+                                <div class="attendance-stat-content">                                
+                                    <span class="attendance-stat-label">Hours Worked</span>
+                                    <strong id="todayHours">--</strong>
+                                </div> 
+                            </div>
                         </div>
 
-                        <div class="stat-row">
-                            <span class="stat-label">Hours Worked</span>
-                            <span id="todayHours" class="stat-value stat-hours">--</span>
+                        <div class="attendance-status">
+                            <span class="status-dot"></span>
+                            <span id="todayStatusNote">Checking today's attendance...</span>
                         </div>
-
-                        <p id="todayStatusNote"></p>
                     </div>
 
                     <div class="field-card" data-view="date-range" data-permission="USER_GET">
@@ -265,26 +286,55 @@
                         </table>
                     </div>
 
-                    <div class="field-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
-                        <h4 data-permission="ALL_ATTENDANCE">Attendance Today</h4>
-                        <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View</button>
+                    <div class="field-card today-all-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
+                        <div class="today-all-header">
+                            <div>
+                                <h4 data-permission="ALL_ATTENDANCE">Employee Attendance</h4>
+                                <pre id="todayAllDate"></pre>
+                            </div>
+                            <button id="listTodayBtn" data-permission="ALL_ATTENDANCE" onclick="listToday()">View Attendance</button>
+                        </div>
+                
+                        <div id="attendanceSummary" class="attendance-summary" hidden>
+
+                            <div class="summary-card">
+                                <span class="summary-label">Employees</span>
+                                <strong id="todayTotalEmployees">--</strong>
+                            </div>
+
+                            <div class="summary-card">
+                                <span class="summary-label">Checked In</span>
+                                <strong id="todayCheckedIn">--</strong>
+                            </div>
+
+                            <div class="summary-card">
+                                <span class="summary-label">Checked Out</span>
+                                <strong id="todayCheckedOut">--</strong>
+                            </div>
+
+                            <div class="summary-card">
+                                <span class="summary-label">Not Checked In</span>
+                                <strong id="todayNotCheckedIn">--</strong>
+                            </div>
+                        </div>
                         <p id="listTodayNote"></p>
-                        <table class="data-table-with-user" id="listTodayTable" hidden>
-                            <thead>
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Hours</th>
-                                </tr>
-                            </thead>
-                            <tbody id="listTodayBody"></tbody>
-                        </table>
+                        <div class="today-table-wrapper">
+                            <table class="data-table-with-user" id="listTodayTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="listTodayBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card" data-view="list-range" data-permission="GET_LIST">
-                        <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>    
+                        <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
                         <label for="list-from-date">From Date</label>
                         <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
                         <br><br>
@@ -295,6 +345,7 @@
                         <table class="data-table-with-user" id="getListTable" hidden>
                             <thead>
                                 <tr>
+
                                     <th>User ID</th>
                                     <th>Date</th>
                                     <th>Check In</th>
@@ -342,7 +393,7 @@
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Hours</th>
-                                </tr>
+                                </tr>                            
                             </thead>
                             <tbody id="userAttendanceBody"></tbody>
                         </table>
@@ -365,10 +416,7 @@
                         </table>
                     </div>
                 </div>
-
-
-
-
+        
                 <div id="leaveSection" hidden>
                     <h3>Leave</h3>
 
@@ -385,7 +433,7 @@
                                     <th>Leave Type</th>
                                     <th>Reason</th>
                                     <th>Status</th>
-                                </tr>
+                                </tr>                    
                             </thead>
                             <tbody id="leaveHistoryBody"></tbody>
                         </table>
@@ -412,8 +460,8 @@
                         </table>
                     </div>
 
-                    <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                            
-                        <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>            
+                    <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                                    
+                        <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>
                         <label for="leaves-by-id" class="sr-only">User ID</label>
                         <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
                         <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
@@ -454,111 +502,113 @@
                         <button id="validatePassword" onclick="validatePassword()">Submit</button>
                     </div>
                 </div>
-
             </main>
-        </div>
+    
 
-        <div id="profileModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeProfile()">&times;</button>
-                <h4>Profile</h4>
-                <div class="profile-row">
-                    <span class="profile-label">User ID</span>
-                    <p id="profileUserId">--</p>
+            <div id="profileModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeProfile()">&times;</button>
+                    <h4>Profile</h4>
+                    <div class="profile-row">
+                        <span class="profile-label">User ID</span>
+                        <p id="profileUserId">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Username</span>
+                        <p id="profileUsername">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Email</span>
+                        <p id="profileEmail">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Role</span>
+                        <p id="profileRole">--</p>
+                    </div>
+                    <br><br>
+                    <button id="change password" class="back-button" onclick="showValidatePassword()">Change Password</button> 
                 </div>
-                <div class="profile-row">
-                    <span class="profile-label">Username</span>
-                    <p id="profileUsername">--</p>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-label">Email</span>
-                    <p id="profileEmail">--</p>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-label">Role</span>
-                    <p id="profileRole">--</p>
-                </div>
-                <br><br>
-                <button id="change password" class="back-button" onclick="showValidatePassword()">Change Password</button> 
             </div>
-        </div>
 
-        <div id="checkInModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('checkInModal')">&times;</button>
-                <h4> Check In </h4>
-                <p class="modal-subtext">Mark your arrival for today.</p>
-                <button id="checkInBtn" onclick="checkIn()">Check In</button>
-                <pre id="checkInResult"></pre>
+            <div id="checkInModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('checkInModal')">&times;</button>
+                    <h4> Check In </h4>
+                    <p class="modal-subtext">Mark your arrival for today.</p>
+                    <button id="checkInBtn" onclick="checkIn()">Check In</button>
+                    <pre id="checkInResult"></pre>
+                </div>
             </div>
-        </div>
         
-        <div id="checkOutModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('checkOutModal')">&times;</button>
-                <h4> Check Out </h4>
-                <p class="modal-subtext">Mark your departure for today</p>
-                <button id="checkOutBtn" onclick="checkOut()">Check Out</button>
-                <pre id="checkOutResult"></pre>
-            </div>
-        </div>
-
-        <div id="leaveRequestModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
-                <h4> Request Leave </h4>
-                <label for="start-leave">Start date</label>
-                <input type="date" id="start-leave" placeholder="Start Date">
-                <br><br>
-                <label for="end-leave">End date</label>
-                <input type="date" id="end-leave" placeholder="End Date">
-                <br><br>
-                <label for="leave-type" class="sr-only">Leave Type</label>                        
-                <select id="leave-type">
-                    <option value="" selected disabled>Select Leave Type</option>
-                    <option value="SICK">Sick</option>
-                    <option value="CASUAL">Casual</option>
-                    <option value="EARNED">Earned</option>
-                    <option value="MANDATORY">Mandatory</option>
-                </select>                        
-                <label for="leabe-reason" class="sr-only">Reason for leave</label>
-                <input type="text" id="leave-reason" placeholder="Reason for Leave">
-                <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
-            </div>
-        </div>
-
-        <div id="editAttendanceModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
-                <h4>Edit Attendance</h4>
-                <p class="modal-subtext">Select a date</p>
-                <label for="edit-date">Date</label>
-                <input type="date" id="edit-date">
-                <br><br>
-                <label for="edit-checkin">Check In Time</label>
-                <input type="time" id="edit-checkin" placeholder="Check In">
-                <br><br>
-                <label for="edit-checkout">Check Out Time</label>
-                <input type="time" id="edit-checkout" placeholder="Check Out">
-                <br>
-                <button id="editAttendanceBtn" onclick="editAttendance()">Save Changes</button>
-                <pre id="editAttendanceResult"></pre>
-                <div id="noRecords" class="modal-inline-panel" hidden>
-                    <pre id="noRecordsResult"></pre>
-                    <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
-                    <pre id="createRecordsResult"></pre>
+            <div id="checkOutModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('checkOutModal')">&times;</button>
+                    <h4> Check Out </h4>
+                    <p class="modal-subtext">Mark your departure for today</p>
+                    <button id="checkOutBtn" onclick="checkOut()">Check Out</button>
+                    <pre id="checkOutResult"></pre>
                 </div>
-                <div id="createRecord" class="modal-inline-panel" hidden>
-                    <label for="new-checkin">Check In</label>                    
-                    <input type="time" id="new-checkin">
+            </div>
+
+            <div id="leaveRequestModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
+                    <h4> Request Leave </h4>
+                    <label for="start-leave">Start date</label>
+                    <input type="date" id="start-leave" placeholder="Start Date">
                     <br><br>
-                    <label for="new-checkout">Check Out</label>
-                    <input type="time" id="new-checkout">
+                    <label for="end-leave">End date</label>
+                    <input type="date" id="end-leave" placeholder="End Date">
                     <br><br>
-                    <button id="createRecordBtn" onclick="createRecord()">Submit</button>
+                    <label for="leave-type" class="sr-only">Leave Type</label>                        
+                    <select id="leave-type">
+                        <option value="" selected disabled>Select Leave Type</option>
+                        <option value="SICK">Sick</option>
+                        <option value="CASUAL">Casual</option>
+                        <option value="EARNED">Earned</option>
+                        <option value="MANDATORY">Mandatory</option>
+                    </select>                        
+                    <label for="leabe-reason" class="sr-only">Reason for leave</label>
+                    <input type="text" id="leave-reason" placeholder="Reason for Leave">
+                    <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
+                </div>
+            </div>
+
+            <div id="editAttendanceModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
+                    <h4>Edit Attendance</h4>
+                    <p class="modal-subtext">Select a date</p>
+                    <label for="edit-date">Date</label>
+                    <input type="date" id="edit-date">
+                    <br><br>
+                    <label for="edit-checkin">Check In Time</label>
+                    <input type="time" id="edit-checkin" placeholder="Check In">
+                    <br><br>
+                    <label for="edit-checkout">Check Out Time</label>
+                    <input type="time" id="edit-checkout" placeholder="Check Out">
+                    <br>
+                    <button id="editAttendanceBtn" onclick="editAttendance()">Save Changes</button>
+                    <pre id="editAttendanceResult"></pre>
+                    
+                    <div id="noRecords" class="modal-inline-panel" hidden>
+                        <pre id="noRecordsResult"></pre>
+                        <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
+                        <pre id="createRecordsResult"></pre>
+                    </div>
+
+                    <div id="createRecord" class="modal-inline-panel" hidden>                        
+                        <label for="new-checkin">Check In</label>                    
+                        <input type="time" id="new-checkin">
+                        <br><br>
+                        <label for="new-checkout">Check Out</label>
+                        <input type="time" id="new-checkout">
+                        <br><br>
+                        <button id="createRecordBtn" onclick="createRecord()">Submit</button>
+                    </div>
                 </div>
             </div>
         </div>
         <script type="module" src="script.js?v=10"></script>
-    </body>
+    </body>    
 </html>

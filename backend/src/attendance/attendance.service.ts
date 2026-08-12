@@ -135,24 +135,36 @@ export class AttendanceService {
         };
     }
 
-    async listToday(req: Express.Request){
-        const reqRole = req.session.role;
+
+    async listToday(req: Express.Request) {
         const today = new Date().toISOString().split("T")[0];
-        const clause = reqRole === UserRole.HR?{}:{role: { [Op.in]: [UserRole.MANAGER, UserRole.EMPLOYEE]}};
-        const records = await this.attendanceModel.findAll({ 
-            where: { date: today }, 
+        const records = await this.attendanceModel.findAll({
+            where: {date: today},
             include: [{
                 model: User,
-                where: clause,
                 attributes: ['userId', 'username', 'role'],
-            }],     
+            }],
         });
-        if(!Array.isArray(records) || records.length === 0){
-            throw new NotFoundException('Records Not Found!');
-        }
+
+        
+
+        const users = await this.userModel.findAll({
+            attributes: ['userId']
+        });
+
+        const employeesCount = users.length;
+        const checkinCount = records.filter(record => record.checkIn !== null).length;
+        const checkoutCount = records.filter(record => record.checkOut !== null).length;
+        const notCheckedIn = records.filter(record => record.checkIn !== null && record.checkOut === null).length;
+
         return {
             message: 'Records Fetched Successfully.',
-            records
+            records,
+            employeesCount,
+            checkinCount,
+            checkoutCount,
+            notCheckedIn,
+            today
         };
     }
 

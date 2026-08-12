@@ -1062,6 +1062,7 @@ window.listToday = async function(){
     document.getElementById("listTodayNote").textContent = "";
     document.getElementById("listTodayTable").hidden = true;
 
+    document.getElementById("attendanceSummary").hidden = false;
     try{
         const response = await fetch(`${API_BASE}/attendance/list-today`,
         {
@@ -1075,7 +1076,12 @@ window.listToday = async function(){
         const data = await safeJson(response);
 
         if(response.ok){
-            renderAttendanceTableWithUser(
+            document.getElementById("todayAllDate").textContent = data.today;
+            document.getElementById("todayTotalEmployees").textContent = data.employeesCount;
+            document.getElementById("todayCheckedIn").textContent = data.checkinCount;
+            document.getElementById("todayCheckedOut").textContent = data.checkoutCount;
+            document.getElementById("todayNotCheckedIn").textContent = data.notCheckedIn;
+            renderAttendanceTable(
                 data?.records,
                 'listTodayBody',
                 'listTodayTable',
