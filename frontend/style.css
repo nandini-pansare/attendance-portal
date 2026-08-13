@@ -1095,11 +1095,9 @@ pre{
 .data-id-table th,
 .leave-table th,
 #userAttendanceTable th,
-#leaveHistoryTable th,
 #leaveHistoryByIdTable th {
     white-space: nowrap;
 }
-
 
 .leave-table {
     width: 100%;
@@ -1241,9 +1239,6 @@ pre{
     color: #8a8179;
 }
 
-
-/* Leave history table */
-
 #leaveHistoryTable {
     width: 100%;
     margin-top: 8px;
@@ -1252,6 +1247,12 @@ pre{
 #leaveHistoryTable th,
 #leaveHistoryTable td {
     text-align: center;
+}
+
+#leaveHistoryTable th {
+    font-size: 11px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 #leaveHistoryTable th:nth-child(1),
@@ -1264,7 +1265,6 @@ pre{
 #leaveHistoryTable th:nth-child(3),
 #leaveHistoryTable td:nth-child(3) {
     width: 14%;
-    white-space: nowrap;
 }
 
 #leaveHistoryTable th:nth-child(4),
