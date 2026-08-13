@@ -1598,9 +1598,9 @@ function renderPendingLeaves(records){
         row.innerHTML = `
             <td>${record.userId}</td>
             <td>${record.leaveId}</td>
-            <td>${record.leaveType}</td>
             <td>${record.start}</td>
             <td>${record.end}</td>
+            <td>${record.leaveType}</td>
             <td>${record.reason}</td>
             <td>${record.status}</td>
 

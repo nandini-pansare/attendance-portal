@@ -242,26 +242,41 @@
                         </div>
                     </div>
 
-                    <div class="field-card" data-view="date-range" data-permission="USER_GET">
-                        <h4 data-permission="USER_GET">Attendance in Date Range</h4>
-                        <label for="from-date">From Date</label>
-                        <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
-                        <br><br>
-                        <label for="to-date">To Date</label>
-                        <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
-                        <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View From and To</button>
-                        <p id="attendanceRangeNote"></p>
-                        <table class="data-table" id="attendanceRangeTable" hidden>
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th> Check In </th>
-                                    <th> Check Out </th>
-                                    <th> Hours </th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendanceRangeBody"></tbody>
-                        </table>
+                    <div class="field-card date-range-card" data-view="date-range" data-permission="USER_GET">
+                        
+                        <div class="date-range-header">
+                            <h4 data-permission="USER_GET">Attendance in Date Range</h4>
+                            <p>Select a period to view your attendance records.</p>
+                        </div>
+
+                        <div class="date-range-controls">
+
+                            <div class="date-input group">
+                                <label for="from-date">From Date</label>
+                                <input type="date" id="from-date" placeholder="From" data-permission="USER_GET">
+                            </div>
+                            
+                            <div class="date-input-group">
+                                <label for="to-date">To Date</label>
+                                <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
+                            </div>
+                        
+                            <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View Attendance</button>
+                        </div>
+                        <p id="attendanceRangeNote" class="date-range-note"></p>
+                        <div class="date-range-results">
+                            <table class="data-table" id="attendanceRangeTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th> Check In </th>
+                                        <th> Check Out </th>
+                                        <th> Hours </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceRangeBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card" data-view="by-month" data-permission="USER_GET">

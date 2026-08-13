@@ -774,6 +774,19 @@ pre{
         font-size: 24px;
     }
 
+    .date-range-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-input-group {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .date-range-controls button {
+        width: 100%;
+    }
 }
 
 .sidebar-spacer{
@@ -975,12 +988,12 @@ pre{
 
 .data-table-with-email th:nth-child(1),
 .data-table-with-email td:nth-child(1) {
-    width: 22%;
+    width: 12%;
 }
 
 .data-table-with-email th:nth-child(2),
 .data-table-with-email td:nth-child(2) {
-    width: 23%;
+    width: 20%;
     text-align: center;
 }
 
@@ -994,7 +1007,7 @@ pre{
 
 .data-table-with-email th:nth-child(4),
 .data-table-with-email td:nth-child(4) {
-    width: 20%;
+    width: 17%;
     text-align: center;
 }
 
@@ -1037,7 +1050,7 @@ pre{
 #leaveHistoryTable td:nth-child(2),
 #leaveHistoryTable th:nth-child(3),
 #leaveHistoryTable td:nth-child(3) {
-    width: 13%;
+    width: 20%;
 }
 
 #leaveHistoryTable th:nth-child(4),
@@ -1047,7 +1060,7 @@ pre{
 
 #leaveHistoryTable th:nth-child(5),
 #leaveHistoryTable td:nth-child(5) {
-    width: 34%;
+    width: 20%;
 }
 
 #leaveHistoryTable th:nth-child(6),
@@ -1069,39 +1082,39 @@ pre{
 
 .pending-leave-table th:nth-child(1),
 .pending-leave-table td:nth-child(1) {
-    width: 9%;
+    width: 10%;
 }
 
 .pending-leave-table th:nth-child(2),
 .pending-leave-table td:nth-child(2) {
-    width: 9%;
+    width: 12%;
 }
 
 .pending-leave-table th:nth-child(3),
 .pending-leave-table td:nth-child(3),
 .pending-leave-table th:nth-child(4),
 .pending-leave-table td:nth-child(4) {
-    width: 12%;
+    width: 15%;
 }
 
 .pending-leave-table th:nth-child(5),
 .pending-leave-table td:nth-child(5) {
-    width: 13%;
+    width: 17%;
 }
 
 .pending-leave-table th:nth-child(6),
 .pending-leave-table td:nth-child(6) {
-    width: 25%;
+    width: 13%;
 }
 
 .pending-leave-table th:nth-child(7),
 .pending-leave-table td:nth-child(7) {
-    width: 10%;
+    width: 13%;
 }
 
 .pending-leave-table th:nth-child(8),
 .pending-leave-table td:nth-child(8) {
-    width: 10%;
+    width: 13%;
 }
 
 .modal-inline-panel {
@@ -1225,4 +1238,90 @@ pre{
 .today-all-card .data-table-with-user th:nth-child(4),
 .today-all-card .data-table-with-user td:nth-child(4) {
     width: 25%;
+}
+
+.date-range-card {
+    align-items: stretch;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.date-range-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.date-range-header h4 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: #3b2b20;
+}
+
+.date-range-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #8a8179;
+}
+
+.date-range-controls {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.date-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 190px;
+}
+
+.date-input-group label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6f5c47;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.date-input-group input {
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #d8cbbd;
+    border-radius: 8px;
+    background-color: #faf8f5;
+    color: #403a35;
+    font-size: 14px;
+    outline: none;
+}
+
+.date-input-group input:focus {
+    border-color: #6f4e37;
+    box-shadow: 0 0 0 2px rgba(111, 78, 55, 0.10);
+}
+
+.date-range-controls button {
+    height: 42px;
+    white-space: nowrap;
+}
+
+.date-range-note {
+    margin: 16px 0 4px;
+    text-align: center;
+    font-size: 13px;
+    color: #8a8179;
+}
+
+.date-range-results {
+    width: 100%;
+    margin-top: 8px;
+    overflow-x: auto;
+}
+
+.date-range-results .data-table {
+    margin-top: 0;
 }
