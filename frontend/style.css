@@ -471,19 +471,19 @@ body {
 
 #leaveHistoryTable th:nth-child(1),
 #leaveHistoryTable td:nth-child(1) {
-    width: 11%;
+    width: 8%;
 }
 
 #leaveHistoryTable th:nth-child(2),
 #leaveHistoryTable td:nth-child(2),
 #leaveHistoryTable th:nth-child(3),
 #leaveHistoryTable td:nth-child(3) {
-    width: 14%;
+    width: 16%;
 }
 
 #leaveHistoryTable th:nth-child(4),
 #leaveHistoryTable td:nth-child(4) {
-    width: 16%;
+    width: 14%;
 }
 
 #leaveHistoryTable th:nth-child(5),
@@ -494,7 +494,13 @@ body {
 
 #leaveHistoryTable th:nth-child(6),
 #leaveHistoryTable td:nth-child(6) {
-    width: 15%;
+    width: 16%;
+}
+
+#leaveHistoryTable td:nth-child(2),
+#leaveHitoryTable td:nth-child(3){
+    white-space: nowrap;
+    overflow-wrap: normal;
 }
 
 .today-attendance-card {
