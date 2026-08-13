@@ -282,8 +282,8 @@
                     <div class="field-card" data-view="by-month" data-permission="USER_GET">
                         
                         <div class="date-range-header">
-                        <h4 data-permission="USER_GET">Attendance by Month</h4>
-                        <p>Select a month to view your attendance records.</p>
+                            <h4 data-permission="USER_GET">Attendance by Month</h4>
+                            <p>Select a month to view your attendance records.</p>
                         </div>
 
                         <div class="date-range-controls">
@@ -317,6 +317,7 @@
                     </div>
 
                     <div class="field-card today-all-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
+                       
                         <div class="today-all-header">
                             <div>
                                 <h4 data-permission="ALL_ATTENDANCE">Employee Attendance</h4>
@@ -364,50 +365,80 @@
                     </div>
 
                     <div class="field-card" data-view="list-range" data-permission="GET_LIST">
-                        <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
-                        <label for="list-from-date">From Date</label>
-                        <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
-                        <br><br>
-                        <label for="list-to-date"> To Date</label>
-                        <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
-                        <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
-                        <p id="getListNote"></p>
-                        <table class="data-table-with-user" id="getListTable" hidden>
-                            <thead>
-                                <tr>
 
-                                    <th>User ID</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Hours</th>
-                                </tr>
-                            </thead>
-                            <tbody id="getListBody"></tbody>
-                        </table>
+                        <div class="date-range-header">
+                            <h4 data-permission="GET_LIST"> Attendance List in Date Range</h4>
+                            <p> Select a range to view attendance records.</p>
+                        </div>
+
+                        <div class="date-tage-controls">
+
+                            <div class="date-range-group">
+                                <label for="list-from-date">From Date</label>
+                                <input type="date" id="list-from-date" placeholder="FROM" data-permission="GET_LIST">
+                            </div>
+
+                            <div class="date-input-group">
+                                <label for="list-to-date"> To Date</label>
+                                <input type="date" id="list-to-date" placeholder="To" data-permission="GET_LIST">
+                            </div>
+
+                            <button id="listRangeBtn" data-permission="GET_LIST" onclick="getAttendanceRange()">View From and To</button>
+
+                        </div>
+                        <p id="getListNote" class="list-range-note"></p>
+                        <div class="list-range-results">
+                            <table class="data-table-with-user" id="getListTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Date</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="getListBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card" data-view="list-month" data-permission="GET_LIST">
-                        <h4 data-permission="GET_LIST">Attendance List by Month</h4>
-                        <label for="list-month">Month (MM)</label>
-                        <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
-                        <br><br>
-                        <label for="list-year">Year (YYYY)</label>
-                        <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
-                        <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
-                        <p id="getMonthListNote"></p>
-                        <table class="data-table-with-user" id="getMonthListTable" hidden>
-                            <thead>
-                                <tr>
-                                    <th>User ID</th>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Hours</th>
-                                </tr>
-                            </thead>
-                            <tbody id="getMonthListBody"></tbody>
-                        </table>
+                       
+                        <div class="date-range-header">
+                            <h4 data-permission="GET_LIST">Attendance List by Month</h4>
+                            <p>Select a month to view attendance records.</p>
+                        </div>
+
+                        <div class="date-range-controls">
+                      
+                            <div class="date-input-group">
+                                <label for="list-month">Month (MM)</label>
+                                <input type="number" id="list-month" min="1" max="12" placeholder="MM" data-permission="GET_LIST">
+                            </div>
+
+                            <div class="date-input-group">
+                                <label for="list-year">Year (YYYY)</label>
+                                <input type="number" id="list-year" min="1000" max="9999" placeholder="YYYY" data-permission="GET_LIST">
+                            </div>
+
+                            <button id="listMonthBtn" data-permission="GET_LIST" onclick="listByMonth()">View</button>
+                        </div>
+                        <p id="getMonthListNote" class="date-range-note"></p>
+                        <div class="lit-range-results">
+                            <table class="data-table-with-user" id="getMonthListTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>User ID</th>
+                                        <th>Date</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="getMonthListBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card" data-view="by-id" data-permission="GET_ID">
@@ -459,11 +490,28 @@
                                 <h4 data-permission="LEAVE">Leave History</h4>
                                 <p>View your previous and current lave requests</p>
                             </div>
-                            <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
                         </div>
-                        <p id="leaveHistoryNote"></p>
+                        <div class="leave-summary">
 
-                        <div class="leave-table-wrapper">
+                            <div class="leave-summary-card pending">
+                                <div class="leave-summary-icon">◷</div>
+                                <div class="leave-summary-content">
+                                    <span class="leave-summary-label">Pending</span>
+                                    <strong id="pendingLeaveCount">--</strong>
+                                </div>
+                            </div>
+
+                            <div class="leave-summary-card processed">
+                                <div class="leave-summary-icon">✓</div>
+                                <div class="leave-summary-content">
+                                    <div class="leave-summary-content">
+                                        <span class="leave-summary-label">Processed</span>
+                                        <strong id="processedLeaveCount">--</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                            <p id="leaveHistoryNote"></p>
                             <table class="leave-table" id="leaveHistoryTable" hidden>
                                 <thead>
                                     <tr>
