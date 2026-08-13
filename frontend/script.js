@@ -1152,7 +1152,7 @@ window.getAttendanceRange = async function(){
     if(from > to){
         showBanner("The from date must be before the to date.", "error");
         btn.disabled = false;
-        btn.textContent = "View From and To";
+        btn.textContent = "View";
         return;
     }
     try{

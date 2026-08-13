@@ -261,7 +261,7 @@
                                 <input type="date" id="to-date" placeholder="To" data-permission="USER_GET">
                             </div>
                         
-                            <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View Attendance</button>
+                            <button id="getRangeBtn" data-permission="USER_GET" onclick="getUserAttendanceRange()">View</button>
                         </div>
                         <p id="attendanceRangeNote" class="date-range-note"></p>
                         <div class="date-range-results">
@@ -280,25 +280,40 @@
                     </div>
 
                     <div class="field-card" data-view="by-month" data-permission="USER_GET">
+                        
+                        <div class="date-range-header">
                         <h4 data-permission="USER_GET">Attendance by Month</h4>
-                        <label for="get-month">Month (MM)</label>
-                        <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
-                        <br><br>
-                        <label for="get-year">Year (YYYY)</label>
-                        <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
-                        <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
-                        <p id="attendanceMonthNote"></p>
-                        <table class="data-table" id="attendanceMonthTable" hidden>
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Check In</th>
-                                    <th>Check Out</th>
-                                    <th>Hours</th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendanceMonthBody"></tbody>
-                        </table>
+                        <p>Select a month to view your attendance records.</p>
+                        </div>
+
+                        <div class="date-range-controls">
+
+                            <div class="date-input-group">
+                                <label for="get-month">Month (MM)</label>
+                                <input type="number" id="get-month" min="1" max="12" placeholder="MM" data-permission="USER_GET">
+                            </div>
+
+                            <div class="date-input-group">
+                                <label for="get-year">Year (YYYY)</label>
+                                <input type="number" id="get-year" min="1000" max="9999" placeholder="YYYY" data-permission="USER_GET">
+                            </div>
+
+                            <button id="getMonthBtn" data-permission="USER_GET" onclick="attendanceByMonth()">View</button>
+                        </div>                        
+                        <p id="attendanceMonthNote" class="date-range-note"></p>
+                        <div class="date-range-results">
+                            <table class="data-table" id="attendanceMonthTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceMonthBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card today-all-card" data-view="list-today" data-permission="ALL_ATTENDANCE">
@@ -432,26 +447,37 @@
                     </div>
                 </div>
         
+
+
                 <div id="leaveSection" hidden>
                     <h3>Leave</h3>
 
-                    <div class="field-card" data-view="history" data-permission="LEAVE">
-                        <h4 data-permission="LEAVE">Leave History</h4>
-                        <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                    <div class="field-card leave-history-card" data-view="history" data-permission="LEAVE">
+                        
+                        <div class="leave-history-header">
+                            <div>
+                                <h4 data-permission="LEAVE">Leave History</h4>
+                                <p>View your previous and current lave requests</p>
+                            </div>
+                            <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                        </div>
                         <p id="leaveHistoryNote"></p>
-                        <table class="leave-table" id="leaveHistoryTable" hidden>
-                            <thead>
-                                <tr>
-                                    <th>Leave ID</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                    <th>Leave Type</th>
-                                    <th>Reason</th>
-                                    <th>Status</th>
-                                </tr>                    
-                            </thead>
-                            <tbody id="leaveHistoryBody"></tbody>
-                        </table>
+
+                        <div class="leave-table-wrapper">
+                            <table class="leave-table" id="leaveHistoryTable" hidden>
+                                <thead>
+                                    <tr>
+                                        <th>Leave ID</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Leave Type</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                    </tr>                    
+                                </thead>
+                                <tbody id="leaveHistoryBody"></tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="field-card" data-view="pending" data-permission="LIST_PENDING_REQ">

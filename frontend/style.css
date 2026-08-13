@@ -327,6 +327,61 @@ body {
     margin-top: 4px;
 }
 
+.leave-history-card {
+    max-width: 1100px;
+    align-items: stretch;
+    padding: 26px 28px;
+}
+
+.leave-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.leave-history-header h4 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.leave-history-header p {
+    margin: 6px 0 0;
+    color: #8a7b70;
+    font-size: 14px;
+}
+
+#leaveHistoryBtn {
+    background-color: #4b2816;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#leaveHistoryBtn:hover {
+    background-color: #63371f;
+}
+
+#leaveHistoryNote {
+    margin: 0;
+    font-size: 14px;
+    color: #7a6a5e;
+}
+
+.leave-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.leave-history-card .leave-table {
+    width: 100%;
+}
+
 .today-attendance-card {
     max-width: 900px;
     padding: 28px 32px;
@@ -782,6 +837,7 @@ pre{
     .date-input-group {
         min-width: 0;
         width: 100%;
+        color: #6b3d3d;
     }
 
     .date-range-controls button {
@@ -1060,7 +1116,7 @@ pre{
 
 #leaveHistoryTable th:nth-child(5),
 #leaveHistoryTable td:nth-child(5) {
-    width: 20%;
+    width: left;
 }
 
 #leaveHistoryTable th:nth-child(6),
