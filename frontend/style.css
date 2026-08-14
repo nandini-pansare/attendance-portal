@@ -553,7 +553,7 @@ body {
 
 #leaveHistoryTable th:nth-child(1),
 #leaveHistoryTable td:nth-child(1) {
-    width: 8%;
+    width: 6%;
 }
 
 #leaveHistoryTable th:nth-child(2),
