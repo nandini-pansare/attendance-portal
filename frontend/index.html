@@ -509,193 +509,192 @@
                                 </div>
                             </div>
                         </div>
+                        <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
+                        <p id="leaveHistoryNote"></p>
+                        <table class="leave-table" id="leaveHistoryTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Leave ID</th>
+                                    <th>Start</th>                                        
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                </tr>                    
+                            </thead>
+                            <tbody id="leaveHistoryBody"></tbody>
+                        </table>
                     </div>
-                    <button id="leaveHistoryBtn" data-permission="LEAVE" onclick="leaveHistory()">View</button>
-                    <p id="leaveHistoryNote"></p>
-                    <table class="leave-table" id="leaveHistoryTable" hidden>
-                        <thead>
-                            <tr>
-                                <th>Leave ID</th>
-                                 <th>Start</th>                                        
-                                <th>End</th>
-                                <th>Leave Type</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                            </tr>                    
-                        </thead>
-                        <tbody id="leaveHistoryBody"></tbody>
-                    </table>
-                </div>
-
-                <div class="field-card" data-view="pending" data-permission="LIST_PENDING_REQ">
-                    <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
-                    <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
-                    <p id="pendingLeavesNote"></p>
-                    <table id="pendingLeavesTable" class="leave-table pending-leave-table" hidden>
-                        <thead>
-                            <tr>
-                                <th>User ID</th>
-                                <th>Leave ID</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Leave Type</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pendingLeavesBody"></tbody>
-                    </table>
-                </div>
-
-                <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                                    
-                    <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>
-                    <label for="leaves-by-id" class="sr-only">User ID</label>
-                    <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
-                    <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
-                    <p id="leaveHistoryByIdNote"></p>
-                    <table class="leave-table" id="leaveHistoryByIdTable" hidden>
-                        <thead>
-                            <tr>
-                                <th>User ID</th>
-                                <th>Leave ID</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Leave Type</th>
-                                <th>Reason</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaveHistoryByIdBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="tokenSection" hidden>
-                <div class="field-card">
-                    <h4>FCM Token</h4>
-                    <button id="getTokenBtn" onclick="getTokenFromFirebase()">Get FCM Token</button>
-                    <button id="registerTokenBtn" onclick="registerToken()">Register Device</button>
-                    <label for="notificationImage" class="sr-only">Notification test image</label>
-                    <input type="file" id="notificationImage" accept="image/*">
-                    <button id="testNotificationBtn" onclick="testNotification()">Test Notification</button>
-                </div>
-            </div>
-
-            <div id="validatePasswordForm" hidden>
-                <div class="field-card">
-                    <h4>Password Validation</h4>
-                    <label for="changePasword">Current Password</label>
-                    <input type="password" id="currentPassword" placeholder="Enter Current Password">
-                    <button id="validatePassword" onclick="validatePassword()">Submit</button>
-                </div>
-            </div>
-        </main>
-    
-
-        <div id="profileModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeProfile()">&times;</button>
-                <h4>Profile</h4>
-                <div class="profile-row">
-                    <span class="profile-label">User ID</span>
-                    <p id="profileUserId">--</p>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-label">Username</span>
-                    <p id="profileUsername">--</p>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-label">Email</span>
-                    <p id="profileEmail">--</p>
-                </div>
-                <div class="profile-row">
-                    <span class="profile-label">Role</span>
-                    <p id="profileRole">--</p>
-                </div>
-                <br><br>
-                <button id="change password" class="back-button" onclick="showValidatePassword()">Change Password</button> 
-            </div>
-        </div>
-
-        <div id="checkInModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('checkInModal')">&times;</button>
-                <h4> Check In </h4>
-                <p class="modal-subtext">Mark your arrival for today.</p>
-                <button id="checkInBtn" onclick="checkIn()">Check In</button>
-                <pre id="checkInResult"></pre>
-            </div>
-        </div>
-        
-        <div id="checkOutModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('checkOutModal')">&times;</button>
-                <h4> Check Out </h4>
-                <p class="modal-subtext">Mark your departure for today</p>
-                <button id="checkOutBtn" onclick="checkOut()">Check Out</button>
-                <pre id="checkOutResult"></pre>
-            </div>
-        </div>
-
-        <div id="leaveRequestModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
-                <h4> Request Leave </h4>
-                <label for="start-leave">Start date</label>
-                <input type="date" id="start-leave" placeholder="Start Date">
-                <br><br>
-                <label for="end-leave">End date</label>
-                <input type="date" id="end-leave" placeholder="End Date">
-                <br><br>
-                <label for="leave-type" class="sr-only">Leave Type</label>                        
-                <select id="leave-type">
-                    <option value="" selected disabled>Select Leave Type</option>
-                    <option value="SICK">Sick</option>
-                    <option value="CASUAL">Casual</option>
-                    <option value="EARNED">Earned</option>
-                    <option value="MANDATORY">Mandatory</option>
-                </select>                        
-                <label for="leabe-reason" class="sr-only">Reason for leave</label>
-                <input type="text" id="leave-reason" placeholder="Reason for Leave">
-                <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
-            </div>
-        </div>
-
-        <div id="editAttendanceModal" class="modal-overlay" hidden>
-            <div class="modal-card">
-                <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
-                <h4>Edit Attendance</h4>
-                <p class="modal-subtext">Select a date</p>
-                <label for="edit-date">Date</label>
-                <input type="date" id="edit-date">
-                <br><br>
-                <label for="edit-checkin">Check In Time</label>
-                <input type="time" id="edit-checkin" placeholder="Check In">
-                <br><br>
-                <label for="edit-checkout">Check Out Time</label>
-                <input type="time" id="edit-checkout" placeholder="Check Out">
-                <br>
-                <button id="editAttendanceBtn" onclick="editAttendance()">Save Changes</button>
-                <pre id="editAttendanceResult"></pre>
                     
-                <div id="noRecords" class="modal-inline-panel" hidden>
-                    <pre id="noRecordsResult"></pre>
-                    <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
-                    <pre id="createRecordsResult"></pre>
+                    <div class="field-card" data-view="pending" data-permission="LIST_PENDING_REQ">
+                        <h4 data-permission="LIST_PENDING_REQ">Pending Leave Requests</h4>
+                        <button id="pendingLeavesBtn" data-permission="LIST_PENDING_REQ" onclick="pendingLeaves()">View</button>
+                        <p id="pendingLeavesNote"></p>
+                        <table id="pendingLeavesTable" class="leave-table pending-leave-table" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Leave ID</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingLeavesBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="field-card" data-view="by-id" data-permission="LIST_LEAVES">                                    
+                        <h4 data-permission="LIST_LEAVES">Leave History by ID</h4>
+                        <label for="leaves-by-id" class="sr-only">User ID</label>
+                        <input type="number" id="leaves-by-id" placeholder="User ID" data-permission="LIST_LEAVES">
+                        <button id="leavesByIdBtn" data-permission="LIST_LEAVES" onclick="leavesById()">View</button>
+                        <p id="leaveHistoryByIdNote"></p>
+                        <table class="leave-table" id="leaveHistoryByIdTable" hidden>
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Leave ID</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Leave Type</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaveHistoryByIdBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            
+                <div id="tokenSection" hidden>
+                    <div class="field-card">
+                        <h4>FCM Token</h4>
+                        <button id="getTokenBtn" onclick="getTokenFromFirebase()">Get FCM Token</button>
+                        <button id="registerTokenBtn" onclick="registerToken()">Register Device</button>
+                        <label for="notificationImage" class="sr-only">Notification test image</label>
+                        <input type="file" id="notificationImage" accept="image/*">
+                        <button id="testNotificationBtn" onclick="testNotification()">Test Notification</button>
+                    </div>
                 </div>
 
-                <div id="createRecord" class="modal-inline-panel" hidden>                        
-                    <label for="new-checkin">Check In</label>                    
-                    <input type="time" id="new-checkin">
+                <div id="validatePasswordForm" hidden>
+                    <div class="field-card">
+                        <h4>Password Validation</h4>
+                        <label for="changePasword">Current Password</label>
+                        <input type="password" id="currentPassword" placeholder="Enter Current Password">
+                        <button id="validatePassword" onclick="validatePassword()">Submit</button>
+                    </div>
+                </div>
+            </main>
+
+            <div id="profileModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeProfile()">&times;</button>
+                    <h4>Profile</h4>
+                    <div class="profile-row">
+                        <span class="profile-label">User ID</span>
+                        <p id="profileUserId">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Username</span>
+                        <p id="profileUsername">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Email</span>
+                        <p id="profileEmail">--</p>
+                    </div>
+                    <div class="profile-row">
+                        <span class="profile-label">Role</span>
+                        <p id="profileRole">--</p>
+                    </div>
                     <br><br>
-                    <label for="new-checkout">Check Out</label>
-                    <input type="time" id="new-checkout">
-                    <br><br>
-                    <button id="createRecordBtn" onclick="createRecord()">Submit</button>
+                    <button id="change password" class="back-button" onclick="showValidatePassword()">Change Password</button> 
                 </div>
             </div>
+
+            <div id="checkInModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('checkInModal')">&times;</button>
+                    <h4> Check In </h4>
+                    <p class="modal-subtext">Mark your arrival for today.</p>
+                    <button id="checkInBtn" onclick="checkIn()">Check In</button>
+                    <pre id="checkInResult"></pre>
+                </div>
+            </div>
+        
+            <div id="checkOutModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('checkOutModal')">&times;</button>
+                    <h4> Check Out </h4>
+                    <p class="modal-subtext">Mark your departure for today</p>
+                    <button id="checkOutBtn" onclick="checkOut()">Check Out</button>
+                    <pre id="checkOutResult"></pre>
+                </div>
+            </div>
+
+            <div id="leaveRequestModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('leaveRequestModal')">&times;</button>
+                    <h4> Request Leave </h4>
+                    <label for="start-leave">Start date</label>
+                    <input type="date" id="start-leave" placeholder="Start Date">
+                    <br><br>
+                    <label for="end-leave">End date</label>
+                    <input type="date" id="end-leave" placeholder="End Date">
+                    <br><br>
+                    <label for="leave-type" class="sr-only">Leave Type</label>                        
+                    <select id="leave-type">
+                        <option value="" selected disabled>Select Leave Type</option>
+                        <option value="SICK">Sick</option>
+                        <option value="CASUAL">Casual</option>
+                        <option value="EARNED">Earned</option>
+                        <option value="MANDATORY">Mandatory</option>
+                    </select>                        
+                    <label for="leabe-reason" class="sr-only">Reason for leave</label>
+                    <input type="text" id="leave-reason" placeholder="Reason for Leave">
+                    <button id="postLeaveBtn"onclick="postLeave()">Submit</button>
+                </div>
+            </div>
+
+            <div id="editAttendanceModal" class="modal-overlay" hidden>
+                <div class="modal-card">
+                    <button class="modal-close" onclick="closeModal('editAttendanceModal')">&times;</button>
+                    <h4>Edit Attendance</h4>
+                    <p class="modal-subtext">Select a date</p>
+                    <label for="edit-date">Date</label>
+                    <input type="date" id="edit-date">
+                    <br><br>
+                    <label for="edit-checkin">Check In Time</label>
+                    <input type="time" id="edit-checkin" placeholder="Check In">
+                    <br><br>
+                    <label for="edit-checkout">Check Out Time</label>
+                    <input type="time" id="edit-checkout" placeholder="Check Out">
+                    <br>
+                    <button id="editAttendanceBtn" onclick="editAttendance()">Save Changes</button>
+                    <pre id="editAttendanceResult"></pre>
+                    
+                    <div id="noRecords" class="modal-inline-panel" hidden>
+                        <pre id="noRecordsResult"></pre>
+                        <button id="noRecordsBtn" onclick="showCreateRecord()">Create</button>
+                        <pre id="createRecordsResult"></pre>
+                    </div>
+
+                    <div id="createRecord" class="modal-inline-panel" hidden>                        
+                        <label for="new-checkin">Check In</label>                    
+                        <input type="time" id="new-checkin">
+                        <br><br>
+                        <label for="new-checkout">Check Out</label>
+                        <input type="time" id="new-checkout">
+                        <br><br>
+                        <button id="createRecordBtn" onclick="createRecord()">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <script type="module" src="script.js?v=10"></script>
         </div>
-        <script type="module" src="script.js?v=10"></script>
     </body>    
 </html>
