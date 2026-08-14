@@ -1529,6 +1529,24 @@ function renderLeaveTableWithUser(records, tbodyId, tableId, noteId, emptyMessag
     note.textContent = '';
 }
 
+function updateLeaveHistorySummary(records){
+    const pendingCount = document.getElementById('pendingLeaveCount');
+    const processedCount = document.getElementById('processedLeaveCount');
+
+    if(!pendingCount || !processedCount){
+        return;
+    }
+
+    const leaveRecords = Array.isArray(records) ? records : [];
+    const pending = leaveRecords.filter(record => {
+        const status = String(record?.status || '').toLowerCase();
+        return status === 'pending' || status === 'hr_pending';
+    }).length;
+
+    pendingCount.textContent = pending;
+    processedCount.textContent = leaveRecords.length - pending;
+}
+
 window.leaveHistory = async function(){
     const btn = document.getElementById("leaveHistoryBtn");
     btn.disabled = true;
@@ -1556,8 +1574,19 @@ window.leaveHistory = async function(){
         const records = data?.data ?? data?.records;
 
         if(response.ok){
+            const leaveRecords = Array.isArray(records) ? records : [];
+            updateLeaveHistorySummary(leaveRecords);
             renderLeaveTable(
-                Array.isArray(records) ? records : [],
+                leaveRecords,
+                'leaveHistoryBody',
+                'leaveHistoryTable',
+                'leaveHistoryNote',
+                data?.message || 'No records found.'
+            );
+        } else if(response.status === 404){
+            updateLeaveHistorySummary([]);
+            renderLeaveTable(
+                [],
                 'leaveHistoryBody',
                 'leaveHistoryTable',
                 'leaveHistoryNote',
