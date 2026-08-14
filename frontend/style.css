@@ -1305,6 +1305,13 @@ pre{
     max-width: 1100px;
 }
 
+#dashboardSection[hidden],
+#attendanceSection[hidden],
+#leaveSection[hidden],
+#tokenSection[hidden] {
+    display: none !important;
+}
+
 .today-all-card {
     max-width: 1100px;
     padding: 28px 32px;
